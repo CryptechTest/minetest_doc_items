@@ -1,0 +1,254 @@
+local groupdefs = {
+}
+
+local forced_nodes = {
+	"bones:bones",
+	"farming:soil",
+	"farming:soil_wet",
+	"farming:desert_sand_soil",
+	"farming:desert_sand_soil_wet",
+}
+
+local groups_to_string = function(grouptable)
+	local gstring = ""
+	if #grouptable == 0 then
+		return nil
+	end
+	for id, value in pairs(grouptable) do
+		if groupdefs[id] ~= nil then
+			gstring = gstring .. groupdefs[id][value] .. "\\, "
+		end
+	end
+	return gstring
+end
+
+doc.new_category("nodes", {
+	name = "Blocks",
+	build_formspec = function(data)
+		if data then
+			local longdesc = data.longdesc or "N/A"
+			local usagehelp = data.usagehelp or "N/A"
+			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
+			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
+			formstring = formstring .. "Usage: "..usagehelp .. "\n\n"
+			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+
+			local yesno = function(bool)
+				if bool==true then return "Yes"
+				elseif bool==false then return "No"
+				else return "N/A" end
+			end
+
+			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
+			local liquid
+			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
+			formstring = formstring .. "Liquid: "..yesno(liquid).. "\n"
+			if liquid then
+				local range, renew, viscos
+				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
+				if data.def.liquid_renewable then range = data.def.liquid_renewable else renew = true end
+				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscosity = 0 end
+				formstring = formstring .. "Liquid range: "..range.. "\n"
+				formstring = formstring .. "Liquid viscosity: "..viscos.. "\n"
+				formstring = formstring .. "Renewable liquid: "..yesno(renew).. "\n"
+			end
+			formstring = formstring .. "Pointable: "..yesno(data.def.pointable).. "\n"
+			formstring = formstring .. "Transparent to sunlight: "..yesno(data.def.sunlight_propagates).. "\n"
+
+			formstring = formstring .. "\n"
+
+			-- Global factoids
+			if data.def.buildable_to == true then
+				formstring = formstring .. "This block will be replaced when building on it.\n"
+			end
+			if data.def.light_source == 15 then
+				formstring = formstring .. "This block is a very bright source of light. It glows as bright the sun.\n"
+			elseif data.def.light_source > 12 then
+				formstring = formstring .. "This block is a bright source of light.\n"
+			elseif data.def.light_source > 5 then
+				formstring = formstring .. "This block is a source of light.\n"
+			elseif data.def.light_source > 0 then
+				formstring = formstring .. "This block is a source of light and glow faintly.\n"
+			end
+			if data.def.climbable == true then
+				formstring = formstring .. "This block can be climbed.\n"
+			end
+			if data.def.damage_per_second > 1 then
+				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit points per second.\n"
+			elseif data.def.damage_per_second == 1 then
+				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit point per second.\n"
+			elseif data.def.damage_per_second < -1 then
+				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit points per second.\n"
+			elseif data.def.damage_per_second == -1 then
+				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
+			end
+			if data.def.drowning > 0 then
+				formstring = formstring .. "You will slowly lose breath in this block.\n"
+			end
+
+			if data.def.groups.immortal == 1 then
+				formstring = formstring .. "This block can not be dug by ordinary digging tools.\n"
+			end
+			if data.def.groups.dig_immediate == 2 then
+				formstring = formstring .. "This block can be dug by any tool in half a second.\n"
+			elseif data.def.groups.dig_immediate == 3 then
+				formstring = formstring .. "This block can be dug by any tool immediately.\n"
+			end
+
+			if data.def.groups.falling_node == 1 then
+				formstring = formstring .. "This block is affected by gravity and can fall.\n"
+			end
+			if data.def.groups.attached_node == 1 then
+				formstring = formstring .. "This block must be attached to another block\\, otherwise it will drop as an item.\n"
+			end
+			if data.def.groups.disable_jump == 1 then
+				formstring = formstring .. "You can not jump while standing on this block.\n"
+			end
+			local fdap = data.def.groups.fall_damage_add_percent 
+			if fdap ~= nil then
+				if fdap > 0 then
+					formstring = formstring .. "The fall damage is "..fdap.."% higher on this block.\n"
+				elseif fdap == -100 then
+					formstring = formstring .. "This block negates all fall damage.\n"
+				else
+					formstring = formstring .. "The fall damage is "..math.abs(fdap).."% lower on this block.\n"
+				end
+			end
+			local bouncy = data.def.groups.bouncy
+			if bouncy ~= nil then
+				formstring = formstring .. "You will bounce on this block with a bounce speed of "..bouncy.."%.\n"
+			end
+
+			formstring = formstring .. "\n"
+
+			-- minetest_game factoids
+			if data.def.groups.flammable == 1 then
+				formstring = formstring .. "This block is flammable and burns slowly.\n"
+			elseif data.def.groups.flammable == 2 then
+				formstring = formstring .. "This block is flammable and burns at medium speed.\n"
+			elseif data.def.groups.flammable == 3 then
+				formstring = formstring .. "This block is highly flammable and burns very quickly.\n"
+			elseif data.def.groups.flammable == 4 then
+				formstring = formstring .. "This block is very easily set on fire and burns extremely quickly.\n"
+			elseif data.def.groups.flammable ~= nil then
+				formstring = formstring .. "This block is flammable.\n"
+			end
+
+			formstring = formstring .. "\n"
+			if data.def.groups.oddly_breakable_by_hand ~= nil then
+				formstring = formstring .. "This block can be dug by hand.\n"
+			end
+
+			if data.def.groups.cracky == 1 then
+				formstring = formstring .. "This block is slightly cracky and can be dug by a strong pickaxe.\n"
+			elseif data.def.groups.cracky == 2 then
+				formstring = formstring .. "This block is cracky and can be dug by a pickaxe.\n"
+			elseif data.def.groups.cracky == 3 then
+				formstring = formstring .. "This block is very cracky and can be dug easily by a pickaxe.\n"
+			elseif data.def.groups.cracky ~= nil then
+				formstring = formstring .. "This block is cracky in some way.\n"
+			end
+
+
+			if data.def.groups.crumbly == 1 then
+				formstring = formstring .. "This block is slightly crumbly and can be dug by a good shovel.\n"
+			elseif data.def.groups.crumbly == 2 then
+				formstring = formstring .. "This block is crumbly and can be dug by a shovel.\n"
+			elseif data.def.groups.crumbly == 3 then
+				formstring = formstring .. "This block is very crumbly and can be dug easily by a shovel.\n"
+			elseif data.def.groups.crumbly ~= nil then
+				formstring = formstring .. "This block is crumbly in some way.\n"
+			end
+
+			if data.def.groups.explody == 1 then
+				formstring = formstring .. "This block is a bit prone to explosions.\n"
+			elseif data.def.groups.explody == 2 then
+				formstring = formstring .. "This block is prone to explosions.\n"
+			elseif data.def.groups.explody == 3 then
+				formstring = formstring .. "This block is very prone to explosions and easily affected by them.\n"
+			elseif data.def.groups.explody ~= nil then
+				formstring = formstring .. "This block is prone to explosions to some extent.\n"
+			end
+
+			if data.def.groups.snappy == 1 then
+				formstring = formstring .. "This block is slightly snappy and can be dug by fine tools.\n"
+			elseif data.def.groups.snappy == 2 then
+				formstring = formstring .. "This block is snappy and can be dug by fine tools.\n"
+			elseif data.def.groups.snappy == 3 then
+				formstring = formstring .. "This block is highly snappy and can be dug easily by fine tools.\n"
+			elseif data.def.groups.snappy ~= nil then
+				formstring = formstring .. "This block is to some extent snappy.\n"
+			end
+
+			if data.def.groups.choppy == 1 then
+				formstring = formstring .. "This block is a bit choppy and can be dug by tools which involve brute force.\n"
+			elseif data.def.groups.choppy == 2 then
+				formstring = formstring .. "This block is choppy and can be dug by tools which involve brute force.\n"
+			elseif data.def.groups.choppy == 3 then
+				formstring = formstring .. "This block is highly choppy and can easily be dug by tools which involve brute force.\n"
+			elseif data.def.groups.choppy ~= nil then
+				formstring = formstring .. "This block is choppy to some extent.\n"
+			end
+
+			if data.def.groups.fleshy ~= nil then
+				formstring = formstring .. "This block is made out of flesh.\n"
+			end
+
+			formstring = formstring .. "\n\n"
+	
+			-- Show other “exposable” groups
+			local gstring = groups_to_string(data.def.groups)
+			if gstring ~= nil then
+				formstring = formstring .. "This block is member of the following additional groups: "..groups_to_string(data.def.groups).."\n"
+			end
+	
+	
+			formstring = formstring .. ";]"
+
+			return formstring
+		else
+			return "label[0,1;NO DATA AVALIABLE!"
+		end
+	end
+})
+
+dofile(minetest.get_modpath("doc_minetest_game") .. "/helptexts.lua")
+
+local function gather_descs()
+	doc.new_entry("nodes", "air", {
+		name = "Air",
+		data = {
+			itemstring = "air",
+			longdesc = "A transparent block, basically empty space. It is usually left behind after digging something.",
+			def = minetest.registered_nodes["air"],
+		}
+	})
+	for id, def in pairs(minetest.registered_nodes) do
+		local name, ld, uh
+		name = def.description
+		local forced = false
+		for i=1, #forced_nodes do
+			if name == forced_nodes then forced = true end
+		end
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
+			if help.longdesc[id] ~= nil then
+				ld = help.longdesc[id]
+			end
+			if help.usagehelp[id] ~= nil then
+				uh = help.usagehelp[id]
+			end
+			local infotable = {
+				name = name,
+				data = {
+					longdesc = ld,
+					usagehelp = uh,
+					itemstring = id,
+					def = def,
+				}
+			}
+			doc.new_entry("nodes", id, infotable) 
+		end
+	end
+end
+
+minetest.after(0, gather_descs)
