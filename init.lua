@@ -99,7 +99,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "You will slowly lose breath in this block.\n"
 			end
 
-			if data.def.drops == "" then
+			if data.def.drops ~= "" then
 				if data.def.groups.immortal == 1 then
 					formstring = formstring .. "This block can not be dug by ordinary digging tools.\n"
 				end
