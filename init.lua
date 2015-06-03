@@ -9,6 +9,10 @@ local forced_nodes = {
 	"farming:desert_sand_soil_wet",
 }
 
+local item_name_overrides = {
+	["screwdriver:screwdriver"] = "Screwdriver",
+}
+
 local groups_to_string = function(grouptable)
 	local gstring = ""
 	if #grouptable == 0 then
@@ -26,11 +30,19 @@ doc.new_category("nodes", {
 	name = "Blocks",
 	build_formspec = function(data)
 		if data then
-			local longdesc = data.longdesc or "N/A"
-			local usagehelp = data.usagehelp or "N/A"
-			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
-			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
-			formstring = formstring .. "Usage: "..usagehelp .. "\n\n"
+			local longdesc = data.longdesc
+			local usagehelp = data.usagehelp
+
+			local formstring = ""
+			if data.itemstring ~= "air" then
+				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+			end
+			if longdesc ~= nil then
+				formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
+			end
+			if usagehelp ~= nil then
+				formstring = formstring .. "Usage help: "..usagehelp .. "\n\n"
+			end
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
 			local yesno = function(bool)
@@ -68,7 +80,7 @@ doc.new_category("nodes", {
 			elseif data.def.light_source > 5 then
 				formstring = formstring .. "This block is a source of light.\n"
 			elseif data.def.light_source > 0 then
-				formstring = formstring .. "This block is a source of light and glow faintly.\n"
+				formstring = formstring .. "This block is a source of light and glows faintly.\n"
 			end
 			if data.def.climbable == true then
 				formstring = formstring .. "This block can be climbed.\n"
@@ -86,13 +98,24 @@ doc.new_category("nodes", {
 				formstring = formstring .. "You will slowly lose breath in this block.\n"
 			end
 
-			if data.def.groups.immortal == 1 then
-				formstring = formstring .. "This block can not be dug by ordinary digging tools.\n"
-			end
-			if data.def.groups.dig_immediate == 2 then
-				formstring = formstring .. "This block can be dug by any tool in half a second.\n"
-			elseif data.def.groups.dig_immediate == 3 then
-				formstring = formstring .. "This block can be dug by any tool immediately.\n"
+			if data.def.drops == "" then
+				if data.def.groups.immortal == 1 then
+					formstring = formstring .. "This block can not be dug by ordinary digging tools.\n"
+				end
+				if data.def.groups.dig_immediate == 2 then
+					formstring = formstring .. "This block can be dug by any tool in half a second.\n"
+				elseif data.def.groups.dig_immediate == 3 then
+					formstring = formstring .. "This block can be dug by any tool immediately.\n"
+				end
+			else
+				if data.def.groups.immortal == 1 then
+					formstring = formstring .. "This block can not be destroyed by ordinary digging tools.\n"
+				end
+				if data.def.groups.dig_immediate == 2 then
+					formstring = formstring .. "This block can be destroyed by any tool in half a second.\n"
+				elseif data.def.groups.dig_immediate == 3 then
+					formstring = formstring .. "This block can be destroyed by any tool immediately.\n"
+				end
 			end
 
 			if data.def.groups.falling_node == 1 then
@@ -212,6 +235,118 @@ doc.new_category("nodes", {
 	end
 })
 
+doc.new_category("tools", {
+	name = "Tools and weapons",
+	build_formspec = function(data)
+		if data then
+			local longdesc = data.longdesc or "N/A"
+			local usagehelp = data.usagehelp or "N/A"
+			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
+			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
+			formstring = formstring .. "Usage: "..usagehelp .. "\n\n"
+			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+
+			local yesno = function(bool)
+				if bool==true then return "Yes"
+				elseif bool==false then return "No"
+				else return "N/A" end
+			end
+
+			local range = 4.0
+			if data.def.range ~= nil then range = data.def.range end
+			formstring = formstring .. "Range: "..range.."\n"
+
+			formstring = formstring .. "\n"
+
+			if data.def.tool_capabilities ~= nil and data.def.tool_capabilities ~= {} then
+				formstring = formstring .. "Full punch interval: "..data.def.tool_capabilities.full_punch_interval.." s\n"
+				local groupcaps = data.def.tool_capabilities.groupcaps
+				formstring = formstring .. "Groupcaps:\n"
+				for k,v in pairs(groupcaps) do
+					formstring = formstring .. k .. ": blabla" .. "\n"
+				end
+
+				formstring = formstring .. "Damage groups:\n"
+				local damage_groups = data.def.tool_capabilities.damage_groups
+				for k,v in pairs(damage_groups) do
+					formstring = formstring .. k .. ": " .. v .. " HP\n"
+				end
+			end
+
+			formstring = formstring .. "\n"
+
+			-- Global factoids
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "This item will point to liquids rather than ignore them.\n"
+			end
+
+			formstring = formstring .. ";]"
+
+			return formstring
+		else
+			return "label[0,1;NO DATA AVALIABLE!"
+		end
+	end
+})
+
+
+doc.new_category("craftitems", {
+	name = "Misc. items",
+	build_formspec = function(data)
+		if data then
+			local longdesc = data.longdesc or "N/A"
+			local usagehelp = data.usagehelp or "N/A"
+			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
+			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
+			formstring = formstring .. "Usage: "..usagehelp .. "\n\n"
+			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+
+			local yesno = function(bool)
+				if bool==true then return "Yes"
+				elseif bool==false then return "No"
+				else return "N/A" end
+			end
+
+			local range = 4.0
+			if data.def.range ~= nil then range = data.def.range end
+			formstring = formstring .. "Range: "..range.."\n"
+
+			formstring = formstring .. "\n"
+
+			if data.def.tool_capabilities ~= nil and data.def.tool_capabilities ~= {} then
+				formstring = formstring .. "Full punch interval: "..data.def.tool_capabilities.full_punch_interval.." s\n"
+				local groupcaps = data.def.tool_capabilities.groupcaps
+				formstring = formstring .. "Groupcaps:\n"
+				for k,v in pairs(groupcaps) do
+					formstring = formstring .. k .. ": blabla" .. "\n"
+				end
+
+				formstring = formstring .. "Damage groups:\n"
+				local damage_groups = data.def.tool_capabilities.damage_groups
+				for k,v in pairs(damage_groups) do
+					formstring = formstring .. k .. ": " .. v .. " HP\n"
+				end
+			end
+
+			formstring = formstring .. "\n"
+
+			-- Global factoids
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "This tool will point to liquids rather than ignore them.\n"
+			end
+
+			formstring = formstring .. ";]"
+
+			return formstring
+		else
+			return "label[0,1;NO DATA AVALIABLE!"
+		end
+	end
+})
+
+
+
+
 dofile(minetest.get_modpath("doc_minetest_game") .. "/helptexts.lua")
 
 local function gather_descs()
@@ -246,7 +381,60 @@ local function gather_descs()
 					def = def,
 				}
 			}
-			doc.new_entry("nodes", id, infotable) 
+			doc.new_entry("nodes", id, infotable)
+		end
+	end
+
+
+	-- TODO: Add hand
+	for id, def in pairs(minetest.registered_tools) do
+		local name, ld, uh
+		if item_name_overrides[id] ~= nil then
+			name = item_name_overrides[id]
+		else
+			name = def.description
+		end
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) then
+			if help.longdesc[id] ~= nil then
+				ld = help.longdesc[id]
+			end
+			if help.usagehelp[id] ~= nil then
+				uh = help.usagehelp[id]
+			end
+			local infotable = {
+				name = name,
+				data = {
+					longdesc = ld,
+					usagehelp = uh,
+					itemstring = id,
+					def = def,
+				}
+			}
+			doc.new_entry("tools", id, infotable)
+		end
+	end
+
+
+	for id, def in pairs(minetest.registered_craftitems) do
+		local name, ld, uh
+		name = def.description
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) then
+			if help.longdesc[id] ~= nil then
+				ld = help.longdesc[id]
+			end
+			if help.usagehelp[id] ~= nil then
+				uh = help.usagehelp[id]
+			end
+			local infotable = {
+				name = name,
+				data = {
+					longdesc = ld,
+					usagehelp = uh,
+					itemstring = id,
+					def = def,
+				}
+			}
+			doc.new_entry("craftitems", id, infotable)
 		end
 	end
 end

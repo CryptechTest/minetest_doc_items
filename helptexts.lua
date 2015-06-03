@@ -63,6 +63,9 @@ help.longdesc = {
 	["default:nyancat"] = "A pop-tart cat in a block. Just for fun.",
 	["default:nyancat_rainbow"] = "A rainbow in a block. Just for fun.",
 	["default:grass_1"] = "Some grass. On a dirt with grass block, it will slowly spread.",
+	["default:bucket_empty"] = "A bucket, liquids can be collected with it.",
+	["default:bucket_water"] = "A bucket which is filled with water.",
+	["default:bucket_lava"] = "A bucket which is filled with lava.",
 
 
 	["bones:bones"] = "These are the remains of a deceased player. It contains the player's inventory.",
@@ -72,7 +75,7 @@ help.longdesc = {
 	["farming:desert_sand_soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet if a water source is near.",
 	["farming:desert_sand_soil_wet"] = "Wet soil, this is where you can grow crops on.",
 
-	["tnt:tnt"] = "An explosive device which is capable of damaging living beings and destroys blocks around it, shortly after it has been ignited. With a small chance, blocks may drop as an item. TNT can be ignited by explosions and fire.",
+	["tnt:tnt"] = "An explosive device. When it explodes, it will hurt living beings, destroy blocks around it, and set flammable blocks on fire. With a small chance, blocks may drop as an item rather than being destroyed. TNT can be ignited by explosions and fire.",
 	["tnt:gunpowder"] = "Gunpowder is used to craft TNT and to create gunpowder trails which can be ignited.",
 
 	["fire:basic_flame"] = "Fire is a damaging and destructive but short-lived kind of block. It will destroy and spread towards near flammable blocks, but fire will disappear if there is nothing to burn left. Fire will be extinguished faster if water is near it (no matter from which direction). A single fire block can be destroyed safely by punching it, but it is hurtful if you stand directly in fire.",
@@ -80,6 +83,10 @@ help.longdesc = {
 	["bedrock2:bedrock"] = "If you have found this block then you have reached the bottom of the world. Bedrock cannot be moved, altered or destroyed by any means.",
 
 	["doors:trapdoor"] = "A trapdoor covers a hole in the floor and can be opened manually to access the area below it. An opened trapdoor can be climbed like a ladder.",
+
+	["screwdriver:screwdriver"] = "A screwdriver can be used to rotate blocks. It can be used 200 times.",
+
+	["boats:boat"] = "A simple boat which allows you to float on the surface of large water bodies. Travelling by boat is slightly faster than swimming.",
 }
 
 help.usagehelp = {
@@ -91,6 +98,9 @@ help.usagehelp = {
 	["default:sign_wall"] = "Rightclick the sign to edit the text.",
 
 	["default:bookshelf"] = "Rightclick to open the bookshelf. You can store one book per inventory slot. To collect the bookshelf, you must make sure it does not contain any books.",
+	["default:bucket_empty"] = "Rightclick on a liquid source while holding the bucket to collect the liquid. Rightclick again somewhere to empty the bucket, this will create a liquid source at the position you've clicked at.",
+	["default:bucket_water"] = "Rightclick while holding this bucket on any block to empty it.",
+	["default:bucket_lava"] = "Rightclick while holding this bucket on any block to empty it. Be careful by doing so, lava is dangerous!",
 
 	["bones:bones"] = "Rightclick to access the inventory, dig it to obtain all items immediately. If these are not your bones, you have to wait 10 minutes before you can do this. It is only possible to take from this inventory, nothing can be stored into it.",
 
@@ -98,4 +108,8 @@ help.usagehelp = {
 	["tnt:tnt"] = "Place the TNT on the ground and punch it with a torch to light it and quickly get in a safe distance before it explodes. A burning gunpowder trail will also light the TNT.",
 
 	["doors:trapdoor"] = "Rightclick the trapdoor to open or close it. When the trapdoor is open, use the sneak or use key (depends on your configuration) to climb down, and the jump key to climb up.",
+
+	["screwdriver:screwdriver"] = "Leftclick on a block to rotate it around its current axis. Rightclick on a block to rotate its axis.",
+
+	["boats:boat"] = "Place the boat on an even water surface to set it up. Rightclick the boat to enter it. When you are on the boat, use the forward key to speed up, the backward key to slow down and the left and right keys to turn the boat. Rightclick on the boat again to leave it. Leftclick the placed boat to collect it.",
 }
