@@ -59,8 +59,8 @@ help.longdesc = {
 	["default:diamondblock"] = "A very hard decorational block.",
 	["default:obsidian_glass"] = "A decorational, transparent block.",
 	["default:obsidian"] = "A hard mineral which is generated when a lava source meets a water source.",
-	["default:nyancat"] = "A pop-tart cat in a block. Just for fun.",
-	["default:nyancat_rainbow"] = "A rainbow in a block. Just for fun.",
+	["default:nyancat"] = "A weird creature with a cat face, cat extremities and a strawberry-flavored pop-tart body. It has been trapped in a block and cannot move and can thus be dug easily by simple tools. Nyan cats are usually followed by nyan cat rainbows. Legends say that in ancient times, long before the creation of our world, the were many of the Nyan Cats which were free and flew through space and sang the \"Nya-nya\" song. Nowadays, nyan cats serve as a fancy collector's item and are traded as souveniers. Apart from that, nyan cats have no intrinsic value.",
+	["default:nyancat_rainbow"] = "A rainbow made by a real nyan cat, ancient creatures which once flew through space. It has gone inert and can be dug by simple tools. Like nyan cats, nyan cat rainbows have no intrinsic value.",
 	["default:grass_1"] = "Some grass. On a dirt with grass block, it will slowly spread.",
 	["default:bucket_empty"] = "A bucket, liquids can be collected with it.",
 	["default:bucket_water"] = "A bucket which is filled with water.",
@@ -111,4 +111,9 @@ help.usagehelp = {
 	["screwdriver:screwdriver"] = "Leftclick on a block to rotate it around its current axis. Rightclick on a block to rotate its axis.",
 
 	["boats:boat"] = "Place the boat on an even water surface to set it up. Rightclick the boat to enter it. When you are on the boat, use the forward key to speed up, the backward key to slow down and the left and right keys to turn the boat. Rightclick on the boat again to leave it. Leftclick the placed boat to collect it.",
+}
+
+help.generation = {
+	["default:nyancat"] = "These blocks are extremely rare. It has been said that it would take an adventurer several years to even find once of these Nyan Cats. Nyan Cats can appear anywhere, it is completely random. However, Nyan Cats are always followed by a trail of Nyan Cat Rainbows.",
+	["default:nyancat_rainbow"] = "These blocks are extremely rare. They only appear behind a Nyan Cat, which itself can appear randomly anywhere.",
 }
