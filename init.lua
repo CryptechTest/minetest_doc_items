@@ -37,8 +37,9 @@ doc.new_category("nodes", {
 			if data.itemstring ~= "air" then
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
+			formstring = formstring .. "textarea[0.25,1;10,8;;"
 			if longdesc ~= nil then
-				formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
+				formstring = formstring .. "Description: "..longdesc.."\n\n"
 			end
 			if usagehelp ~= nil then
 				formstring = formstring .. "Usage help: "..usagehelp .. "\n\n"
