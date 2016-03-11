@@ -75,13 +75,17 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block will be replaced when building on it.\n"
 			end
 			if data.def.light_source == 15 then
-				formstring = formstring .. "This block is a very bright source of light. It glows as bright the sun.\n"
+				formstring = formstring .. "This block is an extremely bright light source. It glows as bright the sun.\n"
+			elseif data.def.light_source == 14 then
+				formstring = formstring .. "This block is a very bright light source.\n"
 			elseif data.def.light_source > 12 then
-				formstring = formstring .. "This block is a bright source of light.\n"
+				formstring = formstring .. "This block is a bright light source.\n"
 			elseif data.def.light_source > 5 then
-				formstring = formstring .. "This block is a source of light.\n"
-			elseif data.def.light_source > 0 then
-				formstring = formstring .. "This block is a source of light and glows faintly.\n"
+				formstring = formstring .. "This block is a light source of medium luminance.\n"
+			elseif data.def.light_source > 1 then
+				formstring = formstring .. "This block is a weak light source and glows faintly.\n"
+			elseif data.def.light_source == 1 then
+				formstring = formstring .. "This block glows faintly. It is barely noticable.\n"
 			end
 			if data.def.climbable == true then
 				formstring = formstring .. "This block can be climbed.\n"
@@ -96,7 +100,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
 			end
 			if data.def.drowning > 0 then
-				formstring = formstring .. "You will slowly lose breath in this block.\n"
+				formstring = formstring .. "You will slowly lose breath in this block with a drowning damage of "..data.def.drowning..".\n"
 			end
 
 			if data.def.drops ~= "" then
@@ -158,6 +162,10 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block is flammable.\n"
 			end
 
+			if data.def.groups.puts_out_fire ~= nil then
+				formstring = formstring .. "This block will extinguish nearby fire.\n"
+			end
+
 			formstring = formstring .. "\n"
 			if data.def.groups.oddly_breakable_by_hand ~= nil then
 				formstring = formstring .. "This block can be dug by hand.\n"
@@ -205,13 +213,13 @@ doc.new_category("nodes", {
 			end
 
 			if data.def.groups.choppy == 1 then
-				formstring = formstring .. "This block is a bit choppy and can be dug by tools which involve brute force.\n"
+				formstring = formstring .. "This block is a bit choppy and can be dug by an axe and other tools which involve brute force.\n"
 			elseif data.def.groups.choppy == 2 then
-				formstring = formstring .. "This block is choppy and can be dug by tools which involve brute force.\n"
+				formstring = formstring .. "This block is choppy and can be dug by an axe and other tools which involve brute force.\n"
 			elseif data.def.groups.choppy == 3 then
-				formstring = formstring .. "This block is highly choppy and can easily be dug by tools which involve brute force.\n"
+				formstring = formstring .. "This block is highly choppy and can easily be dug by and axe and other tools which involve brute force.\n"
 			elseif data.def.groups.choppy ~= nil then
-				formstring = formstring .. "This block is choppy to some extent.\n"
+				formstring = formstring .. "This block is choppy to some extent and can be dug by axes and similar tools.\n"
 			end
 
 			if data.def.groups.fleshy ~= nil then
