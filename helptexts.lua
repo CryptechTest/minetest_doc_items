@@ -53,7 +53,7 @@ help.longdesc = {
 	["default:steel_ingot"] = "Smolten iron. It is the element of numerous crafting recipes.",
 	["default:mese_crystal_fragment"] = "A piece of what was once a whole mese crystal. It has no use in Minetest Game.",
 
-	["default:cobble"] = "A decorational block.",
+	["default:cobble"] = "A decorational block, created after digging stone. If it is near water for a long time, it will turn into mossy cobblestone",
 	["default:desert_cobble"] = "A decorational block.",
 	["default:coal_lump"] = "Coal lumps are your standard furnace fuel, but they are used to make torches and a few other crafting recipes.",
 	["default:mossycobble"] = "A decorational block.",
@@ -76,7 +76,7 @@ help.longdesc = {
 	["bucket:bucket_river_water"] = "A bucket which is filled with river water.",
 	["bucket:bucket_lava"] = "A bucket which is filled with lava. You can use it in the furnace as a very efficient fuel (you'll keep the bucket).",
 
-	["bones:bones"] = "These are the remains of a deceased player. It contains the player's former inventory.",
+	["bones:bones"] = "These are the remains of a deceased player. It contains the player's former inventory which can be looted. Fresh bones are bones of a player who has deceased recently and can only be looted by the same player. Old bones can be looted by everyone. The bones are destroyed after they have been completely looted.",
 	["doors:door_wood"] = "A door covers a vertical area of two blocks to block the way. It can be opened and closed by any player.",
 	["doors:door_glass"] = "A door covers a vertical area of two blocks to block the way. It can be opened and closed by any player.",
 	["doors:door_obsidian_glass"] = "A door covers a vertical area of two blocks to block the way. It can be opened and closed by any player.",
@@ -84,13 +84,13 @@ help.longdesc = {
 	["farming:bread"] = "A nutritious food. Eat it to restore 5 hit points.",
 	["farming:seed_wheat"] = "Grows into wheat.",
 	["farming:seed_cotton"] = "Grows into cotton.",
-	["farming:soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet if a water source is near.",
+	["farming:soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet soil if a water source is near.",
 	["farming:soil_wet"] = "Wet soil, this is where you can grow crops on.",
-	["farming:desert_sand_soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet if a water source is near.",
+	["farming:desert_sand_soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet soil if a water source is near.",
 	["farming:desert_sand_soil_wet"] = "Wet soil, this is where you can grow crops on.",
-	["flowers:mushroom_brown"] = "An edible mushroom. Likes to grow on Dirt with Grass in forests. It will slowly spread if you leave it alone. Eat it to restore 2 hit points.",
-	["flowers:mushroom_red"] = "A poisonous mushroom, don't eat it. Likes to grow on Dirt with Grass in forests. It will slowly spread if you leave it alone. Eat it to lose 5 hit points.",
-	["flowers:geranium"] = "Will slowly spread on Dirt with Grass but withers and dies on sand to become a Dry Shrub.",
+	["flowers:mushroom_brown"] = "An edible mushroom. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to restore 2 hit points.",
+	["flowers:mushroom_red"] = "A poisonous mushroom, don't eat it. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to lose 5 hit points.",
+	["flowers:geranium"] = "Will slowly spread on dirt with grass but withers and dies on sand to become a dry shrub.",
 
 	["tnt:tnt"] = "An explosive device. When it explodes, it will hurt living beings, destroy blocks around it, and set flammable blocks on fire. With a small chance, blocks may drop as an item rather than being destroyed. TNT can be ignited by explosions and fire.",
 	["tnt:gunpowder"] = "Gunpowder is used to craft TNT and to create gunpowder trails which can be ignited.",
@@ -114,6 +114,34 @@ help.longdesc = {
 	["beds:fancy_bed"] = "A really fancy bed, used to skip the night and setting your start point. Not different from the simple bed other than its appearance.",
 }
 
+local bonestime = tonumber(minetest.setting_get("share_bones_time"))
+local bonestime2 = tonumber(minetest.setting_get("share_bones_time_early"))
+local bonesstring, bonesstring2, bonestime_s, bonestime2_s
+if bonestime == nil then bonestime = 1200 end
+if bonestime2 == nil then bonestime2 = math.floor(bonestime / 4) end
+
+if bonestime == 0 then
+	bonesstring = "In this world this can be done without any delay as the bones instantly become old. "
+elseif bonestime % 60 == 0 then
+	bonestime_s = string.format("%d min", bonestime/60)
+else
+	bonestime_s = string.format("%d min %d s", bonestime/60, bonestime%60)
+end
+if bonestime2 == 0 then
+	bonesstring2 = ""
+elseif bonestime2 % 60 == 0 then
+	bonestime2_s = string.format("%d min", bonestime2/60)
+else
+	bonestime2_s = string.format("%d min %d s", bonestime2/60, bonestime2 % 60)
+end
+
+if bonestime ~= 0 then
+	bonesstring = "If these are not your bones, you have to wait "..bonestime_s.." before you can do this. "
+end
+if bonestime2 ~= 0 then
+	bonesstring2 = "If the player died in a protected area of someone else, the bones can be dug after "..bonestime2_s..". "
+end
+
 help.usagehelp = {
 	["default:apple"] = "Hold it in your hand, then leftclick to eat it.",
 	["flowers:mushroom_brown"] = "Hold it in your hand, then leftclick to eat it.",
@@ -133,7 +161,7 @@ help.usagehelp = {
 	["bucket:bucket_river_water"] = "Rightclick while holding this bucket on any block to empty it.",
 	["bucket:bucket_lava"] = "Rightclick while holding this bucket on any block to empty it. Be careful by doing so, lava is dangerous!",
 
-	["bones:bones"] = "Rightclick to access the inventory, dig it to obtain all items immediately. If these are not your bones, you have to wait 10 minutes before you can do this. It is only possible to take from this inventory, nothing can be stored into it.",
+	["bones:bones"] = "Rightclick to access the inventory, dig it to obtain all items immediately. "..bonesstring..bonesstring2.."It is only possible to take from this inventory, nothing can be stored into it.",
 
 	["tnt:gunpowder"] = "Place gunpowder on the ground to create gunpowder trails. Punch it with a torch to light the gunpowder, which will then ignore neighbor gunpowder and TNT.",
 	["tnt:tnt"] = "Place the TNT on the ground and punch it with a torch to light it and quickly get in a safe distance before it explodes. A burning gunpowder trail will also ignite the TNT.",
