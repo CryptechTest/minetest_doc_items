@@ -238,7 +238,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block is made out of flesh.\n"
 			end
 
-			formstring = formstring .. "\n\n"
+			formstring = formstring .. "\n"
 	
 			-- Show other “exposable” groups
 			local gstring = groups_to_string(data.def.groups)
@@ -250,7 +250,7 @@ doc.new_category("nodes", {
 			-- Show fuel recipe
 			local result =  minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
 			if result ~= nil and result.time > 0 then
-				formstring = formstring .. "This block can serve as a fuel with a burning time of "..burntime_to_text(result.time)..".\n"
+				formstring = formstring .. "This block can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
 	
 
@@ -311,7 +311,7 @@ doc.new_category("tools", {
 			-- Show fuel recipe
 			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
 			if result ~= nil and result.time > 0 then
-				formstring = formstring .. "This tool can serve as a fuel with a burning time of "..burntime_to_text(result.time)..".\n"
+				formstring = formstring .. "This tool can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
 
 			formstring = formstring .. ";]"
@@ -372,7 +372,7 @@ doc.new_category("craftitems", {
 			-- Show fuel recipe
 			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
 			if result ~= nil and result.time > 0 then
-				formstring = formstring .. "This item can serve as a fuel with a burning time of "..burntime_to_text(result.time)..".\n"
+				formstring = formstring .. "This item can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
 
 			formstring = formstring .. ";]"
