@@ -16,6 +16,19 @@ local leavesdesc = "Leaves and needles are solid blocks usually found at trees, 
 local signdesc = "A sign is placed at walls. You can write something want on it."
 local signuse = "Rightclick the sign to edit the text."
 
+local beddesc = "Beds allow you to sleep at night and waste some time. Survival in this world does not demand sleep, but sleeping might have some other uses. "
+local beduse = "Rightclick on the bed to try to sleep in it. This only works at night. Rightclick the bed again to get up. "
+if minetest.setting_getbool("enable_bed_respawn") == false then
+	beddesc = beddesc .. "In local folklore, legends are told of other worlds where setting the start point for your next would be possible. But this world is not one of them. "
+else
+	beddesc = beddesc .. "By sleeping in a bed, you set the starting point for your next life. "
+end
+if minetest.setting_getbool("enable_bed_night_skip") == false then
+	beddesc = beddesc .. "In this strange world, the time will not pass faster for you when you sleep."
+else
+	beddesc = beddesc .. "Going into bed seems to make time pass faster: The night will be skipped when you go sleep and you are the only human being in this world. If you are not alone, the night will be skipped as soon the majority of all humans went to bed."
+end
+
 help = {}
 help.longdesc = {
 	["default:apple"] = "Eat it to restore 2 HP.",
@@ -158,8 +171,8 @@ help.longdesc = {
 	["vessels:shelf"] = "A vessels shelf provides space for 16 vessels (like glass bottles).",
 	["xpanes:pane"] = "Glass panes are thin layers of glass which neatly connect to their neighbors as you build them.",
 	["xpanes:bar"] = "Iron bars neatly connect to their neighbors as you build them.",
-	["beds:bed_bottom"] = "A simple-looking bed, used to skip the night and setting your start point. Not different from the fancy bed other than its appearance.",
-	["beds:fancy_bed"] = "A really fancy bed, used to skip the night and setting your start point. Not different from the simple bed other than its appearance.",
+	["beds:bed_bottom"] = beddesc,
+	["beds:fancy_bed_bottom"] = beddesc,
 }
 
 local bonestime = tonumber(minetest.setting_get("share_bones_time"))
@@ -230,8 +243,8 @@ help.usagehelp = {
 	["screwdriver:screwdriver"] = "Leftclick on a block to rotate it around its current axis. Rightclick on a block to rotate its axis.",
 
 	["boats:boat"] = "Place the boat on an even water surface to set it up. Rightclick the boat to enter it. When you are on the boat, use the forward key to speed up, the backward key to slow down and the left and right keys to turn the boat. Rightclick on the boat again to leave it. Leftclick the placed boat to collect it.",
-	["beds:bed_bottom"] = "Wait until the night, then right-click to sleep in it, skip the night and set your start point. In multiplayer games, the night is only skipped when all players have gone to bed.",
-	["beds:fancy_bed"] = "Wait until the night, then right-click to sleep in it, skip the night and set your start point. In multiplayer games, the night is only skipped when all players have gone to bed.",
+	["beds:bed_bottom"] = beduse,
+	["beds:fancy_bed_bottom"] = beduse,
 	["farming:seed_wheat"] = "Use a hoe to create soil, wetten the soil, place the seed on wet soil, watch it grow, then harvest it.",
 	["farming:seed_cotton"] = "Use a hoe to create soil, wetten the soil, place the seen on wet soil or wet desert sand, watch it grow, then harvest it.",
 	["fire:flint_and_steel"] = "Punch with it on a appropriate surface to create a basic flame. A basic flame can only be created inside air. Fires can't be started on fire-extinguishing blocks (such as water). Flint and steel can be used 64 times.",
