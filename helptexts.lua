@@ -161,9 +161,6 @@ help.longdesc = {
 	["fire:permanent_flame"] = "The permanent flame is a damaging and destructive block. It will create basic flames next to it if flammable blocks are nearby. Other than the basic flame, the permanent flame will not go away by time alone. Permanent flames will be extinguished by water and similar blocks if it is next to it. A single permanent flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it.",
 
 
-	["default:ladder_wood"] = ladderuse,
-	["default:ladder_steel"] = ladderuse,
-
 	["doors:trapdoor"] = "A trapdoor covers a hole in the floor and can be opened manually to access the area below it. An opened trapdoor can be climbed like a ladder.",
 	["doors:trapdoor_steel"] = "A steel trapdoor covers a hole in the floor and can be opened manually only by the placer to access the area below it. An opened steel trapdoor can be climbed like a ladder. Steel trapdoors are immune to explosions.",
 
@@ -289,11 +286,13 @@ help.usagehelp = {
 	["boats:boat"] = "Place the boat on an even water surface to set it up. Rightclick the boat to enter it. When you are on the boat, use the forward key to speed up, the backward key to slow down and the left and right keys to turn the boat. Rightclick on the boat again to leave it. Leftclick the placed boat to collect it.",
 	["beds:bed_bottom"] = beduse,
 	["beds:fancy_bed_bottom"] = beduse,
-	["farming:seed_wheat"] = "Use a hoe to create soil, wetten the soil, place the seed on wet soil, watch it grow, then harvest it.",
-	["farming:seed_cotton"] = "Use a hoe to create soil, wetten the soil, place the seen on wet soil or wet desert sand, watch it grow, then harvest it.",
+	["farming:seed_wheat"] = "Use a hoe to create soil, then wetten the soil, then place the seed on the wet soil. Now watch your wheat plant grow and harvest it at its full size.",
+	["farming:seed_cotton"] = "Use a hoe to create soil or desert sand soil, then wetten it, then place the seed on the wet soil or wet desert sand soil. Now watch the cotton plant grow and harvest it at its full size.",
 	["fire:flint_and_steel"] = "Punch with it on a appropriate surface to create a basic flame. A basic flame can only be created inside air. Fires can't be started on fire-extinguishing blocks (such as water). Flint and steel can be used 64 times.",
 
 	["flowers:waterlily"] = "Waterlilies can only be placed water sources and equivalent blocks.",
+	["default:ladder_wood"] = ladderuse,
+	["default:ladder_steel"] = ladderuse,
 }
 
 help.generation = {
