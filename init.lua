@@ -2,6 +2,7 @@ local groupdefs = {
 }
 
 local forced_nodes = {
+	"default:cloud",
 	"bones:bones",
 	"farming:soil",
 	"farming:soil_wet",
@@ -111,8 +112,10 @@ doc.new_category("nodes", {
 			elseif data.def.damage_per_second == -1 then
 				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
 			end
-			if data.def.drowning > 0 then
-				formstring = formstring .. "You will slowly lose breath in this block with a drowning damage of "..data.def.drowning..".\n"
+			if data.def.drowning > 1 then
+				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit points every 2 seconds.\n"
+			elseif data.def.drowning == 1 then
+				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
 			end
 
 			if data.def.drops ~= "" then

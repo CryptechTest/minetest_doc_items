@@ -6,12 +6,22 @@ else
 
 end
 
+local flowertext = "Will slowly spread on dirt with grass but withers and dies on sand to become a dry shrub."
+local ladderdesc =  "A piece of ladder which allows you to move vertically."
+local ladderuse = "Hold the jump key to climb up and the sneak or use key (depends on configuration) to climb down."
+local fencedesc = "A fence post. When multiple of these are placed to next to each other, they will automatically build a nice fence structure. You can easily jump over a low fence."
+local fencegatedesc = "Fence gates connect neatly to other fence pieces and can be opened or closed. They can be easily jumped over."
+local fencegateuse = "Rightclick the gate to open or close it."
+local leavesdesc = "Leaves and needles are solid blocks usually found at trees, but they can be placed anywhere just like every other block. These blocks will decay if there is no tree trunk of any kind near them, unless you have placed the block manually."
+local signdesc = "A sign is placed at walls. You can write something want on it."
+local signuse = "Rightclick the sign to edit the text."
+
 help = {}
 help.longdesc = {
 	["default:apple"] = "Eat it to restore 2 HP.",
 	["default:furnace"] = "Cooks several items, using a furnace fuel, into something else.",
 	["default:chest"] = "Provides 32 slots of inventory space.",
-	["default:chest_locked"] = "Provides 32 slots of inventory space, is accessible only to the player who placed it. Locked chests are also immune to TNT explosions.",
+	["default:chest_locked"] = "Provides 32 slots of inventory space, is accessible only to the player who placed it. Locked chests are also immune to explosions.",
 	["default:stone"] = "A very common block in the world of Minetest. It sometimes contains ores. Usable for a variety in crafting recipes. Can be dug with a wooden pickaxe or better.",
 	["default:desert_stone"] = "A less common block in the world, usually only found in deserts. Can be dug with a wooden pickaxe or better.",
 	["default:stone_with_coal"] = "Some natural coal! Can be dug with a wooden pickaxe or better.",
@@ -31,8 +41,12 @@ help.longdesc = {
 	["default:sandstonebrick"] = "A decorational block.",
 	["default:clay"] = "Clay.",
 	["default:brick"] = "A decorational block.",
-	["default:tree"] = "A trunk of an ordinary tree. You can break it with your bare hands!",
-	["default:jungletree"] = "A trunk of a jungle tree. You can break it with your bare hands!",
+	["default:tree"] = "A trunk of an ordinary tree.",
+	["default:cloud"] = "A solid block which can not be mined. It could be destroyed by explosions.",
+	["default:jungletree"] = "A trunk of a jungle tree.",
+	["default:pine_tree"] = "A trunk of a pine tree.",
+	["default:aspen_tree"] = "A trunk of a aspen tree.",
+	["default:acacia_tree"] = "A trunk of a acacia tree.",
 	["default:wood"] = "A decorational and flammable block.",
 	["default:junglewood"] = "A decorational and flammable block.",
 	["default:pinewood"] = "A decorational and flammable block.",
@@ -41,30 +55,44 @@ help.longdesc = {
 	["default:junglesapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into a large jungle tree after some time.",
 	["default:pine_sapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into a pine tree after some time.",
 	["default:acacia_sapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into an acacia after some time.",
-	["default:leaves"] = "Leaves of an ordinary tree or apple tree. It will decay if there is no tree trunk near it, unless you have placed the leaves manually.",
-	["default:jungleleaves"] = "Leaves of a jungle tree. It will decay if there is no tree trunk near it, unless you have placed the leaves manually.",
-	["default:pine_needles"] = "Needles of a pine tree. It will decay if there is no tree trunk near it, unless you have placed the pine needles manually.",
+	["default:leaves"] = leavesdesc,
+	["default:jungleleaves"] = leavesdesc,
+	["default:pine_needles"] = leavesdesc,
+	["default:acacia_leaves"] = leavesdesc,
+	["default:aspen_leaves"] = leavesdesc,
 	["default:cactus"] = "A piece of cactus usually found in deserts. Cactus placed on desert sand will slowly grow up to 4 cactus blocks high.",
 	["default:papyrus"] = "A papyrus piece usually found near water. Papyrus will grow up to 4 blocks high when it is near a water source.",
 	["default:bookshelf"] = "A bookshelf provides space for 16 books.",
 	["default:glass"] = "A decorational, transparent block.",
-	["default:fence_wood"] = "A fence post. When multiple of these are placed to next to each other, they will automatically build a nice fence structure. You can easily jump over a low fence.",
+	["default:fence_wood"] = fencedesc,
+	["default:fence_junglewood"] = fencedesc,
+	["default:fence_pine_wood"] = fencedesc,
+	["default:fence_acacia_wood"] = fencedesc,
+	["default:fence_aspen_wood"] = fencedesc,
+	["doors:gate_wood_closed"] = fencegatedesc,
+	["doors:gate_junglewood_closed"] = fencegatedesc,
+	["doors:gate_acacia_wood_closed"] = fencegatedesc,
+	["doors:gate_pine_wood_closed"] = fencegatedesc,
+	["doors:gate_aspen_wood_closed"] = fencegatedesc,
+
 	["default:rail"] = "Railroad tracks. Place these on the ground to build your railway, the blocks will automatically connect to each other nicely.",
-	["default:ladder"] = "A piece of ladder which allows you to move vertically.",
+	["default:ladder_wood"] = ladderdesc,
+	["default:ladder_steel"] = ladderdesc,
 	["default:water_flowing"] = "You can swim easily in water, but you need to catch your breath from time to time.",
 	["default:water_source"] = "You can swim easily in water, but you need to catch your breath from time to time.",
 	["default:lava_source"] = "Don't touch the lava, it will hurt you very much and once you're in, it is hard to get out.",
 	["default:lava_flowing"] = "Don't touch the lava, it will hurt you very much and once you're in, it is hard to get out.",
 	["default:torch"] = "Provides plenty of light, but not as much as a sun would do. It can be placed on almost any block facing any direction.",
-	["default:sign_wall"] = "A sign which is placed at walls. You can write anything you want on it.",
+	["default:sign_wall_wood"] = signdesc,
+	["default:sign_wall_steel"] = signdesc,
 	["default:stick"] = "Wooden sticks are used as element in countless crafting recipes.",
 	["default:steel_ingot"] = "Smolten iron. It is the element of numerous crafting recipes.",
 	["default:mese_crystal_fragment"] = "A piece of what was once a whole mese crystal. It has no use in Minetest Game.",
 
-	["default:cobble"] = "A decorational block, created after digging stone. If it is near water for a long time, it will turn into mossy cobblestone",
+	["default:cobble"] = "A decorational block, created after digging stone. If it is near water, it might turn into mossy cobblestone.",
 	["default:desert_cobble"] = "A decorational block.",
 	["default:coal_lump"] = "Coal lumps are your standard furnace fuel, but they are used to make torches and a few other crafting recipes.",
-	["default:mossycobble"] = "A decorational block.",
+	["default:mossycobble"] = "A decorational block. It is found in underground dungeons and the product of cobblestone near water.",
 	["default:coalblock"] = "A decorational block and compact storage of coal lumps. As a furnace fuel, it is slightly more efficient than 9 coal lumps.",
 	["default:steelblock"] = "A decorational block.",
 	["default:copperblock"] = "A decorational block.",
@@ -73,6 +101,7 @@ help.longdesc = {
 	["default:diamondblock"] = "A very hard decorational block.",
 	["default:obsidian_glass"] = "A decorational, transparent block.",
 	["default:obsidian"] = "A hard mineral which is generated when a lava source meets a water source.",
+
 	["default:nyancat"] = "A weird creature with a cat face, cat extremities and a strawberry-flavored pop-tart body. It has been trapped in a block and cannot move and can thus be dug easily by simple tools. Nyan cats are usually followed by nyan cat rainbows. Legends say that in ancient times, long before the creation of our world, the were many of the Nyan Cats which were free and flew through space and sang the \"Nya-nya\" song. Nowadays, nyan cats serve as a fancy collector's item and are traded as souveniers. Apart from that, nyan cats have no intrinsic value.",
 	["default:nyancat_rainbow"] = "A rainbow made by a real nyan cat, ancient creatures which once flew through space. It has gone inert and can be dug by simple tools. Like nyan cats, nyan cat rainbows have no intrinsic value.",
 	["default:book"] = "A book is used to store notes and to make bookshelfs.",
@@ -98,7 +127,13 @@ help.longdesc = {
 	["farming:desert_sand_soil_wet"] = "Wet soil, this is where you can grow crops on.",
 	["flowers:mushroom_brown"] = "An edible mushroom. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to restore 2 hit points.",
 	["flowers:mushroom_red"] = "A poisonous mushroom, don't eat it. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to lose 5 hit points.",
-	["flowers:geranium"] = "Will slowly spread on dirt with grass but withers and dies on sand to become a dry shrub.",
+	["flowers:geranium"] = flowertext,
+	["flowers:dandelion_yellow"] = flowertext,
+	["flowers:dandelion_white"] = flowertext,
+	["flowers:tulip"] = flowertext,
+	["flowers:rose"] = flowertext,
+	["flowers:viola"] = flowertext,
+	["flowers:waterlily"] = "Waterlilies grow and spread on shallow water. They can't survive on anything else but water.",
 
 	["tnt:tnt"] = "An explosive device. When it explodes, it will hurt living beings, destroy blocks around it, and set flammable blocks on fire. With a small chance, blocks may drop as an item rather than being destroyed. TNT can be ignited by explosions and fire.",
 	["tnt:gunpowder"] = "Gunpowder is used to craft TNT and to create gunpowder trails which can be ignited.",
@@ -108,7 +143,11 @@ help.longdesc = {
 	["fire:permanent_flame"] = "The permanent flame is a damaging and destructive block. It will create basic flames next to it if flammable blocks are nearby. Other than the basic flame, the permanent flame will not go away by time alone. Permanent flames will be extinguished by water and similar blocks if it is next to it. A single permanent flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it.",
 
 
+	["default:ladder_wood"] = ladderuse,
+	["default:ladder_steel"] = ladderuse,
+
 	["doors:trapdoor"] = "A trapdoor covers a hole in the floor and can be opened manually to access the area below it. An opened trapdoor can be climbed like a ladder.",
+	["doors:trapdoor_steel"] = "A steel trapdoor covers a hole in the floor and can be opened manually only by the placer to access the area below it. An opened steel trapdoor can be climbed like a ladder. Steel trapdoors are immune to explosions.",
 
 	["screwdriver:screwdriver"] = "A screwdriver can be used to rotate blocks. It can be used 200 times.",
 
@@ -153,6 +192,12 @@ end
 
 help.usagehelp = {
 	["default:apple"] = "Hold it in your hand, then leftclick to eat it.",
+	["doors:gate_wood_closed"] = fencegateuse,
+	["doors:gate_junglewood_closed"] = fencegateuse,
+	["doors:gate_acacia_wood_closed"] = fencegateuse,
+	["doors:gate_pine_wood_closed"] = fencegateuse,
+	["doors:gate_aspen_wood_closed"] = fencegateuse,
+	
 	["flowers:mushroom_brown"] = "Hold it in your hand, then leftclick to eat it.",
 	["flowers:mushroom_red"] = "Hold it in your hand, then leftclick to eat it. But why would you want to do that?",
 	["farming:bread"] = "Hold it in your hand, then leftclick to eat it.",
@@ -160,9 +205,8 @@ help.usagehelp = {
 	["default:chest"] = "Rightclick the chest to open it and to exchange items. You can only dig it when the chest is empty.",
 	["default:chest_locked"] = "Point it to reveal the name of its owner. Rightclick the chest to open it and to exchange items. This is only possible if you own the chest. You also can only dig the chest when you own it and it is empty.",
 	["default:book"] = "Hold the book in hand and leftclick to write some notes. Doing so will turn the book into a “Book With Text” which cannot be stacked.",
-	["default:ladder"] = "Hold the jump key to climb up and the sneak or use key (depends on configuration) to climb down.",
-	["default:sign_wall"] = "Rightclick the sign to edit the text.",
-
+	["default:sign_wall_wood"] = signuse,
+	["default:sign_wall_steel"] = signuse,
 	["default:bookshelf"] = "Rightclick to open the bookshelf. You can store one book per inventory slot. To collect the bookshelf, you must make sure it does not contain any books.",
 	["vessels:shelf"] = "Rightclick to open the vessels shelf. You can store one vessel per inventory slot. To collect the vessels shelf, it must be empty.",
 	["bucket:bucket_empty"] = "Rightclick on a liquid source while holding the bucket to collect the liquid. Rightclick again somewhere to empty the bucket, this will create a liquid source at the position you've clicked at.",
@@ -176,6 +220,8 @@ help.usagehelp = {
 	["tnt:tnt"] = "Place the TNT on the ground and punch it with a torch to light it and quickly get in a safe distance before it explodes. A burning gunpowder trail will also ignite the TNT.",
 
 	["doors:trapdoor"] = "Rightclick the trapdoor to open or close it. When the trapdoor is open, use the sneak or use key (depends on your configuration) to climb down, and the jump key to climb up.",
+	["doors:trapdoor_steel"] = "Point the steel trapdoor to see who owns it. Rightclick the trapdoor to open or close it (if you own it). When the trapdoor is open, use the sneak or use key (depends on your configuration) to climb down, and the jump key to climb up.",
+
 	["doors:door_wood"] = "Rightclick the door to open or close it.",
 	["doors:door_steel"] = "Point the door to see who owns it. Rightclick the door to open or close it (if you own it).",
 	["doors:door_glass"] = "Rightclick the door to open or close it.",
@@ -189,6 +235,8 @@ help.usagehelp = {
 	["farming:seed_wheat"] = "Use a hoe to create soil, wetten the soil, place the seed on wet soil, watch it grow, then harvest it.",
 	["farming:seed_cotton"] = "Use a hoe to create soil, wetten the soil, place the seen on wet soil or wet desert sand, watch it grow, then harvest it.",
 	["fire:flint_and_steel"] = "Punch with it on a appropriate surface to create a basic flame. A basic flame can only be created inside air. Fires can't be started on fire-extinguishing blocks (such as water). Flint and steel can be used 64 times.",
+
+	["flowers:waterlily"] = "Waterlilies can only be placed water sources and equivalent blocks.",
 }
 
 help.generation = {
