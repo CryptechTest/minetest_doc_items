@@ -12,7 +12,7 @@ local forced_nodes = {
 
 local item_name_overrides = {
 	["screwdriver:screwdriver"] = "Screwdriver",
-	["fire:basic_flame"] = "Fire",
+	["fire:basic_flame"] = "Basic Flame",
 }
 
 local groups_to_string = function(grouptable)
@@ -403,7 +403,12 @@ local function gather_descs()
 		name = def.description
 		local forced = false
 		for i=1, #forced_nodes do
-			if name == forced_nodes then forced = true end
+			if id == forced_nodes[i] then forced = true end
+		end
+		if item_name_overrides[id] ~= nil then
+			name = item_name_overrides[id]
+		else
+			name = def.description
 		end
 		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
 			if help.longdesc[id] ~= nil then

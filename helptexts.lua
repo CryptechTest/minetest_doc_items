@@ -1,3 +1,11 @@
+local basicflametext
+if minetest.setting_getbool("disable_fire") == true then
+	basicflametext = "The basic flame is a damaging but short-lived kind of block. This particular world is rather hostile to fire, so basic flames won't spread and destroy other blocks. They disappear after a while. A basic flame will be extinguished by water and other blocks if it is next to it. A single basic flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it."
+else
+	basicflametext = "The basic flame is a damaging and destructive but short-lived kind of block. It will destroy and spread towards near flammable blocks, but fire will disappear if there is nothing to burn left. It will be extinguished by water and other blocks if it is next to it. A single basic flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it."
+
+end
+
 help = {}
 help.longdesc = {
 	["default:apple"] = "Eat it to restore 2 HP.",
@@ -95,7 +103,8 @@ help.longdesc = {
 	["tnt:tnt"] = "An explosive device. When it explodes, it will hurt living beings, destroy blocks around it, and set flammable blocks on fire. With a small chance, blocks may drop as an item rather than being destroyed. TNT can be ignited by explosions and fire.",
 	["tnt:gunpowder"] = "Gunpowder is used to craft TNT and to create gunpowder trails which can be ignited.",
 
-	["fire:basic_flame"] = "The basic flame is a damaging and destructive but short-lived kind of block. It will destroy and spread towards near flammable blocks, but fire will disappear if there is nothing to burn left. It will be extinguished by water and other blocks if it is next to it. A single basic flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it.",
+	["fire:basic_flame"] = basicflametext,
+	["fire:flint_and_steel"] = "Flint and steel is a tool to start fires.",
 	["fire:permanent_flame"] = "The permanent flame is a damaging and destructive block. It will create basic flames next to it if flammable blocks are nearby. Other than the basic flame, the permanent flame will not go away by time alone. Permanent flames will be extinguished by water and similar blocks if it is next to it. A single permanent flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it.",
 
 
@@ -179,6 +188,7 @@ help.usagehelp = {
 	["beds:fancy_bed"] = "Wait until the night, then right-click to sleep in it, skip the night and set your start point. In multiplayer games, the night is only skipped when all players have gone to bed.",
 	["farming:seed_wheat"] = "Use a hoe to create soil, wetten the soil, place the seed on wet soil, watch it grow, then harvest it.",
 	["farming:seed_cotton"] = "Use a hoe to create soil, wetten the soil, place the seen on wet soil or wet desert sand, watch it grow, then harvest it.",
+	["fire:flint_and_steel"] = "Punch with it on a appropriate surface to create a basic flame. A basic flame can only be created inside air. Fires can't be started on fire-extinguishing blocks (such as water). Flint and steel can be used 64 times.",
 }
 
 help.generation = {
