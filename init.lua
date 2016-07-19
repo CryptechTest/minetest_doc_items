@@ -28,6 +28,16 @@ local groups_to_string = function(grouptable)
 	return gstring
 end
 
+local burntime_to_text = function(burntime)
+	if burntime == nil then
+		return "unknown"
+	elseif burntime == 1 then
+		return "1 second"
+	else
+		return string.format("%d seconds", burntime)
+	end
+end
+
 doc.new_category("nodes", {
 	name = "Blocks",
 	build_formspec = function(data)
@@ -233,10 +243,17 @@ doc.new_category("nodes", {
 			-- Show other “exposable” groups
 			local gstring = groups_to_string(data.def.groups)
 			if gstring ~= nil then
-				formstring = formstring .. "This block is member of the following additional groups: "..groups_to_string(data.def.groups).."\n"
+				formstring = formstring .. "This block is member of the following additional groups: "..groups_to_string(data.def.groups).."\n\n"
+			end
+
+
+			-- Show fuel recipe
+			local result =  minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
+			if result ~= nil and result.time > 0 then
+				formstring = formstring .. "This block can serve as a fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
 	
-	
+
 			formstring = formstring .. ";]"
 
 			return formstring
@@ -289,6 +306,12 @@ doc.new_category("tools", {
 			-- Global factoids
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This item will point to liquids rather than ignore them.\n"
+			end
+
+			-- Show fuel recipe
+			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
+			if result ~= nil and result.time > 0 then
+				formstring = formstring .. "This tool can serve as a fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
 
 			formstring = formstring .. ";]"
@@ -344,6 +367,12 @@ doc.new_category("craftitems", {
 			-- Global factoids
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This tool will point to liquids rather than ignore them.\n"
+			end
+
+			-- Show fuel recipe
+			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
+			if result ~= nil and result.time > 0 then
+				formstring = formstring .. "This item can serve as a fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
 
 			formstring = formstring .. ";]"
