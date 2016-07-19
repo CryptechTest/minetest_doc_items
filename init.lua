@@ -7,10 +7,12 @@ local forced_nodes = {
 	"farming:soil_wet",
 	"farming:desert_sand_soil",
 	"farming:desert_sand_soil_wet",
+	"fire:basic_flame",
 }
 
 local item_name_overrides = {
 	["screwdriver:screwdriver"] = "Screwdriver",
+	["fire:basic_flame"] = "Fire",
 }
 
 local groups_to_string = function(grouptable)
@@ -59,7 +61,7 @@ doc.new_category("nodes", {
 			if liquid then
 				local range, renew, viscos
 				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
-				if data.def.liquid_renewable then range = data.def.liquid_renewable else renew = true end
+				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
 				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscosity = 0 end
 				formstring = formstring .. "Liquid range: "..range.. "\n"
 				formstring = formstring .. "Liquid viscosity: "..viscos.. "\n"
@@ -135,16 +137,16 @@ doc.new_category("nodes", {
 			local fdap = data.def.groups.fall_damage_add_percent 
 			if fdap ~= nil then
 				if fdap > 0 then
-					formstring = formstring .. "The fall damage is "..fdap.."% higher on this block.\n"
+					formstring = formstring .. "The fall damage on this block is increased by "..fdap.."%.\n"
 				elseif fdap == -100 then
 					formstring = formstring .. "This block negates all fall damage.\n"
 				else
-					formstring = formstring .. "The fall damage is "..math.abs(fdap).."% lower on this block.\n"
+					formstring = formstring .. "The fall damage on this block is reduced by "..math.abs(fdap).."%.\n"
 				end
 			end
 			local bouncy = data.def.groups.bouncy
 			if bouncy ~= nil then
-				formstring = formstring .. "You will bounce on this block with a bounce speed of "..bouncy.."%.\n"
+				formstring = formstring .. "This block will make you bounce off with an elasticity of "..bouncy.."%.\n"
 			end
 
 			formstring = formstring .. "\n"

@@ -95,9 +95,9 @@ help.longdesc = {
 	["tnt:tnt"] = "An explosive device. When it explodes, it will hurt living beings, destroy blocks around it, and set flammable blocks on fire. With a small chance, blocks may drop as an item rather than being destroyed. TNT can be ignited by explosions and fire.",
 	["tnt:gunpowder"] = "Gunpowder is used to craft TNT and to create gunpowder trails which can be ignited.",
 
-	["fire:basic_flame"] = "Fire is a damaging and destructive but short-lived kind of block. It will destroy and spread towards near flammable blocks, but fire will disappear if there is nothing to burn left. Fire will be extinguished by water and other blocks if it is next to it. A single fire block can be destroyed safely by punching it, but it is hurtful if you stand directly in fire.",
+	["fire:basic_flame"] = "The basic flame is a damaging and destructive but short-lived kind of block. It will destroy and spread towards near flammable blocks, but fire will disappear if there is nothing to burn left. It will be extinguished by water and other blocks if it is next to it. A single basic flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it.",
+	["fire:permanent_flame"] = "The permanent flame is a damaging and destructive block. It will create basic flames next to it if flammable blocks are nearby. Other than the basic flame, the permanent flame will not go away by time alone. Permanent flames will be extinguished by water and similar blocks if it is next to it. A single permanent flame block can be destroyed safely by punching it, but it is hurtful if you stand directly in it.",
 
-	["bedrock2:bedrock"] = "If you have found this block then you have reached the bottom of the world. Bedrock cannot be moved, altered or destroyed by any means.",
 
 	["doors:trapdoor"] = "A trapdoor covers a hole in the floor and can be opened manually to access the area below it. An opened trapdoor can be climbed like a ladder.",
 
@@ -154,6 +154,6 @@ help.usagehelp = {
 }
 
 help.generation = {
-	["default:nyancat"] = "These blocks are extremely rare. It has been said that it would take an adventurer several years to even find once of these Nyan Cats. Nyan Cats can appear anywhere, it is completely random. However, Nyan Cats are always followed by a trail of Nyan Cat Rainbows.",
+	["default:nyancat"] = "These blocks are extremely rare. It has been said that it would take an adventurer several years to even find one of these Nyan Cats. Nyan Cats can appear anywhere, it is completely random. However, Nyan Cats are always followed by a trail of Nyan Cat Rainbows.",
 	["default:nyancat_rainbow"] = "These blocks are extremely rare. They only appear behind a Nyan Cat, which itself can appear randomly anywhere.",
 }
