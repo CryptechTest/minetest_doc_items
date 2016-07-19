@@ -34,6 +34,9 @@ else
 	beddesc = beddesc .. "Going into bed seems to make time pass faster: The night will be skipped when you go sleep and you are the only human being in this world. If you are not alone, the night will be skipped as soon the majority of all humans went to bed."
 end
 
+local hoedesc = "Hoes are essential tools for growing crops. They are used to create soil in order to plant seeds on it."
+local hoeuse = "Punch a cultivatable block (such as dirt) with a hoe to turn it into soil."
+
 help = {}
 help.longdesc = {
 	["default:apple"] = "Eat it to restore 2 hit points.",
@@ -137,12 +140,12 @@ help.longdesc = {
 	["doors:door_obsidian_glass"] = "A door covers a vertical area of two blocks to block the way. It can be opened and closed by any player.",
 	["doors:door_steel"] = "Steel doors are owned by the player who placed it, only their owner can open, close or mine them. Steel doors are also immune to TNT explosions.",
 	["farming:bread"] = "A nutritious food. Eat it to restore 5 hit points.",
-	["farming:seed_wheat"] = "Grows into wheat.",
-	["farming:seed_cotton"] = "Grows into cotton.",
-	["farming:soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet soil if a water source is near.",
-	["farming:soil_wet"] = "Wet soil, this is where you can grow crops on.",
-	["farming:desert_sand_soil"] = "Dry soil, this is where you can grow crops on. Dry soil will become wet soil if a water source is near.",
-	["farming:desert_sand_soil_wet"] = "Wet soil, this is where you can grow crops on.",
+	["farming:seed_wheat"] = "Grows into a wheat plant.",
+	["farming:seed_cotton"] = "Grows into a cotton plant.",
+	["farming:soil"] = "Dry soil, a neccessary surface to plant crops. It is created when a hoe is used on dirt or a similar block. Dry soil will become wet soil if a water source is near. Soil might turn back into dirt if nothing is planted on it and it is not made wet for a while.",
+	["farming:soil_wet"] = "Wet soil, this is where you can plant and grow crops on. Wet soil is created when water is near soil. Wet soil will become (dry) soil again if there is no water nearby.",
+	["farming:desert_sand_soil"] = "Dry desert sand soil, a neccessary surface to plant crops. It is created when a hoe is used on desert sand. Desert sand soil will become wet desert sand soil if a water source is near. Desert sand soil might turn back into desert sand if nothing is planted on it and it is not made wet for a while.",
+	["farming:desert_sand_soil_wet"] = "Wet desert sand soil, this is where you can plant and grow crops on. Wet desert sand soil is created when water is near (dry) desert sand soil. Wet desert sand soil will become (dry) desert sand soil again if there is no water nearby.",
 	["flowers:mushroom_brown"] = "An edible mushroom. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to restore 1 hit point.",
 	["flowers:mushroom_red"] = "A poisonous mushroom, don't eat it. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to lose 5 hit points.",
 	["flowers:geranium"] = flowertext,
@@ -214,6 +217,12 @@ help.longdesc = {
 	["stairs:stair_copperblock"] = stairdesc,
 	["stairs:stair_bronzeblock"] = stairdesc,
 	["stairs:stair_goldblock"] = stairdesc,
+	["farming:hoe_wood"] = hoedesc,
+	["farming:hoe_stone"] = hoedesc,
+	["farming:hoe_steel"] = hoedesc,
+	["farming:hoe_bronze"] = hoedesc,
+	["farming:hoe_mese"] = hoedesc,
+	["farming:hoe_diamond"] = hoedesc,
 }
 
 local bonestime = tonumber(minetest.setting_get("share_bones_time"))
@@ -286,13 +295,19 @@ help.usagehelp = {
 	["boats:boat"] = "Place the boat on an even water surface to set it up. Rightclick the boat to enter it. When you are on the boat, use the forward key to speed up, the backward key to slow down and the left and right keys to turn the boat. Rightclick on the boat again to leave it. Leftclick the placed boat to collect it.",
 	["beds:bed_bottom"] = beduse,
 	["beds:fancy_bed_bottom"] = beduse,
-	["farming:seed_wheat"] = "Use a hoe to create soil, then wetten the soil, then place the seed on the wet soil. Now watch your wheat plant grow and harvest it at its full size.",
-	["farming:seed_cotton"] = "Use a hoe to create soil or desert sand soil, then wetten it, then place the seed on the wet soil or wet desert sand soil. Now watch the cotton plant grow and harvest it at its full size.",
+	["farming:seed_wheat"] = "Place the wheat seed on soil or wet soil. The plant will only grow in sunlight and as long as the soil is wet. Watch the wheat plant grow and mine it at its full size.",
+	["farming:seed_cotton"] = "Place the cotton seed on soil, wet soil, desert sand soil or wet desert sand soil. The plant will only grow in sunlight and as long as the soil is wet. Watch the cotton plant grow and mine it at its full size.",
 	["fire:flint_and_steel"] = "Punch with it on a appropriate surface to create a basic flame. A basic flame can only be created inside air. Fires can't be started on fire-extinguishing blocks (such as water). Flint and steel can be used 64 times.",
 
 	["flowers:waterlily"] = "Waterlilies can only be placed water sources and equivalent blocks.",
 	["default:ladder_wood"] = ladderuse,
 	["default:ladder_steel"] = ladderuse,
+	["farming:hoe_wood"] = hoeuse,
+	["farming:hoe_stone"] = hoeuse,
+	["farming:hoe_steel"] = hoeuse,
+	["farming:hoe_bronze"] = hoeuse,
+	["farming:hoe_mese"] = hoeuse,
+	["farming:hoe_diamond"] = hoeuse,
 }
 
 help.generation = {

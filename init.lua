@@ -237,6 +237,10 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block is choppy to some extent and can be dug by axes and similar tools.\n"
 			end
 
+			if data.def.groups.soil == 1 then
+				formstring = formstring .. "This block can be turned into soil with a hoe.\n"
+			end
+
 			if data.def.groups.fleshy ~= nil then
 				formstring = formstring .. "This block is made out of flesh.\n"
 			end
