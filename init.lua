@@ -283,9 +283,10 @@ doc.new_category("tools", {
 			local longdesc = data.longdesc or "N/A"
 			local usagehelp = data.usagehelp or "N/A"
 			local formstring = ""
-			-- TODO: Read hand image from hand definition instead of hardcoding it
-			if data.itemstring == ":" then
-				formstring = formstring .. "image[11,0;1,1;wieldhand.png]"
+			-- Hand
+			if data.itemstring == "" then
+				formstring = formstring .. "image[11,0;1,1;"..minetest.formspec_escape(minetest.registered_items[""].wield_image).."]"
+			-- Other tools
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
@@ -469,6 +470,15 @@ local function gather_descs()
 		end
 	end
 
+	-- Add the hand
+	doc.new_entry("tools", "", {
+		name = "Hand",
+		data = {
+			longdesc = "You use your bare hand whenever you are not wielding any item. With your hand you can dig the weakest blocks and deal minor damage by punching. Using the hand is often a last resort, as proper mining tools and weapons are usually better than the hand. When you are wielding an item which is not a mining tool or a weapon it will behave is it were the hand when you start mining or punching.",
+			itemstring = "",
+			def = minetest.registered_items[""]
+		}
+	})
 	for id, def in pairs(minetest.registered_tools) do
 		local name, ld, uh
 		if item_name_overrides[id] ~= nil then
@@ -495,28 +505,6 @@ local function gather_descs()
 			doc.new_entry("tools", id, infotable)
 		end
 	end
-
-	-- Add the hand
-	doc.new_entry("tools", ":", { name = "Hand", data = { longdesc = "You use your bare hand whenever you are not wielding any item. With your hand you can dig the weakest blocks and deal minor damage by punching. Using the hand is often a last resort, as proper mining tools and weapons are usually better than the hand. When you are wielding an item which is not a mining tool or a weapon it will behave is it were the hand when you start mining or punching.",
-	itemstring = ":",
-	-- FIXME: The real hand data should be read directly from the original definition
-	def = {
-		type = "none",
-		wield_image = "wieldhand.png",
-		stack_max = 1,
-		tool_capabilities = {
-			full_punch_interval = 0.9,
-			max_drop_level = 0,
-			groupcaps = {
-				crumbly = {times={[2]=3.00, [3]=0.70}, uses=0, maxlevel=1},
-				snappy = {times={[3]=0.40}, uses=0, maxlevel=1},
-				oddly_breakable_by_hand = {times={[1]=3.50,[2]=2.00,[3]=0.70}, uses=0}
-			},
-			damage_groups = {fleshy=1},
-		}
-	}}})
-
-
 
 	for id, def in pairs(minetest.registered_craftitems) do
 		local name, ld, uh
