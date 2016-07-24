@@ -34,8 +34,12 @@ else
 	beddesc = beddesc .. "Going into bed seems to make time pass faster: The night will be skipped when you go sleep and you are the only human being in this world. If you are not alone, the night will be skipped as soon the majority of all humans went to bed."
 end
 
-local hoedesc = "Hoes are essential tools for growing crops. They are used to create soil in order to plant seeds on it."
+local hoedesc = "Hoes are essential tools for growing crops. They are used to create farming soil in order to plant seeds on it."
 local hoeuse = "Punch a cultivatable block with a hoe to turn it into soil. Dirt, dirt with grass, dirt with dry grass and desert sand are cultivatable blocks."
+local axedesc = "An axe is your tool of choice to cut down blocks which are affected by brute force, especially trees and wood. It also serves as a weapon in a pinch, although not as efficient as swords, but still acceptable."
+local sworddesc = "Swords are great in melee combat, as they are fast, deal high damage and can endure countless battles. Swords are also surprisingly useful in cutting “snappy” plants and blocks, like grass, wheat and leaves, but this will wear them out much faster than by fighting."
+local shoveldesc = "Shovels are mining tools to dig out “crumbly” blocks, such as sand, dirt, gravel, and so on. Technically, they can also be used as weapons, but they are not much better than hand-to-hand combat."
+local pickaxedesc = "Pickaxes are mining tools to dig out hard, “cracky” blocks, such as stone. If you are desperate, you can use a pickaxe as an inefficient weapon."
 
 help = {}
 help.longdesc = {
@@ -146,10 +150,10 @@ help.longdesc = {
 	["farming:bread"] = "A nutritious food. Eat it to restore 5 hit points.",
 	["farming:seed_wheat"] = "Grows into a wheat plant.",
 	["farming:seed_cotton"] = "Grows into a cotton plant.",
-	["farming:soil"] = "Dry soil, a neccessary surface to plant crops. It is created when a hoe is used on dirt or a similar block. Dry soil will become wet soil if a water source is near. Soil might turn back into dirt if nothing is planted on it and it is not made wet for a while.",
-	["farming:soil_wet"] = "Wet soil, this is where you can plant and grow crops on. Wet soil is created when water is near soil. Wet soil will become (dry) soil again if there is no water nearby.",
-	["farming:desert_sand_soil"] = "Dry desert sand soil, a neccessary surface to plant crops. It is created when a hoe is used on desert sand. Desert sand soil will become wet desert sand soil if a water source is near. Desert sand soil might turn back into desert sand if nothing is planted on it and it is not made wet for a while.",
-	["farming:desert_sand_soil_wet"] = "Wet desert sand soil, this is where you can plant and grow crops on. Wet desert sand soil is created when water is near (dry) desert sand soil. Wet desert sand soil will become (dry) desert sand soil again if there is no water nearby.",
+	["farming:soil"] = "Dry soil for farming, a neccessary surface to plant crops. It is created when a hoe is used on dirt or a similar block. Dry soil will become wet soil if a water source is near. Soil might turn back into dirt if nothing is planted on it and it is not made wet for a while.",
+	["farming:soil_wet"] = "Wet soil for farmin, this is where you can plant and grow crops on. Wet soil is created when water is near soil. Wet soil will become (dry) soil again if there is no water nearby.",
+	["farming:desert_sand_soil"] = "Dry desert sand soil for farmin, a neccessary surface to plant crops. It is created when a hoe is used on desert sand. Desert sand soil will become wet desert sand soil if a water source is near. Desert sand soil might turn back into desert sand if nothing is planted on it and it is not made wet for a while.",
+	["farming:desert_sand_soil_wet"] = "Wet desert sand soil for farming, this is where you can plant and grow crops on. Wet desert sand soil is created when water is near (dry) desert sand soil. Wet desert sand soil will become (dry) desert sand soil again if there is no water nearby.",
 	["flowers:mushroom_brown"] = "An edible mushroom. Eat it to restore 1 hit point. Brown mushrooms like to grow and spread on natural soil (like dirt) and sometimes on fallen tree trunks. They need darkness to spread and survive and die off in direct sunlight.",
 	["flowers:mushroom_red"] = "A poisonous mushroom, don't eat it. If you eat it, you lose 5 hit point. Red mushrooms like to grow and spread on natural dirt (like dirt) and sometimes on fallen tree trunks. They need darkness to spread and survive and die off in direct sunlight.",
 	["flowers:geranium"] = flowertext,
@@ -227,6 +231,30 @@ help.longdesc = {
 	["farming:hoe_bronze"] = hoedesc,
 	["farming:hoe_mese"] = hoedesc,
 	["farming:hoe_diamond"] = hoedesc,
+	["default:pick_wood"] = pickaxedesc,
+	["default:pick_stone"] = pickaxedesc,
+	["default:pick_steel"] = pickaxedesc,
+	["default:pick_bronze"] = pickaxedesc,
+	["default:pick_mese"] = pickaxedesc,
+	["default:pick_diamond"] = pickaxedesc,
+	["default:shovel_wood"] = shoveldesc,
+	["default:shovel_stone"] = shoveldesc,
+	["default:shovel_steel"] = shoveldesc,
+	["default:shovel_bronze"] = shoveldesc,
+	["default:shovel_mese"] = shoveldesc,
+	["default:shovel_diamond"] = shoveldesc,
+	["default:axe_wood"] = axedesc,
+	["default:axe_stone"] = axedesc,
+	["default:axe_steel"] = axedesc,
+	["default:axe_bronze"] = axedesc,
+	["default:axe_mese"] = axedesc,
+	["default:axe_diamond"] = axedesc,
+	["default:sword_wood"] = sworddesc,
+	["default:sword_stone"] = sworddesc,
+	["default:sword_steel"] = sworddesc,
+	["default:sword_bronze"] = sworddesc,
+	["default:sword_mese"] = sworddesc,
+	["default:sword_diamond"] = sworddesc,
 }
 
 local bonestime = tonumber(minetest.setting_get("share_bones_time"))
