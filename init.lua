@@ -298,19 +298,31 @@ doc.new_category("tools", {
 			formstring = formstring .. "Range: "..range.."\n"
 
 			formstring = formstring .. "\n"
+			if data.def.tool_capabilities.full_punch_interval ~= nil then
+				punch = data.def.tool_capabilities.full_punch_interval
+			end
+
 
 			if data.def.tool_capabilities ~= nil and data.def.tool_capabilities ~= {} then
-				formstring = formstring .. "Full punch interval: "..data.def.tool_capabilities.full_punch_interval.." s\n"
+				local punch = 1.0
+				if data.def.tool_capabilities.full_punch_interval ~= nil then
+					punch = data.def.tool_capabilities.full_punch_interval
+				end
+				formstring = formstring .. "Full punch interval: "..punch.." s\n"
 				local groupcaps = data.def.tool_capabilities.groupcaps
-				formstring = formstring .. "Groupcaps:\n"
-				for k,v in pairs(groupcaps) do
-					formstring = formstring .. k .. ": blabla" .. "\n"
+				if groupcaps ~= nil then
+					formstring = formstring .. "Groupcaps:\n"
+					for k,v in pairs(groupcaps) do
+						formstring = formstring .. k .. ": blabla" .. "\n"
+					end
 				end
 
-				formstring = formstring .. "Damage groups:\n"
 				local damage_groups = data.def.tool_capabilities.damage_groups
-				for k,v in pairs(damage_groups) do
-					formstring = formstring .. k .. ": " .. v .. " HP\n"
+				if damage_groups ~= nil then
+					formstring = formstring .. "Damage groups:\n"
+					for k,v in pairs(damage_groups) do
+						formstring = formstring .. k .. ": " .. v .. " HP\n"
+					end
 				end
 			end
 
