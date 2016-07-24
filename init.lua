@@ -228,11 +228,11 @@ doc.new_category("nodes", {
 			end
 
 			if data.def.groups.choppy == 1 then
-				formstring = formstring .. "This block is a bit choppy and can be dug by an axe and other tools which involve brute force.\n"
+				formstring = formstring .. "This block is a bit choppy and can be dug by axes and other tools which involve brute force.\n"
 			elseif data.def.groups.choppy == 2 then
-				formstring = formstring .. "This block is choppy and can be dug by an axe and other tools which involve brute force.\n"
+				formstring = formstring .. "This block is choppy and can be dug by axes and other tools which involve brute force.\n"
 			elseif data.def.groups.choppy == 3 then
-				formstring = formstring .. "This block is highly choppy and can easily be dug by and axe and other tools which involve brute force.\n"
+				formstring = formstring .. "This block is highly choppy and can easily be dug by axes and other tools which involve brute force.\n"
 			elseif data.def.groups.choppy ~= nil then
 				formstring = formstring .. "This block is choppy to some extent and can be dug by axes and similar tools.\n"
 			end
