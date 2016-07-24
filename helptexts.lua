@@ -41,8 +41,7 @@ local sworddesc = "Swords are great in melee combat, as they are fast, deal high
 local shoveldesc = "Shovels are mining tools to dig out “crumbly” blocks, such as sand, dirt, gravel, and so on. Technically, they can also be used as weapons, but they are not much better than hand-to-hand combat."
 local pickaxedesc = "Pickaxes are mining tools to dig out hard, “cracky” blocks, such as stone. If you are desperate, you can use a pickaxe as an inefficient weapon."
 
-help = {}
-help.longdesc = {
+local export_longdesc = {
 	["default:apple"] = "Eat it to restore 2 hit points.",
 	["default:furnace"] = "Cooks several items, using a furnace fuel, into something else.",
 	["default:chest"] = "Provides 32 slots of inventory space.",
@@ -285,7 +284,7 @@ if bonestime2 ~= 0 then
 	bonesstring2 = "If the player died in a protected area of someone else, the bones can be dug after "..bonestime2_s..". "
 end
 
-help.usagehelp = {
+local export_usagehelp = {
 	["default:apple"] = "Hold it in your hand, then leftclick to eat it.",
 	["doors:gate_wood_closed"] = fencegateuse,
 	["doors:gate_junglewood_closed"] = fencegateuse,
@@ -342,7 +341,10 @@ help.usagehelp = {
 	["farming:hoe_diamond"] = hoeuse,
 }
 
-help.generation = {
+-- TODO: Actually make use of these texts
+local export_generation = {
 	["default:nyancat"] = "These blocks are extremely rare. It has been said that it would take an adventurer several years to even find one of these Nyan Cats. Nyan Cats can appear anywhere, it is completely random. However, Nyan Cats are always followed by a trail of Nyan Cat Rainbows.",
 	["default:nyancat_rainbow"] = "These blocks are extremely rare. They only appear behind a Nyan Cat, which itself can appear randomly anywhere.",
 }
+
+doc.sub.minetest_game.add_helptexts(export_longdesc, export_usagehelp)

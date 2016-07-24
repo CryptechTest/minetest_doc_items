@@ -411,12 +411,24 @@ doc.new_category("craftitems", {
 	end
 })
 
-
-
+doc.sub.minetest_game = {}
+doc.sub.minetest_game.help = {}
+doc.sub.minetest_game.help.longdesc = {}
+doc.sub.minetest_game.help.usagehelp = {}
+-- Gather help texts
+function doc.sub.minetest_game.add_helptexts(longdesc, usagehelp)
+	for k,v in pairs(longdesc) do
+		doc.sub.minetest_game.help.longdesc[k] = v
+	end
+	for k,v in pairs(usagehelp) do
+		doc.sub.minetest_game.help.usagehelp[k] = v
+	end
+end
 
 dofile(minetest.get_modpath("doc_minetest_game") .. "/helptexts.lua")
 
 local function gather_descs()
+	local help = doc.sub.minetest_game.help
 	doc.new_entry("nodes", "air", {
 		name = "Air",
 		data = {
