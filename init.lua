@@ -237,8 +237,14 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block is choppy to some extent and can be dug by axes and similar tools.\n"
 			end
 
+			if data.def.groups.flora == 1 then
+				formstring = formstring .. "This block is a living organism which likes to grow and spread on dirt with grass or dirt with dry grass when it is in light. On desert sand, it will wither and die and turn into a dry shrub.\n"
+			end
+
 			if data.def.groups.soil == 1 then
-				formstring = formstring .. "This block can be turned into soil with a hoe.\n"
+				formstring = formstring .. "This block is natural soil for wild plants such as grass, mushrooms or and supports their growth and spreading.\n"
+			elseif data.def.groups.soil == 2 or data.def.groups.soil == 3 then
+				formstring = formstring .. "This block serves as a soil for wild plants as well as plants grown from seeds. It supports their growth and spreading.\n"
 			end
 
 			if data.def.groups.fleshy ~= nil then

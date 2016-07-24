@@ -6,7 +6,7 @@ else
 
 end
 
-local flowertext = "Will slowly spread on dirt with grass but withers and dies on sand to become a dry shrub."
+local flowertext = "Flowers will slowly spread on dirt with grass and dirt with dry grass but wither and die on desert sand to become a dry shrub."
 local ladderdesc =  "A piece of ladder which allows you to move vertically."
 local ladderuse = "Hold the jump key to climb up and the sneak or use key (depends on configuration) to climb down."
 local fencedesc = "A fence post. When multiple of these are placed to next to each other, they will automatically build a nice fence structure. You can easily jump over a low fence."
@@ -17,7 +17,7 @@ local slabdesc = "Slabs are half as high as their full block counterparts. Slabs
 local stairdesc = "Stairs are useful to climb up without needing to jump."
 
 
-local leavesdesc = "Leaves and needles are solid blocks usually found at trees, but they can be placed anywhere just like every other block. These blocks will decay if there is no tree trunk of any kind near them, unless you have placed the block manually."
+local leavesdesc = "Leaves and needles are solid blocks usually found at trees, but they can be placed anywhere just like every other block. When grown naturally, these blocks will decay if there is no tree trunk of any kind near them. But if they were placed by a player, they won't decay."
 local signdesc = "A sign is placed at walls. You can write something want on it."
 local signuse = "Rightclick the sign to edit the text."
 
@@ -35,7 +35,7 @@ else
 end
 
 local hoedesc = "Hoes are essential tools for growing crops. They are used to create soil in order to plant seeds on it."
-local hoeuse = "Punch a cultivatable block (such as dirt) with a hoe to turn it into soil."
+local hoeuse = "Punch a cultivatable block with a hoe to turn it into soil. Dirt, dirt with grass, dirt with dry grass and desert sand are cultivatable blocks."
 
 help = {}
 help.longdesc = {
@@ -53,17 +53,19 @@ help.longdesc = {
 	["default:stone_with_diamond"] = "Hooray, diamonds! Can be dug with a steel pickaxe or better.",
 	["default:stonebrick"] = "A decorational block.",
 	["default:desert_stonebrick"] = "A decorational block.",
-	["default:dirt_with_grass"] = "Natural soil for a variety of plants. It has been exposed to sunlight and is thus grassy. Can be dug with a shovel.",
-	["default:dirt"] = "Natural soil for a variety of plants. Its top will become grassy if it becomes exposed to sunlight. Can be dug with a shovel.",
+	["default:dirt_with_grass"] = "Very common on the surface, found in grasslands, forests and jungles. It this block is in darkness, it will turn into naked dirt eventually.",
+	["default:dirt_with_dry_grass"] = "Found at the surface of savannahs. If this block is in darkness, it will turn into naked dirt eventually.",
+	["default:dirt_with_snow"] = "Dirt with a snow cover, found in cold regions. If this block is in darkness, it will turn into naked dirt eventually.",
+	["default:snow"] = "A thin layer of snow. When placed on a dirt block, the dirt block will soon become a dirt with snow block.",
+	["default:dirt"] = "If exposed to sunlight, it will turn into dirt with grass or dirt with dry grass eventually, depending on its near environment.",
 	["default:sand"] = "An unstable block, it will fall if nothing is below it. Usually found at beaches. It is best dug with a shovel.",
 	["default:desert_sand"] = "An unstable block, it will fall if nothing is below it. Usually found in deserts. It is best dug with a shovel.",
-	["default:gravel"] = "An unstable block, it will fall if nothing is below it. It is best dug with a shovel.",
+	["default:gravel"] = "An unstable block, it will fall if nothing is below it. It is best dug with a shovel. By digging it, there is a small chance you collect a flint instead.",
 	["default:sandstone"] = "A pretty soft kind of stone.",
 	["default:sandstonebrick"] = "A decorational block.",
-	["default:clay"] = "Clay.",
 	["default:brick"] = "A decorational block.",
 	["default:tree"] = "A trunk of an ordinary tree.",
-	["default:cloud"] = "A solid block which can not be mined. It could be destroyed by explosions.",
+	["default:cloud"] = "A solid block which can not be mined by simple tools. It can be destroyed by explosions, however.",
 	["default:jungletree"] = "A trunk of a jungle tree.",
 	["default:pine_tree"] = "A trunk of a pine tree.",
 	["default:aspen_tree"] = "A trunk of a aspen tree.",
@@ -72,10 +74,10 @@ help.longdesc = {
 	["default:junglewood"] = "A decorational and flammable block.",
 	["default:pinewood"] = "A decorational and flammable block.",
 	["default:acaciawood"] = "A decorational and flammable block.",
-	["default:sapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into an ordinary tree or an apple tree after some time.",
-	["default:junglesapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into a large jungle tree after some time.",
-	["default:pine_sapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into a pine tree after some time.",
-	["default:acacia_sapling"] = "When placed on dirt and exposed to sunlight, this sapling will grow into an acacia after some time.",
+	["default:sapling"] = "When placed on natural soil (such as dirt) and exposed to sunlight, this sapling will grow into an ordinary tree or an apple tree after some time.",
+	["default:junglesapling"] = "When placed on natural soil (such as dirt) and exposed to sunlight, this sapling will grow into a large jungle tree after some time.",
+	["default:pine_sapling"] = "When placed on natural soil (such as dirt) and exposed to sunlight, this sapling will grow into a pine tree after some time.",
+	["default:acacia_sapling"] = "When placed on natural soil (such as dirt) and exposed to sunlight, this sapling will grow into an acacia after some time.",
 	["default:leaves"] = leavesdesc,
 	["default:jungleleaves"] = leavesdesc,
 	["default:pine_needles"] = leavesdesc,
@@ -126,7 +128,9 @@ help.longdesc = {
 	["default:nyancat"] = "A weird creature with a cat face, cat extremities and a strawberry-flavored pop-tart body. It has been trapped in a block and cannot move and can thus be dug easily by simple tools. Nyan cats are usually followed by nyan cat rainbows. Legends say that in ancient times, long before the creation of our world, the were many of the Nyan Cats which were free and flew through space and sang the \"Nya-nya\" song. Nowadays, nyan cats serve as a fancy collector's item and are traded as souveniers. Apart from that, nyan cats have no intrinsic value.",
 	["default:nyancat_rainbow"] = "A rainbow made by a real nyan cat, ancient creatures which once flew through space. It has gone inert and can be dug by simple tools. Like nyan cats, nyan cat rainbows have no intrinsic value.",
 	["default:book"] = "A book is used to store notes and to make bookshelfs.",
-	["default:grass_1"] = "Some grass. On a Dirt with Grass block, it will slowly spread.",
+	["default:grass_1"] = "Some grass. On a dirt with grass block, it will slowly spread. By digging it, there is a small chance you collect wheat seed instead.",
+	["default:junglegrass"] = "This plant is common in jungles and spreads on dirt with grass blocks. By digging it, there is a small chance you collect cotton seed instead.",
+	["default:dry_grass_1"] = "Some dry grass. On a dirt with dry grass block, it will slowly spread.",
 	["default:meselamp"] = "A bright source of light made out of mese. It shines slightly brighter than a torch.",
 	["default:mese"] = "A very rare mineral of alien origin. This is mese in its purest form, can be broken into 9 Mese Crystals.",
 	["bucket:bucket_empty"] = "A bucket, liquids can be collected with it.",
@@ -146,8 +150,8 @@ help.longdesc = {
 	["farming:soil_wet"] = "Wet soil, this is where you can plant and grow crops on. Wet soil is created when water is near soil. Wet soil will become (dry) soil again if there is no water nearby.",
 	["farming:desert_sand_soil"] = "Dry desert sand soil, a neccessary surface to plant crops. It is created when a hoe is used on desert sand. Desert sand soil will become wet desert sand soil if a water source is near. Desert sand soil might turn back into desert sand if nothing is planted on it and it is not made wet for a while.",
 	["farming:desert_sand_soil_wet"] = "Wet desert sand soil, this is where you can plant and grow crops on. Wet desert sand soil is created when water is near (dry) desert sand soil. Wet desert sand soil will become (dry) desert sand soil again if there is no water nearby.",
-	["flowers:mushroom_brown"] = "An edible mushroom. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to restore 1 hit point.",
-	["flowers:mushroom_red"] = "A poisonous mushroom, don't eat it. Likes to grow on dirt with grass in forests. It will slowly spread if you leave it alone. Eat it to lose 5 hit points.",
+	["flowers:mushroom_brown"] = "An edible mushroom. Eat it to restore 1 hit point. Brown mushrooms like to grow and spread on blocks classified as “soil” (like dirt) and sometimes on fallen tree trunks. They need darkness to spread and survive and die off in direct sunlight.",
+	["flowers:mushroom_brown"] = "A poisonous mushroom, don't eat it. If you eat it, you lose 5 hit point. Red mushrooms like to grow and spread on blocks classified as “soil” (like dirt) and sometimes on fallen tree trunks. They need darkness to spread and survive and die off in direct sunlight.",
 	["flowers:geranium"] = flowertext,
 	["flowers:dandelion_yellow"] = flowertext,
 	["flowers:dandelion_white"] = flowertext,
