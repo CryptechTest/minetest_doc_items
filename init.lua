@@ -353,7 +353,7 @@ doc.new_category("tools", {
 
 
 doc.new_category("craftitems", {
-	name = "Misc. items",
+	name = "Miscellaneous items",
 	build_formspec = function(data)
 		if data then
 			local longdesc = data.longdesc or "N/A"
