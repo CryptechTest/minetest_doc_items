@@ -9,11 +9,15 @@ local forced_nodes = {
 	"farming:desert_sand_soil",
 	"farming:desert_sand_soil_wet",
 	"fire:basic_flame",
+	"farming:wheat_8",
+	"farming:cotton_8",
 }
 
 local item_name_overrides = {
 	["screwdriver:screwdriver"] = "Screwdriver",
 	["fire:basic_flame"] = "Basic Flame",
+	["farming:wheat_8"] = "Wheat Plant",
+	["farming:cotton_8"] = "Cotton Plant",
 }
 
 local groups_to_string = function(grouptable)
@@ -281,9 +285,9 @@ for i=2,5 do
 	doc.add_entry_alias("nodes", "default:grass_1", "default:grass_"..i)
 	doc.add_entry_alias("nodes", "default:dry_grass_1", "default:dry_grass_"..i)
 end
-for i=2,8 do
-	doc.add_entry_alias("nodes", "farming:wheat_1", "farming:wheat_"..i)
-	doc.add_entry_alias("nodes", "farming:cotton_1", "farming:cotton_"..i)
+for i=1,7 do
+	doc.add_entry_alias("nodes", "farming:wheat_8", "farming:wheat_"..i)
+	doc.add_entry_alias("nodes", "farming:cotton_8", "farming:cotton_"..i)
 end
 
 doc.new_category("tools", {
