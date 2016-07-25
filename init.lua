@@ -276,6 +276,16 @@ doc.new_category("nodes", {
 	end
 })
 
+-- Add node aliases
+for i=2,5 do
+	doc.add_entry_alias("nodes", "default:grass_1", "default:grass_"..i)
+	doc.add_entry_alias("nodes", "default:dry_grass_1", "default:dry_grass_"..i)
+end
+for i=2,8 do
+	doc.add_entry_alias("nodes", "farming:wheat_1", "farming:wheat_"..i)
+	doc.add_entry_alias("nodes", "farming:cotton_1", "farming:cotton_"..i)
+end
+
 doc.new_category("tools", {
 	name = "Tools and weapons",
 	build_formspec = function(data)
