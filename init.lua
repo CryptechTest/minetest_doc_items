@@ -1,4 +1,20 @@
 local groupdefs = {
+	["book"] = "Books",
+	["vessel"] = "Vessels",
+	["dye"] = "Dyes",
+	["wheat"] = "Wheat",
+	["stick"] = "Sticks",
+	["wall"] = "Walls",
+	["wool"] = "Wool",
+	["sand"] = "Sand",
+	["wood"] = "Wood",
+	["stone"] = "Stone",
+	["tree"] = "Tree Trunks",
+	["leaves"] = "Leaves and Needles",
+	["water"] = "Water",
+	["lava"] = "Lava",
+	["flower"] = "Flowers",
+	["sapling"] = "Saplings",
 }
 
 local forced_nodes = {
@@ -22,15 +38,21 @@ local item_name_overrides = {
 
 local groups_to_string = function(grouptable)
 	local gstring = ""
-	if #grouptable == 0 then
-		return nil
-	end
+	local groups_count = 0
 	for id, value in pairs(grouptable) do
 		if groupdefs[id] ~= nil then
-			gstring = gstring .. groupdefs[id][value] .. "\\, "
+			if groups_count > 0 then
+				gstring = gstring .. "\\, "
+			end
+			gstring = gstring .. minetest.formspec_escape(groupdefs[id])
+			groups_count = groups_count + 1
 		end
 	end
-	return gstring
+	if groups_count == 0 then
+		return nil
+	else
+		return gstring, groups_count
+	end
 end
 
 local burntime_to_text = function(burntime)
@@ -255,21 +277,23 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block is made out of flesh.\n"
 			end
 
-			formstring = formstring .. "\n"
-	
 			-- Show other “exposable” groups
-			local gstring = groups_to_string(data.def.groups)
+			local gstring, gcount = groups_to_string(data.def.groups)
 			if gstring ~= nil then
-				formstring = formstring .. "This block is member of the following additional groups: "..groups_to_string(data.def.groups).."\n\n"
+				if gcount == 1 then
+					formstring = formstring .. "This block belongs to the "..gstring.." group.\n"
+				else
+					formstring = formstring .. "This block belongs to these groups: "..gstring..".\n"
+				end
 			end
 
-
+			formstring = formstring .. "\n"
+	
 			-- Show fuel recipe
 			local result =  minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
 			if result ~= nil and result.time > 0 then
 				formstring = formstring .. "This block can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
 			end
-	
 
 			formstring = formstring .. ";]"
 
@@ -350,6 +374,16 @@ doc.new_category("tools", {
 				formstring = formstring .. "This item will point to liquids rather than ignore them.\n"
 			end
 
+			-- Show other “exposable” groups
+			local gstring, gcount = groups_to_string(data.def.groups)
+			if gstring ~= nil then
+				if gcount == 1 then
+					formstring = formstring .. "This tool belongs to the "..gstring.." group.\n"
+				else
+					formstring = formstring .. "This tool belongs to these groups: "..gstring..".\n"
+				end
+			end
+
 			-- Show fuel recipe
 			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
 			if result ~= nil and result.time > 0 then
@@ -408,7 +442,17 @@ doc.new_category("craftitems", {
 
 			-- Global factoids
 			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This tool will point to liquids rather than ignore them.\n"
+				formstring = formstring .. "This item will point to liquids rather than ignore them.\n"
+			end
+
+			-- Show other “exposable” groups
+			local gstring, gcount = groups_to_string(data.def.groups)
+			if gstring ~= nil then
+				if gcount == 1 then
+					formstring = formstring .. "This item belongs to the "..gstring.." group.\n"
+				else
+					formstring = formstring .. "This item belongs to these groups: "..gstring..".\n"
+				end
 			end
 
 			-- Show fuel recipe
