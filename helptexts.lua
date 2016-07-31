@@ -17,7 +17,7 @@ local slabdesc = "Slabs are half as high as their full block counterparts. Slabs
 local stairdesc = "Stairs are useful to climb up without needing to jump."
 
 
-local leavesdesc = "Leaves and needles are solid blocks usually found at trees, but they can be placed anywhere just like every other block. When grown naturally, these blocks will decay if there is no tree trunk of any kind near them. But if they were placed by a player, they won't decay."
+local leavesdesc = "Leaves and needles are solid blocks usually found at trees, but they can be placed anywhere just like every other block. When grown naturally, these blocks will decay if there is no block of the group “Tree Trunks” near them. After they have been placed by a player, they won't decay."
 local signdesc = "A sign is placed at walls. You can write something want on it."
 local signuse = "Rightclick the sign to edit the text."
 
@@ -303,8 +303,8 @@ local export_usagehelp = {
 	["default:book"] = "Hold the book in hand and leftclick to write some notes. Doing so will turn the book into a “Book With Text” which cannot be stacked.",
 	["default:sign_wall_wood"] = signuse,
 	["default:sign_wall_steel"] = signuse,
-	["default:bookshelf"] = "Rightclick to open the bookshelf. You can only place books in the inventory slots. To collect the bookshelf, you must make sure it does not contain any books.",
-	["vessels:shelf"] = "Rightclick to open the vessels shelf. You can only store vessels in the inventory slots. To collect the vessels shelf, it must be empty.",
+	["default:bookshelf"] = "Rightclick to open the bookshelf. You can only store books and other items belonging to the Books group into the bookshelf. To collect the bookshelf, you must make sure it does not contain anything.",
+	["vessels:shelf"] = "Rightclick to open the vessels shelf. You can only store items which belong to the Vessels group (glass bottle, driking glass, heavy steel bottle). To collect the vessels shelf, it must be empty.",
 	["bucket:bucket_empty"] = "Rightclick on a liquid source while holding the bucket to collect the liquid. Rightclick again somewhere to empty the bucket, this will create a liquid source at the position you've clicked at.",
 	["bucket:bucket_water"] = "Rightclick while holding this bucket on any block to empty it.",
 	["bucket:bucket_river_water"] = "Rightclick while holding this bucket on any block to empty it.",
