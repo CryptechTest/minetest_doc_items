@@ -4,15 +4,12 @@ local groupdefs = {
 	["dye"] = "Dyes",
 	["wheat"] = "Wheat",
 	["stick"] = "Sticks",
-	["wall"] = "Walls",
 	["wool"] = "Wool",
 	["sand"] = "Sand",
 	["wood"] = "Wood",
 	["stone"] = "Stone",
 	["tree"] = "Tree Trunks",
 	["leaves"] = "Leaves and Needles",
-	["water"] = "Water",
-	["lava"] = "Lava",
 	["flower"] = "Flowers",
 	["sapling"] = "Saplings",
 }
@@ -264,13 +261,13 @@ doc.new_category("nodes", {
 			end
 
 			if data.def.groups.flora == 1 then
-				formstring = formstring .. "This block is a living organism which likes to grow and spread on dirt with grass or dirt with dry grass when it is in light. On desert sand, it will wither and die and turn into a dry shrub.\n"
+				formstring = formstring .. "This block belongs to the Flora group. It a living organism which likes to grow and spread on dirt with grass or dirt with dry grass when it is in light. On desert sand, it will wither and die and turn into a dry shrub.\n"
 			end
 
 			if data.def.groups.soil == 1 then
-				formstring = formstring .. "This block is natural soil for wild plants such as grass, mushrooms or and supports their growth and spreading.\n"
+				formstring = formstring .. "This block is natural soil. It supports the spreading of blocks belonging to the Flora group and the growth of blocks belonging to the Saplings group.\n"
 			elseif data.def.groups.soil == 2 or data.def.groups.soil == 3 then
-				formstring = formstring .. "This block serves as a soil for wild plants as well as plants grown from seeds. It supports their growth and spreading.\n"
+				formstring = formstring .. "This block serves as a soil for wild plants (Flora, Saplings) as well as plants grown from seeds. It supports their growth and spreading.\n"
 			end
 
 			if data.def.groups.fleshy ~= nil then
