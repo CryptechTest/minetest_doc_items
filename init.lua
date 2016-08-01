@@ -31,6 +31,9 @@ local item_name_overrides = {
 	["fire:basic_flame"] = "Basic Flame",
 	["farming:wheat_8"] = "Wheat Plant",
 	["farming:cotton_8"] = "Cotton Plant",
+	["default:lava_source"] = "Lava",
+	["default:water_source"] = "Water",
+	["default:river_water_source"] = "River Water",
 }
 
 local groups_to_string = function(grouptable)
@@ -384,6 +387,9 @@ for i=1,7 do
 	doc.add_entry_alias("nodes", "farming:wheat_8", "farming:wheat_"..i)
 	doc.add_entry_alias("nodes", "farming:cotton_8", "farming:cotton_"..i)
 end
+doc.add_entry_alias("nodes", "default:lava_source", "default:lava_flowing")
+doc.add_entry_alias("nodes", "default:water_source", "default:water_flowing")
+doc.add_entry_alias("nodes", "default:river_water_source", "default:river_water_flowing")
 
 doc.new_category("tools", {
 	name = "Tools and weapons",
