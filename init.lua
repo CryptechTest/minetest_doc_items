@@ -476,7 +476,9 @@ doc.new_category("tools", {
 			if usagehelp ~= nil then
 				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
 			end
-			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+			if data.itemstring ~= "" then
+				formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+			end
 
 			local yesno = function(bool)
 				if bool==true then return "Yes"
