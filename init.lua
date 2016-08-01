@@ -704,7 +704,6 @@ if minetest.get_modpath("awards") ~= nil then
 		description = "Read all help entries about blocks.",
 	})
 
-	-- TODO: Test this when the awards mod works again
 	minetest.register_globalstep(function(dtime)
 		-- Check awards every 30 seconds
 		awardchecktime = awardchecktime + dtime
@@ -712,9 +711,10 @@ if minetest.get_modpath("awards") ~= nil then
 		awardchecktime = 30 - awardchecktime
 		local players = minetest.get_connected_players()
 		for p=1,#players do
-			local count = doc.get_viewed_count(players[p]:get_player_name(), "nodes")
+			local playername = players[p]:get_player_name()
+			local count = doc.get_viewed_count(playername, "nodes")
 			if count ~= nil and count >= doc.get_entry_count("nodes") then
-				awards.unlock("doc_minetest_game_allnodes")
+				awards.unlock(playername, "doc_minetest_game_allnodes")
 			end
 		end
 	end)
