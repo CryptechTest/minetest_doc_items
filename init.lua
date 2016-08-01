@@ -194,7 +194,6 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Renewable liquid: "..yesno(renew).. "\n"
 			end
 			formstring = formstring .. "Pointable: "..yesno(data.def.pointable).. "\n"
-			formstring = formstring .. "Transparent to sunlight: "..yesno(data.def.sunlight_propagates).. "\n"
 
 			formstring = formstring .. "\n"
 
@@ -214,6 +213,13 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block is a weak light source and glows faintly.\n"
 			elseif data.def.light_source == 1 then
 				formstring = formstring .. "This block glows faintly. It is barely noticable.\n"
+			end
+			if data.def.paramtype == "light" and data.def.sunlight_propagates then
+				formstring = formstring .. "This block allows light to propagate with a small loss of brightness, but sunlight can go through without loss.\n"
+			elseif data.def.paramtype == "light" then
+				formstring = formstring .. "This block allows light to propagate with a small loss of brightness.\n"
+			elseif data.def.sunlight_propagates then
+				formstring = formstring .. "This block allows sunlight to propagate without loss in brightness.\n"
 			end
 			if data.def.climbable == true then
 				formstring = formstring .. "This block can be climbed.\n"
