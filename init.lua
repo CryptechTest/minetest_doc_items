@@ -649,7 +649,7 @@ local function gather_descs()
 	doc.new_entry("tools", "", {
 		name = "Hand",
 		data = {
-			longdesc = "You use your bare hand whenever you are not wielding any item. With your hand you can dig the weakest blocks and deal minor damage by punching. Using the hand is often a last resort, as proper mining tools and weapons are usually better than the hand. When you are wielding an item which is not a mining tool or a weapon it will behave is it were the hand when you start mining or punching.",
+			longdesc = "You use your bare hand whenever you are not wielding any item. With your hand you can dig the weakest blocks and deal minor damage by punching. Using the hand is often a last resort, as proper mining tools and weapons are usually better than the hand. When you are wielding an item which is not a mining tool or a weapon it will behave is it were the hand when you start mining or punching. In Creative Mode, the mining capabilities, range and damage of the hand are greatly enhanced.",
 			itemstring = "",
 			def = minetest.registered_items[""]
 		}
