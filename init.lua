@@ -344,7 +344,14 @@ doc.new_category("nodes", {
 								rarity = 1
 							end
 						end
-						formstring = formstring .. string.format(" (%.0f%%)",((1/rarity)*100))
+						local chance = (1/rarity)*100
+						-- Add circa indicator for percentages with decimal point
+						local ca = ""
+						-- FIXME: Does this actually reliable?
+						if math.fmod(chance, 1) > 0 then
+							ca = "ca. "
+						end
+						formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						if max ~= nil then
 							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
 						end
