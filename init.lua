@@ -278,9 +278,9 @@ doc.new_category("nodes", {
 			local gstring, gcount = groups_to_string(data.def.groups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					formstring = formstring .. "This block belongs to the "..gstring.." group.\n"
+					formstring = formstring .. "This block belongs to the "..minetest.formspec_escape(gstring).." group.\n"
 				else
-					formstring = formstring .. "This block belongs to these groups: "..gstring..".\n"
+					formstring = formstring .. "This block belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
 				end
 			end
 
@@ -399,8 +399,8 @@ doc.new_category("tools", {
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
-			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
-			formstring = formstring .. "Usage: "..usagehelp .. "\n\n"
+			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..minetest.formspec_escape(longdesc).."\n\n"
+			formstring = formstring .. "Usage: "..minetest.formspec_escape(usagehelp).. "\n\n"
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
 			local yesno = function(bool)
@@ -449,9 +449,9 @@ doc.new_category("tools", {
 			local gstring, gcount = groups_to_string(data.def.groups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					formstring = formstring .. "This tool belongs to the "..gstring.." group.\n"
+					formstring = formstring .. "This tool belongs to the "..minetest.formspec_escape(gstring).." group.\n"
 				else
-					formstring = formstring .. "This tool belongs to these groups: "..gstring..".\n"
+					formstring = formstring .. "This tool belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
 				end
 			end
 
@@ -478,8 +478,8 @@ doc.new_category("craftitems", {
 			local longdesc = data.longdesc or "N/A"
 			local usagehelp = data.usagehelp or "N/A"
 			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
-			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..longdesc.."\n\n"
-			formstring = formstring .. "Usage: "..usagehelp .. "\n\n"
+			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..minetest.formspec_escape(longdesc).."\n\n"
+			formstring = formstring .. "Usage: "..minetest.formspec_escape(usagehelp).. "\n\n"
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
 			local yesno = function(bool)
@@ -520,9 +520,9 @@ doc.new_category("craftitems", {
 			local gstring, gcount = groups_to_string(data.def.groups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					formstring = formstring .. "This item belongs to the "..gstring.." group.\n"
+					formstring = formstring .. "This item belongs to the "..minetest.formspec_escape(gstring).." group.\n"
 				else
-					formstring = formstring .. "This item belongs to these groups: "..gstring..".\n"
+					formstring = formstring .. "This item belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
 				end
 			end
 
