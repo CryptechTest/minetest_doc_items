@@ -8,10 +8,25 @@ local groupdefs = {
 	["sand"] = "Sand",
 	["wood"] = "Wood",
 	["stone"] = "Stone",
+	["metal"] = "Metal",
 	["tree"] = "Tree Trunks",
 	["leaves"] = "Leaves and Needles",
 	["flower"] = "Flowers",
 	["sapling"] = "Saplings",
+	["fleshy"] = "Flesh",
+}
+
+local minegroups = {
+	["cracky"] = "Cracky",
+	["crumbly"] = "Crumbly",
+	["choppy"] = "Choppy",
+	["snappy"] = "Snappy",
+	["bendy"] = "Bendy",
+	["oddly_breakable_by_hand"] = "Oddly breakable by hand",
+}
+
+local damagegroups= {
+	["fleshy"] = "Flesh",
 }
 
 local forced_nodes = {
@@ -55,6 +70,25 @@ local groups_to_string = function(grouptable)
 	end
 end
 
+local group_to_string = function(groupname, grouptype)
+	local grouptable
+	if grouptype == "mining" then
+		grouptable = minegroups
+	elseif grouptype == "damage" then
+		grouptable = damagegroups
+	elseif grouptype == "generic" then
+		grouptable = groupdefs
+	else
+		return minetest.formspec_escape(groupname)
+	end
+
+	if grouptable[groupname] ~= nil then
+		return minetest.formspec_escape(grouptable[groupname])
+	else
+		return minetest.formspec_escape(groupname)
+	end
+end
+
 local burntime_to_text = function(burntime)
 	if burntime == nil then
 		return "unknown"
@@ -64,6 +98,36 @@ local burntime_to_text = function(burntime)
 		return string.format("%d seconds", burntime)
 	end
 end
+
+local toolcaps_to_text = function(tool_capabilities)
+	local formstring = ""
+	if tool_capabilities ~= nil and tool_capabilities ~= {} then
+		local punch = 1.0
+		if tool_capabilities.full_punch_interval ~= nil then
+			punch = tool_capabilities.full_punch_interval
+		end
+		formstring = formstring .. "Full punch interval: "..punch.." s\n\n"
+
+		local groupcaps = tool_capabilities.groupcaps
+		if groupcaps ~= nil then
+			formstring = formstring .. "Mining capabilities:\n"
+			for k,v in pairs(groupcaps) do
+				formstring = formstring .. "- " .. group_to_string(k, "mining") .. ": Level " .. v.maxlevel .. "\n"
+			end
+		end
+		formstring = formstring .. "\n"
+
+		local damage_groups = tool_capabilities.damage_groups
+		if damage_groups ~= nil then
+			formstring = formstring .. "Damage:\n"
+			for k,v in pairs(damage_groups) do
+				formstring = formstring .. "- " .. group_to_string(k, "damage") .. ": " .. v .. " HP\n"
+			end
+		end
+	end
+	return formstring
+end
+
 
 doc.new_category("nodes", {
 	name = "Blocks",
@@ -421,29 +485,7 @@ doc.new_category("tools", {
 
 			formstring = formstring .. "\n"
 
-			if data.def.tool_capabilities ~= nil and data.def.tool_capabilities ~= {} then
-				local punch = 1.0
-				if data.def.tool_capabilities.full_punch_interval ~= nil then
-					punch = data.def.tool_capabilities.full_punch_interval
-				end
-				formstring = formstring .. "Full punch interval: "..punch.." s\n\n"
-				local groupcaps = data.def.tool_capabilities.groupcaps
-				if groupcaps ~= nil then
-					formstring = formstring .. "Mining capabilities:\n"
-					for k,v in pairs(groupcaps) do
-						formstring = formstring .. "- " .. k .. ": Level " .. v.maxlevel .. "\n"
-					end
-				end
-				formstring = formstring .. "\n"
-
-				local damage_groups = data.def.tool_capabilities.damage_groups
-				if damage_groups ~= nil then
-					formstring = formstring .. "Damage:\n"
-					for k,v in pairs(damage_groups) do
-						formstring = formstring .. "- " .. k .. ": " .. v .. " HP\n"
-					end
-				end
-			end
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			formstring = formstring .. "\n"
 
@@ -501,20 +543,7 @@ doc.new_category("craftitems", {
 
 			formstring = formstring .. "\n"
 
-			if data.def.tool_capabilities ~= nil and data.def.tool_capabilities ~= {} then
-				formstring = formstring .. "Full punch interval: "..data.def.tool_capabilities.full_punch_interval.." s\n"
-				local groupcaps = data.def.tool_capabilities.groupcaps
-				formstring = formstring .. "Groupcaps:\n"
-				for k,v in pairs(groupcaps) do
-					formstring = formstring .. k .. ": blabla" .. "\n"
-				end
-
-				formstring = formstring .. "Damage groups:\n"
-				local damage_groups = data.def.tool_capabilities.damage_groups
-				for k,v in pairs(damage_groups) do
-					formstring = formstring .. k .. ": " .. v .. " HP\n"
-				end
-			end
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			formstring = formstring .. "\n"
 
