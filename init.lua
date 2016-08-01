@@ -346,7 +346,7 @@ doc.new_category("nodes", {
 			end
 
 			-- Non-default drops
-			if data.def.drop ~= nil and data.def.drop ~= data.def.itemstring then
+			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
 				local get_desc = function(stack)
 					local desc = minetest.registered_items[stack:get_name()].description
 					if desc == nil then
@@ -359,7 +359,7 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block won't drop anything when mined.\n"
 				elseif type(data.def.drop) == "string" then
 					local dropstack = ItemStack(data.def.drop)
-					if dropstack:get_name() ~= data.def.itemstring and dropstack:get_name() ~= 1 then
+					if dropstack:get_name() ~= data.itemstring and dropstack:get_name() ~= 1 then
 						local desc = get_desc(dropstack)
 						local count = dropstack:get_count()
 						local finalstring
