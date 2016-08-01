@@ -280,6 +280,28 @@ doc.new_category("nodes", {
 			formstring = formstring .. "\n"
 
 			-- minetest_game factoids
+			-- Expose mining groups (crumbly, cracky, etc.) and level group
+			local mstring = "Mining ratings:\n"
+			local minegroupcount = 0
+			for g,name in pairs(minegroups) do
+				local rating = data.def.groups[g]
+				if rating ~= nil then
+					mstring = mstring .. "- "..name..": "..rating.."\n"
+					minegroupcount = minegroupcount + 1
+				end
+			end
+			if data.def.groups.level ~= nil then
+				mstring = mstring .. "Mining level: "..data.def.groups.level.."\n"
+			else
+				mstring = mstring .. "Mining level: 0\n"
+			end
+
+			if minegroupcount > 0 then
+				formstring = formstring .. mstring
+			end
+			formstring = formstring .. "\n"
+
+			-- Fire
 			if data.def.groups.flammable == 1 then
 				formstring = formstring .. "This block is flammable and burns slowly.\n"
 			elseif data.def.groups.flammable == 2 then
@@ -296,62 +318,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block will extinguish nearby fire.\n"
 			end
 
-			formstring = formstring .. "\n"
-			if data.def.groups.oddly_breakable_by_hand ~= nil then
-				formstring = formstring .. "This block can be dug by hand. How odd.\n"
-			end
-
-			if data.def.groups.cracky == 1 then
-				formstring = formstring .. "This block is slightly cracky and can be dug by a strong pickaxe.\n"
-			elseif data.def.groups.cracky == 2 then
-				formstring = formstring .. "This block is cracky and can be dug by a pickaxe.\n"
-			elseif data.def.groups.cracky == 3 then
-				formstring = formstring .. "This block is very cracky and can be dug easily by a pickaxe.\n"
-			elseif data.def.groups.cracky ~= nil then
-				formstring = formstring .. "This block is cracky in some way.\n"
-			end
-
-
-			if data.def.groups.crumbly == 1 then
-				formstring = formstring .. "This block is slightly crumbly and can be dug by a good shovel.\n"
-			elseif data.def.groups.crumbly == 2 then
-				formstring = formstring .. "This block is crumbly and can be dug by a shovel.\n"
-			elseif data.def.groups.crumbly == 3 then
-				formstring = formstring .. "This block is very crumbly and can be dug easily by a shovel.\n"
-			elseif data.def.groups.crumbly ~= nil then
-				formstring = formstring .. "This block is crumbly in some way.\n"
-			end
-
-			if data.def.groups.explody == 1 then
-				formstring = formstring .. "This block is a bit prone to explosions.\n"
-			elseif data.def.groups.explody == 2 then
-				formstring = formstring .. "This block is prone to explosions.\n"
-			elseif data.def.groups.explody == 3 then
-				formstring = formstring .. "This block is very prone to explosions and easily affected by them.\n"
-			elseif data.def.groups.explody ~= nil then
-				formstring = formstring .. "This block is prone to explosions to some extent.\n"
-			end
-
-			if data.def.groups.snappy == 1 then
-				formstring = formstring .. "This block is slightly snappy and can be dug by fine tools.\n"
-			elseif data.def.groups.snappy == 2 then
-				formstring = formstring .. "This block is snappy and can be dug by fine tools.\n"
-			elseif data.def.groups.snappy == 3 then
-				formstring = formstring .. "This block is highly snappy and can be dug easily by fine tools.\n"
-			elseif data.def.groups.snappy ~= nil then
-				formstring = formstring .. "This block is to some extent snappy.\n"
-			end
-
-			if data.def.groups.choppy == 1 then
-				formstring = formstring .. "This block is a bit choppy and can be dug by axes and other tools which involve brute force.\n"
-			elseif data.def.groups.choppy == 2 then
-				formstring = formstring .. "This block is choppy and can be dug by axes and other tools which involve brute force.\n"
-			elseif data.def.groups.choppy == 3 then
-				formstring = formstring .. "This block is highly choppy and can easily be dug by axes and other tools which involve brute force.\n"
-			elseif data.def.groups.choppy ~= nil then
-				formstring = formstring .. "This block is choppy to some extent and can be dug by axes and similar tools.\n"
-			end
-
+			-- Other noteworthy groups
 			if data.def.groups.flora == 1 then
 				formstring = formstring .. "This block belongs to the Flora group. It a living organism which likes to grow and spread on dirt with grass or dirt with dry grass when it is in light. On desert sand, it will wither and die and turn into a dry shrub.\n"
 			end
@@ -362,11 +329,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block serves as a soil for wild plants (Flora, Saplings) as well as plants grown from seeds. It supports their growth and spreading.\n"
 			end
 
-			if data.def.groups.fleshy ~= nil then
-				formstring = formstring .. "This block is made out of flesh.\n"
-			end
-
-			-- Show other “exposable” groups
+			-- Show other “exposable” groups in quick list
 			local gstring, gcount = groups_to_string(data.def.groups)
 			if gstring ~= nil then
 				if gcount == 1 then
@@ -375,8 +338,6 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
 				end
 			end
-
-			formstring = formstring .. "\n"
 
 			-- Non-default drops
 			if data.def.drop ~= nil and data.def.drop ~= data.def.itemstring then
