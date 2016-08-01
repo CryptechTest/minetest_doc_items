@@ -75,10 +75,10 @@ doc.new_category("nodes", {
 			end
 			formstring = formstring .. "textarea[0.25,1;10,8;;"
 			if longdesc ~= nil then
-				formstring = formstring .. "Description: "..longdesc.."\n\n"
+				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
 			end
 			if usagehelp ~= nil then
-				formstring = formstring .. "Usage help: "..usagehelp .. "\n\n"
+				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
 			end
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
