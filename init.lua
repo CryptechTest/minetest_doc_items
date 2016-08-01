@@ -701,6 +701,7 @@ if minetest.get_modpath("awards") ~= nil then
 	-- (excluding unused blocks like default:cloud)
 	awards.register_achievement("doc_minetest_game_allnodes", {
 		title = "Block Index Completed",
+		icon = "doc_awards_icon_generic.png",
 		description = "Read all help entries about blocks.",
 	})
 
