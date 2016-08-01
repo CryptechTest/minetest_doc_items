@@ -209,7 +209,7 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. "\n"
 			if data.def.groups.oddly_breakable_by_hand ~= nil then
-				formstring = formstring .. "This block can be dug by hand.\n"
+				formstring = formstring .. "This block can be dug by hand. How odd.\n"
 			end
 
 			if data.def.groups.cracky == 1 then
@@ -426,20 +426,21 @@ doc.new_category("tools", {
 				if data.def.tool_capabilities.full_punch_interval ~= nil then
 					punch = data.def.tool_capabilities.full_punch_interval
 				end
-				formstring = formstring .. "Full punch interval: "..punch.." s\n"
+				formstring = formstring .. "Full punch interval: "..punch.." s\n\n"
 				local groupcaps = data.def.tool_capabilities.groupcaps
 				if groupcaps ~= nil then
-					formstring = formstring .. "Groupcaps:\n"
+					formstring = formstring .. "Mining capabilities:\n"
 					for k,v in pairs(groupcaps) do
-						formstring = formstring .. k .. ": blabla" .. "\n"
+						formstring = formstring .. "- " .. k .. ": Level " .. v.maxlevel .. "\n"
 					end
 				end
+				formstring = formstring .. "\n"
 
 				local damage_groups = data.def.tool_capabilities.damage_groups
 				if damage_groups ~= nil then
-					formstring = formstring .. "Damage groups:\n"
+					formstring = formstring .. "Damage:\n"
 					for k,v in pairs(damage_groups) do
-						formstring = formstring .. k .. ": " .. v .. " HP\n"
+						formstring = formstring .. "- " .. k .. ": " .. v .. " HP\n"
 					end
 				end
 			end
