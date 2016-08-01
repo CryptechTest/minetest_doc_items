@@ -285,6 +285,73 @@ doc.new_category("nodes", {
 			end
 
 			formstring = formstring .. "\n"
+
+			-- Non-default drops
+			if data.def.drop ~= nil and data.def.drop ~= data.def.itemstring then
+				local get_desc = function(stack)
+					local desc = minetest.registered_items[stack:get_name()].description
+					if desc == nil then
+						return stack:get_name()
+					else
+						return desc
+					end
+				end
+				if data.def.drop == "" then
+					formstring = formstring .. "This block won't drop anything when mined.\n"
+				elseif type(data.def.drop) == "string" then
+					local dropstack = ItemStack(data.def.drop)
+					if dropstack:get_name() ~= data.def.itemstring and dropstack:get_name() ~= 1 then
+						local desc = get_desc(dropstack)
+						local count = dropstack:get_count()
+						local finalstring
+						if count > 1 then
+							finalstring = count .. " × "..desc
+						else
+							finalstring = desc
+						end
+						formstring = formstring .. "This block will drop the following when mined: "..finalstring
+					end
+				elseif type(data.def.drop) == "table" then
+					local max = data.def.drop.max_items
+					if max == nil then
+						formstring = formstring .. "This block will drop the following items when mined: "
+					elseif max == 1 then
+						formstring = formstring .. "This block will randomly drop one of the following when mined: "
+					else
+						formstring = formstring .. "This block will randomly drop up to "..max.." items of the following items when mined: "
+					end
+					local icount = 0
+					local remaining_rarity = 1
+					for i=1,#data.def.drop.items do
+						for j=1,#data.def.drop.items[i].items do
+							if icount > 0 then
+								formstring = formstring .. ", "
+							end
+							local dropstack = ItemStack(data.def.drop.items[i].items[j])
+							local desc = get_desc(dropstack)
+							local count = dropstack:get_count()
+							if count ~= 1 then
+								desc = desc .. "(×"..count
+							end
+							formstring = formstring .. desc
+							icount = icount + 1
+						end
+						local rarity = data.def.drop.items[i].rarity
+						if rarity == nil then
+							if max ~= nil then
+								rarity = remaining_rarity
+							else
+								rarity = 1
+							end
+						end
+						formstring = formstring .. string.format(" (%.0f%%)",((1/rarity)*100))
+						if max ~= nil then
+							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
+						end
+					end
+					formstring = formstring .. ".\n"
+				end
+			end
 	
 			-- Show fuel recipe
 			local result =  minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
