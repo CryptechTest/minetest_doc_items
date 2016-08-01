@@ -101,6 +101,7 @@ local export_longdesc = {
 	["doors:gate_pine_wood_closed"] = fencegatedesc,
 	["doors:gate_aspen_wood_closed"] = fencegatedesc,
 
+	["default:dry_shrub"] = "An unremarkable dead plant which is common in deserts and snowy biomes.",
 	["default:rail"] = "Railroad tracks. Place these on the ground to build your railway, the blocks will automatically connect to each other nicely.",
 	["default:ladder_wood"] = ladderdesc,
 	["default:ladder_steel"] = ladderdesc,
