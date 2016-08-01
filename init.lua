@@ -459,8 +459,8 @@ doc.new_category("tools", {
 	name = "Tools and weapons",
 	build_formspec = function(data)
 		if data then
-			local longdesc = data.longdesc or "N/A"
-			local usagehelp = data.usagehelp or "N/A"
+			local longdesc = data.longdesc
+			local usagehelp = data.usagehelp
 			local formstring = ""
 			-- Hand
 			if data.itemstring == "" then
@@ -469,8 +469,13 @@ doc.new_category("tools", {
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
-			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..minetest.formspec_escape(longdesc).."\n\n"
-			formstring = formstring .. "Usage: "..minetest.formspec_escape(usagehelp).. "\n\n"
+			formstring = formstring .. "textarea[0.25,1;10,8;;"
+			if longdesc ~= nil then
+				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
+			end
+			if usagehelp ~= nil then
+				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
+			end
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
 			local yesno = function(bool)
@@ -524,11 +529,16 @@ doc.new_category("craftitems", {
 	name = "Miscellaneous items",
 	build_formspec = function(data)
 		if data then
-			local longdesc = data.longdesc or "N/A"
-			local usagehelp = data.usagehelp or "N/A"
+			local longdesc = data.longdesc
+			local usagehelp = data.usagehelp
 			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
-			formstring = formstring .. "textarea[0.25,1;10,8;;Description: "..minetest.formspec_escape(longdesc).."\n\n"
-			formstring = formstring .. "Usage: "..minetest.formspec_escape(usagehelp).. "\n\n"
+			formstring = formstring .. "textarea[0.25,1;10,8;;"
+			if longdesc ~= nil then
+				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
+			end
+			if usagehelp ~= nil then
+				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
+			end
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
 			local yesno = function(bool)
