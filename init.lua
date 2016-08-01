@@ -694,3 +694,28 @@ local function gather_descs()
 end
 
 minetest.after(0, gather_descs)
+
+local awardchecktime = 0
+if minetest.get_modpath("awards") ~= nil then
+	-- TODO: Change the goal to unlocking/discovering all block entries of Minetest Game
+	-- (excluding unused blocks like default:cloud)
+	awards.register_achievement("doc_minetest_game_allnodes", {
+		title = "Block Index Completed",
+		description = "Read all help entries about blocks.",
+	})
+
+	-- TODO: Test this when the awards mod works again
+	minetest.register_globalstep(function(dtime)
+		-- Check awards every 30 seconds
+		awardchecktime = awardchecktime + dtime
+		if awardchecktime < 30 then return end
+		awardchecktime = 30 - awardchecktime
+		local players = minetest.get_connected_players()
+		for p=1,#players do
+			local count = doc.get_viewed_count(players[p]:get_player_name(), "nodes")
+			if count ~= nil and count >= doc.get_entry_count("nodes") then
+				awards.unlock("doc_minetest_game_allnodes")
+			end
+		end
+	end)
+end
