@@ -112,7 +112,11 @@ local toolcaps_to_text = function(tool_capabilities)
 		if groupcaps ~= nil then
 			formstring = formstring .. "Mining capabilities:\n"
 			for k,v in pairs(groupcaps) do
-				formstring = formstring .. "- " .. group_to_string(k, "mining") .. ": Level " .. v.maxlevel .. "\n"
+				local levelstring = ""
+				if v.maxlevel ~= nil then
+					levelstring = ": Level "..v.maxlevel
+				end
+				formstring = formstring .. "- " .. group_to_string(k, "mining") .. levelstring .. "\n"
 			end
 		end
 		formstring = formstring .. "\n"
