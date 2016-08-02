@@ -1,17 +1,8 @@
-local groupdefs = {
-}
-
-local minegroups = {
-}
-
-local damagegroups= {
-}
-
-local forced_nodes = {
-}
-
-local item_name_overrides = {
-}
+local groupdefs = {}
+local minegroups = {}
+local damagegroups= {}
+local forced_nodes = {}
+local item_name_overrides = {}
 
 local groups_to_string = function(grouptable)
 	local gstring = ""
@@ -515,6 +506,44 @@ function doc.sub.items.add_helptexts(longdesc, usagehelp)
 	end
 	for k,v in pairs(usagehelp) do
 		doc.sub.items.help.usagehelp[k] = v
+	end
+end
+
+-- Register group definition stuff
+-- “Real” group names to replace the rather technical names
+function doc.sub.items.add_real_group_names(groupnames)
+	for internal, real in pairs(groupnames) do
+		groupdefs[internal] = real
+	end
+end
+
+-- List of “real” group names of groups intended for mining
+function doc.sub.items.add_mine_group_names(groupnames)
+	for internal, real in pairs(groupnames) do
+		minegroups[internal] = real
+	end
+end
+
+-- List of “real” group names of groups intended for damage groups
+function doc.sub.items.add_damage_group_names(groupnames)
+	for internal, real in pairs(groupnames) do
+		damagegroups[internal] = real
+	end
+end
+
+-- Add nodes which will be forced to be added to the node list,
+-- even if the node is not in creative inventory
+function doc.sub.items.add_forced_node_entries(itemstrings)
+	for internal, real in pairs(itemstrings) do
+		forced_nodes[internal] = real
+	end
+end
+
+-- Register a list of entry names where the entry name should differ
+-- from the original item description
+function doc.sub.items.add_item_name_overrides(itemstrings)
+	for internal, real in pairs(itemstrings) do
+		item_name_overrides[internal] = real
 	end
 end
 
