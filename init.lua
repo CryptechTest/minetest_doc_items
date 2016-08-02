@@ -140,7 +140,7 @@ doc.new_category("nodes", {
 			if data.itemstring ~= "air" then
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
-			formstring = formstring .. "textarea[0.25,1;10,8;;"
+			formstring = formstring .. "textarea[0.25,0.5;11,8;;"
 			if longdesc ~= nil then
 				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
 			end
@@ -401,7 +401,7 @@ doc.new_category("tools", {
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
-			formstring = formstring .. "textarea[0.25,1;10,8;;"
+			formstring = formstring .. "textarea[0.25,0.5;11,8;;"
 			if longdesc ~= nil then
 				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
 			end
@@ -466,7 +466,7 @@ doc.new_category("craftitems", {
 			local longdesc = data.longdesc
 			local usagehelp = data.usagehelp
 			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
-			formstring = formstring .. "textarea[0.25,1;10,8;;"
+			formstring = formstring .. "textarea[0.25,0.5;11,8;;"
 			if longdesc ~= nil then
 				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
 			end
