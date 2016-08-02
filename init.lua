@@ -504,22 +504,22 @@ doc.new_category("craftitems", {
 	end
 })
 
-doc.sub.minetest_game = {}
-doc.sub.minetest_game.help = {}
-doc.sub.minetest_game.help.longdesc = {}
-doc.sub.minetest_game.help.usagehelp = {}
+doc.sub.items = {}
+doc.sub.items.help = {}
+doc.sub.items.help.longdesc = {}
+doc.sub.items.help.usagehelp = {}
 -- Gather help texts
-function doc.sub.minetest_game.add_helptexts(longdesc, usagehelp)
+function doc.sub.items.add_helptexts(longdesc, usagehelp)
 	for k,v in pairs(longdesc) do
-		doc.sub.minetest_game.help.longdesc[k] = v
+		doc.sub.items.help.longdesc[k] = v
 	end
 	for k,v in pairs(usagehelp) do
-		doc.sub.minetest_game.help.usagehelp[k] = v
+		doc.sub.items.help.usagehelp[k] = v
 	end
 end
 
 local function gather_descs()
-	local help = doc.sub.minetest_game.help
+	local help = doc.sub.items.help
 	doc.new_entry("nodes", "air", {
 		name = "Air",
 		data = {
