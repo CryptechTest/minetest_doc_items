@@ -1,54 +1,16 @@
 local groupdefs = {
-	["book"] = "Books",
-	["vessel"] = "Vessels",
-	["dye"] = "Dyes",
-	["wheat"] = "Wheat",
-	["stick"] = "Sticks",
-	["wool"] = "Wool",
-	["sand"] = "Sand",
-	["wood"] = "Wood",
-	["stone"] = "Stone",
-	["metal"] = "Metal",
-	["tree"] = "Tree Trunks",
-	["leaves"] = "Leaves and Needles",
-	["flower"] = "Flowers",
-	["sapling"] = "Saplings",
-	["fleshy"] = "Flesh",
 }
 
 local minegroups = {
-	["cracky"] = "Cracky",
-	["crumbly"] = "Crumbly",
-	["choppy"] = "Choppy",
-	["snappy"] = "Snappy",
-	["bendy"] = "Bendy",
-	["oddly_breakable_by_hand"] = "Oddly breakable by hand",
 }
 
 local damagegroups= {
-	["fleshy"] = "Flesh",
 }
 
 local forced_nodes = {
-	"default:cloud",
-	"bones:bones",
-	"farming:soil",
-	"farming:soil_wet",
-	"farming:desert_sand_soil",
-	"farming:desert_sand_soil_wet",
-	"fire:basic_flame",
-	"farming:wheat_8",
-	"farming:cotton_8",
 }
 
 local item_name_overrides = {
-	["screwdriver:screwdriver"] = "Screwdriver",
-	["fire:basic_flame"] = "Basic Flame",
-	["farming:wheat_8"] = "Wheat Plant",
-	["farming:cotton_8"] = "Cotton Plant",
-	["default:lava_source"] = "Lava",
-	["default:water_source"] = "Water",
-	["default:river_water_source"] = "River Water",
 }
 
 local groups_to_string = function(grouptable)
@@ -285,7 +247,6 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. "\n"
 
-			-- minetest_game factoids
 			-- Expose mining groups (crumbly, cracky, etc.) and level group
 			local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
 			mstring = mstring .. "Mining ratings:\n"
@@ -308,33 +269,7 @@ doc.new_category("nodes", {
 			end
 			formstring = formstring .. "\n"
 
-			-- Fire
-			if data.def.groups.flammable == 1 then
-				formstring = formstring .. "This block is flammable and burns slowly.\n"
-			elseif data.def.groups.flammable == 2 then
-				formstring = formstring .. "This block is flammable and burns at medium speed.\n"
-			elseif data.def.groups.flammable == 3 then
-				formstring = formstring .. "This block is highly flammable and burns very quickly.\n"
-			elseif data.def.groups.flammable == 4 then
-				formstring = formstring .. "This block is very easily set on fire and burns extremely quickly.\n"
-			elseif data.def.groups.flammable ~= nil then
-				formstring = formstring .. "This block is flammable.\n"
-			end
-
-			if data.def.groups.puts_out_fire ~= nil then
-				formstring = formstring .. "This block will extinguish nearby fire.\n"
-			end
-
-			-- Other noteworthy groups
-			if data.def.groups.flora == 1 then
-				formstring = formstring .. "This block belongs to the Flora group. It a living organism which likes to grow and spread on dirt with grass or dirt with dry grass when it is in light. On desert sand, it will wither and die and turn into a dry shrub.\n"
-			end
-
-			if data.def.groups.soil == 1 then
-				formstring = formstring .. "This block is natural soil. It supports the spreading of blocks belonging to the Flora group and the growth of blocks belonging to the Saplings group.\n"
-			elseif data.def.groups.soil == 2 or data.def.groups.soil == 3 then
-				formstring = formstring .. "This block serves as a soil for wild plants (Flora, Saplings) as well as plants grown from seeds. It supports their growth and spreading.\n"
-			end
+			-- TODO: Insert custom group-based factoids here
 
 			-- Show other “exposable” groups in quick list
 			local gstring, gcount = groups_to_string(data.def.groups)
@@ -434,19 +369,6 @@ doc.new_category("nodes", {
 		end
 	end
 })
-
--- Add node aliases
-for i=2,5 do
-	doc.add_entry_alias("nodes", "default:grass_1", "default:grass_"..i)
-	doc.add_entry_alias("nodes", "default:dry_grass_1", "default:dry_grass_"..i)
-end
-for i=1,7 do
-	doc.add_entry_alias("nodes", "farming:wheat_8", "farming:wheat_"..i)
-	doc.add_entry_alias("nodes", "farming:cotton_8", "farming:cotton_"..i)
-end
-doc.add_entry_alias("nodes", "default:lava_source", "default:lava_flowing")
-doc.add_entry_alias("nodes", "default:water_source", "default:water_flowing")
-doc.add_entry_alias("nodes", "default:river_water_source", "default:river_water_flowing")
 
 doc.new_category("tools", {
 	name = "Tools and weapons",
@@ -596,8 +518,6 @@ function doc.sub.minetest_game.add_helptexts(longdesc, usagehelp)
 	end
 end
 
-dofile(minetest.get_modpath("doc_minetest_game") .. "/helptexts.lua")
-
 local function gather_descs()
 	local help = doc.sub.minetest_game.help
 	doc.new_entry("nodes", "air", {
@@ -701,29 +621,3 @@ local function gather_descs()
 end
 
 minetest.after(0, gather_descs)
-
-local awardchecktime = 0
-if minetest.get_modpath("awards") ~= nil then
-	-- TODO: Change the goal to unlocking/discovering all block entries of Minetest Game
-	-- (excluding unused blocks like default:cloud)
-	awards.register_achievement("doc_minetest_game_allnodes", {
-		title = "Block Index Completed",
-		icon = "doc_awards_icon_generic.png",
-		description = "Read all help entries about blocks.",
-	})
-
-	minetest.register_globalstep(function(dtime)
-		-- Check awards every 30 seconds
-		awardchecktime = awardchecktime + dtime
-		if awardchecktime < 30 then return end
-		awardchecktime = 30 - awardchecktime
-		local players = minetest.get_connected_players()
-		for p=1,#players do
-			local playername = players[p]:get_player_name()
-			local count = doc.get_viewed_count(playername, "nodes")
-			if count ~= nil and count >= doc.get_entry_count("nodes") then
-				awards.unlock(playername, "doc_minetest_game_allnodes")
-			end
-		end
-	end)
-end
