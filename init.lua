@@ -1,3 +1,5 @@
+doc.sub.items = {}
+
 local groupdefs = {}
 local minegroups = {}
 local damagegroups= {}
@@ -106,6 +108,26 @@ local toolcaps_to_text = function(tool_capabilities)
 	return formstring
 end
 
+local factoid_generators = {}
+factoid_generators.nodes = {}
+factoid_generators.tools = {}
+factoid_generators.craftitems = {}
+
+function doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)
+	local ftable = { fgen = factoid_generator, ftype = factoid_type }
+	if category_id == "nodes" then
+		table.insert(factoid_generators.nodes, ftable)
+		return true
+	elseif category_id == "tools" then
+		table.insert(factoid_generators.tools, ftable)
+		return true
+	elseif category_id == "craftitems" then
+		table.insert(factoid_generators.craftitems, ftable)
+		return true
+	else
+		return false
+	end
+end
 
 doc.new_category("nodes", {
 	name = "Blocks",
@@ -260,7 +282,11 @@ doc.new_category("nodes", {
 			end
 			formstring = formstring .. "\n"
 
-			-- TODO: Insert custom group-based factoids here
+			-- Custom factoids are inserted here
+			for i=1,#factoid_generators.nodes do
+				formstring = formstring .. factoid_generators.nodes[i].fgen(data.itemstring, data.def)
+				formstring = formstring .. "\n"
+			end
 
 			-- Show other “exposable” groups in quick list
 			local gstring, gcount = groups_to_string(data.def.groups)
@@ -495,7 +521,6 @@ doc.new_category("craftitems", {
 	end
 })
 
-doc.sub.items = {}
 doc.sub.items.help = {}
 doc.sub.items.help.longdesc = {}
 doc.sub.items.help.usagehelp = {}
@@ -546,6 +571,7 @@ function doc.sub.items.add_item_name_overrides(itemstrings)
 		item_name_overrides[internal] = real
 	end
 end
+
 
 local function gather_descs()
 	local help = doc.sub.items.help
