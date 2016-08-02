@@ -110,7 +110,7 @@ local toolcaps_to_text = function(tool_capabilities)
 
 		local groupcaps = tool_capabilities.groupcaps
 		if groupcaps ~= nil then
-			formstring = formstring .. "Mining capabilities:\n"
+			formstring = formstring .. "This tool is capable of mining.\nMining capabilities:\n"
 			for k,v in pairs(groupcaps) do
 				local minrating, maxrating
 				for rating, time in pairs(v.times) do
@@ -144,7 +144,7 @@ local toolcaps_to_text = function(tool_capabilities)
 
 		local damage_groups = tool_capabilities.damage_groups
 		if damage_groups ~= nil then
-			formstring = formstring .. "Damage:\n"
+			formstring = formstring .. "This is a melee weapon which deals damage by punching.\nMaximum damage per hit:\n"
 			for k,v in pairs(damage_groups) do
 				formstring = formstring .. "- " .. group_to_string(k, "damage") .. ": " .. v .. " HP\n"
 			end
@@ -287,7 +287,8 @@ doc.new_category("nodes", {
 
 			-- minetest_game factoids
 			-- Expose mining groups (crumbly, cracky, etc.) and level group
-			local mstring = "Mining ratings:\n"
+			local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
+			mstring = mstring .. "Mining ratings:\n"
 			local minegroupcount = 0
 			for g,name in pairs(minegroups) do
 				local rating = data.def.groups[g]
