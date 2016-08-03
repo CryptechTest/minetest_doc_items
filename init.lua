@@ -348,7 +348,7 @@ doc.new_category("nodes", {
 						end
 						formstring = formstring .. "This block will drop the following when mined: "..finalstring
 					end
-				elseif type(data.def.drop) == "table" then
+				elseif type(data.def.drop) == "table" and data.def.drop.items ~= nil then
 					local max = data.def.drop.max_items
 					if max == nil then
 						formstring = formstring .. "This block will drop the following items when mined: "
