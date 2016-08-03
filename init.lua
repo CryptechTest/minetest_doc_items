@@ -544,12 +544,15 @@ doc.new_category("craftitems", {
 doc.sub.items.help = {}
 doc.sub.items.help.longdesc = {}
 doc.sub.items.help.usagehelp = {}
--- Gather help texts
-function doc.sub.items.add_helptexts(longdesc, usagehelp)
-	for k,v in pairs(longdesc) do
+-- Sets the long description for a table of items
+function doc.sub.items.set_items_longdesc(longdesc_table)
+	for k,v in pairs(longdesc_table) do
 		doc.sub.items.help.longdesc[k] = v
 	end
-	for k,v in pairs(usagehelp) do
+end
+-- Sets the usage help texts for a table of items
+function doc.sub.items.set_items_usagehelp(usagehelp_table)
+	for k,v in pairs(usagehelp_table) do
 		doc.sub.items.help.usagehelp[k] = v
 	end
 end
