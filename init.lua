@@ -670,6 +670,8 @@ local function gather_descs()
 		help.longdesc["air"] = "A transparent block, basically empty space. It is usually left behind after digging something."
 	end
 
+	-- NOTE: Mod introduces group “not_in_doc”: Nodes with this group will not have entries
+
 	-- Add node entries
 	for id, def in pairs(minetest.registered_nodes) do
 		local name, ld, uh
@@ -680,7 +682,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
@@ -725,7 +727,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
@@ -756,7 +758,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
