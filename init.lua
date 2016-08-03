@@ -11,20 +11,28 @@ local item_name_overrides = {
 	["air"] = "Air"
 }
 
-local groups_to_string = function(grouptable)
+local groups_to_string = function(grouptable, expose_all_groups)
 	local gstring = ""
 	local groups_count = 0
 	for id, value in pairs(grouptable) do
 		if groupdefs[id] ~= nil then
+			-- Readable group name
 			if groups_count > 0 then
-				gstring = gstring .. "\\, "
+				gstring = gstring .. ", "
 			end
-			gstring = gstring .. minetest.formspec_escape(groupdefs[id])
+			gstring = gstring .. groupdefs[id]
+			groups_count = groups_count + 1
+		elseif expose_all_groups == true then
+			-- Raw group name (if requested)
+			if groups_count > 0 then
+				gstring = gstring .. ", "
+			end
+			gstring = gstring .. id
 			groups_count = groups_count + 1
 		end
 	end
 	if groups_count == 0 then
-		return nil
+		return nil, 0
 	else
 		return gstring, groups_count
 	end
@@ -208,6 +216,50 @@ doc.new_category("nodes", {
 			end
 			if data.def.buildable_to == true then
 				formstring = formstring .. "This block will be replaced when building on it.\n"
+			end
+			-- List nodes/groups to which this node connects to
+			if data.def.connects_to ~= nil then
+				local nodes = {}
+				local groups = {}
+				for c=1,#data.def.connects_to do
+					local itemstring = data.def.connects_to[c]
+					if string.sub(itemstring,1,6) == "group:" then
+						groups[string.sub(itemstring,7,#itemstring)] = 1
+					else
+						table.insert(nodes, itemstring)
+					end
+				end
+
+				local nstring = ""
+				for n=1,#nodes do
+					local name
+					if item_name_overrides[nodes[n]] ~= nil then
+						name = item_name_overrides[nodes[n]]
+					else
+						name = minetest.registered_nodes[nodes[n]].description
+					end
+					if n > 1 then
+						nstring = nstring .. ", "
+					end
+					if name ~= nil then
+						nstring = nstring .. name
+					else
+						nstring = nstring .. "Unknown Node"
+					end
+				end
+				nstring = minetest.formspec_escape(nstring)
+				if #nodes == 1 then
+					formstring = formstring .. "This block connects to this block: "..nstring..".\n"
+				elseif #nodes > 1 then
+					formstring = formstring .. "This block connects to these blocks: "..nstring..".\n"
+				end
+
+				local gstring, gcount = groups_to_string(groups, true)
+				if gcount == 1 then
+					formstring = formstring .. "This block connects to blocks of the "..minetest.formspec_escape(gstring).." group.\n"
+				elseif gcount > 1 then
+					formstring = formstring .. "This block connects to blocks of the following groups: "..minetest.formspec_escape(gstring)..".\n"
+				end
 			end
 			if data.def.light_source == 15 then
 				formstring = formstring .. "This block is an extremely bright light source. It glows as bright the sun.\n"
