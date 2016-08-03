@@ -3,7 +3,7 @@ doc.sub.items = {}
 local groupdefs = {}
 local minegroups = {}
 local damagegroups= {}
-local forced_nodes = {}
+local forced_items = {}
 local item_name_overrides = {}
 
 local groups_to_string = function(grouptable)
@@ -572,11 +572,11 @@ function doc.sub.items.add_damage_group_names(groupnames)
 	end
 end
 
--- Add nodes which will be forced to be added to the node list,
--- even if the node is not in creative inventory
-function doc.sub.items.add_forced_node_entries(itemstrings)
-	for internal, real in pairs(itemstrings) do
-		forced_nodes[internal] = real
+-- Add item which will be forced to be added to the item list,
+-- even if the item is not in creative inventory
+function doc.sub.items.add_forced_item_entries(itemstrings)
+	for i=1,#itemstrings do
+		forced_items[itemstrings[i]] = true
 	end
 end
 
@@ -603,9 +603,7 @@ local function gather_descs()
 		local name, ld, uh
 		name = def.description
 		local forced = false
-		for i=1, #forced_nodes do
-			if id == forced_nodes[i] then forced = true end
-		end
+		if forced_items[id] == true and minetest.registered_nodes[id] ~= nil then forced = true end
 		if item_name_overrides[id] ~= nil then
 			name = item_name_overrides[id]
 		else
@@ -642,12 +640,14 @@ local function gather_descs()
 	})
 	for id, def in pairs(minetest.registered_tools) do
 		local name, ld, uh
+		local forced = false
+		if forced_items[id] == true and minetest.registered_tools[id] ~= nil then forced = true end
 		if item_name_overrides[id] ~= nil then
 			name = item_name_overrides[id]
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
@@ -670,6 +670,13 @@ local function gather_descs()
 	for id, def in pairs(minetest.registered_craftitems) do
 		local name, ld, uh
 		name = def.description
+		local forced = false
+		if forced_items[id] == true and minetest.registered_craftitems[id] ~= nil then forced = true end
+		if item_name_overrides[id] ~= nil then
+			name = item_name_overrides[id]
+		else
+			name = def.description
+		end
 		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
