@@ -244,13 +244,21 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
 			end
 
+			--[[ Check if there are no groups at all, helps for finding undiggable nodes,
+			-- but this approach might miss some of these; still better than nothing. ]]
+			local nogroups = true
+			for k,v in pairs(data.def.groups) do
+				-- If this is reached once, we know the groups table is not empty
+				nogroups = false
+				break
+			end
 			if data.def.drop ~= "" then
 				if data.def.groups.dig_immediate == 2 then
 					formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
 				elseif data.def.groups.dig_immediate == 3 then
 					formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
 				-- Note: “unbreakable” is an unofficial group for undiggable blocks
-				elseif data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 or #data.def.groups == 0 then
+				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
 					formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
 				end
 			else
@@ -258,7 +266,7 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
 				elseif data.def.groups.dig_immediate == 3 then
 					formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
-				elseif data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 or #data.def.groups == 0 then
+				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
 					formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
 				end
 			end
