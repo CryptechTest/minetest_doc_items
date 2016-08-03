@@ -108,6 +108,31 @@ local toolcaps_to_text = function(tool_capabilities)
 	return formstring
 end
 
+-- Smelting fuel factoid
+local fuel_factoid = function(itemstring, ctype)
+	local formstring = ""
+	local result, decremented =  minetest.get_craft_result({method = "fuel", items = {itemstring}})
+	if result ~= nil and result.time > 0 then
+		local base
+		if ctype == "tools" then
+			base = "This tool can serve as a smelting fuel with a burning time of %s."
+		elseif ctype == "nodes" then
+			base = "This block can serve as a smelting fuel with a burning time of %s."
+		else
+			base = "This item can serve as a smelting fuel with a burning time of %s."
+		end
+		formstring = formstring .. string.format(base, burntime_to_text(result.time))
+		local replaced = decremented.items[1]:get_name()
+		if not decremented.items[1]:is_empty() and replaced ~= itemstring then
+			formstring = formstring .. " Using it as fuel turns it into: "..minetest.formspec_escape(minetest.registered_items[replaced].description).."."
+		end
+		formstring = formstring .. "\n"
+	end
+	return formstring
+end
+
+
+
 local factoid_generators = {}
 factoid_generators.nodes = {}
 factoid_generators.tools = {}
@@ -373,10 +398,7 @@ doc.new_category("nodes", {
 			end
 	
 			-- Show fuel recipe
-			local result =  minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
-			if result ~= nil and result.time > 0 then
-				formstring = formstring .. "This block can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
-			end
+			formstring = formstring .. fuel_factoid(data.itemstring, "nodes")
 
 			formstring = formstring .. ";]"
 
@@ -444,10 +466,7 @@ doc.new_category("tools", {
 			end
 
 			-- Show fuel recipe
-			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
-			if result ~= nil and result.time > 0 then
-				formstring = formstring .. "This tool can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
-			end
+			formstring = formstring .. fuel_factoid(data.itemstring, "tools")
 
 			formstring = formstring .. ";]"
 
@@ -507,10 +526,7 @@ doc.new_category("craftitems", {
 			end
 
 			-- Show fuel recipe
-			local result = minetest.get_craft_result({method = "fuel", items = {data.itemstring}})
-			if result ~= nil and result.time > 0 then
-				formstring = formstring .. "This item can serve as a smelting fuel with a burning time of "..burntime_to_text(result.time)..".\n"
-			end
+			formstring = formstring .. fuel_factoid(data.itemstring, "craftitems")
 
 			formstring = formstring .. ";]"
 
