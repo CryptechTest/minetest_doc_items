@@ -3,9 +3,13 @@ doc.sub.items = {}
 local groupdefs = {}
 local minegroups = {}
 local damagegroups= {}
-local forced_items = {}
-local item_name_overrides = {}
-local handdef_overwrite = nil
+local forced_items = {
+	["air"] = true,
+}
+local item_name_overrides = {
+	[""] = "Hand",
+	["air"] = "Air"
+}
 
 local groups_to_string = function(grouptable)
 	local gstring = ""
@@ -588,31 +592,18 @@ function doc.sub.items.add_item_name_overrides(itemstrings)
 	end
 end
 
-function doc.sub.items.overwrite_hand(name, longdesc, usagehelp)
-	handdef_overwrite = {
-		name = name,
-		data = {
-			longdesc = longdesc,
-			usagehelp = usagehelp,
-			itemstring = "",
-			def = minetest.registered_items[""]
-		}
-	}
-end
-
 local function gather_descs()
 	local help = doc.sub.items.help
-	doc.new_entry("nodes", "air", {
-		name = "Air",
-		data = {
-			itemstring = "air",
-			longdesc = "A transparent block, basically empty space. It is usually left behind after digging something.",
-			def = minetest.registered_nodes["air"],
-		}
-	})
+
+	-- Set default air text
+	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
+	if help.longdesc["air"] == nil then
+		help.longdesc["air"] = "A transparent block, basically empty space. It is usually left behind after digging something."
+	end
+
+	-- Add node entries
 	for id, def in pairs(minetest.registered_nodes) do
 		local name, ld, uh
-		name = def.description
 		local forced = false
 		if forced_items[id] == true and minetest.registered_nodes[id] ~= nil then forced = true end
 		if item_name_overrides[id] ~= nil then
@@ -640,21 +631,22 @@ local function gather_descs()
 		end
 	end
 
-	-- Add the default tool (“hand”) with generic text
-	local handdef
-	if handdef_overwrite == nil then
-		handdef = {
-			name = "Hand",
-			data = {
-				longdesc = "Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.",
-				itemstring = "",
-				def = minetest.registered_items[""]
-			}
-		}
-	else
-		handdef = handdef_overwrite
+	-- Add entry for the default tool (“hand”)
+	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
+	if help.longdesc[""] == nil then
+		-- Default text
+		help.longdesc[""] = "Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand."
 	end
-	doc.new_entry("tools", "", handdef)
+	doc.new_entry("tools", "", {
+		name = item_name_overrides[""],
+		data = {
+			longdesc = help.longdesc[""],
+			usagehelp = help.usagehelp[""],
+			itemstring = "",
+			def = minetest.registered_items[""]
+		}
+	})
+	-- Add tool entries
 	for id, def in pairs(minetest.registered_tools) do
 		local name, ld, uh
 		local forced = false
@@ -684,6 +676,7 @@ local function gather_descs()
 		end
 	end
 
+	-- Add craftitem entries
 	for id, def in pairs(minetest.registered_craftitems) do
 		local name, ld, uh
 		name = def.description
