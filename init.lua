@@ -169,6 +169,7 @@ end
 
 doc.new_category("nodes", {
 	name = "Blocks",
+	description = "Item reference of blocks and other things which are capable of occupying space",
 	build_formspec = function(data)
 		if data then
 			local longdesc = data.longdesc
@@ -478,6 +479,7 @@ doc.new_category("nodes", {
 
 doc.new_category("tools", {
 	name = "Tools and weapons",
+	description = "Item reference of all wieldable tools and weapons",
 	build_formspec = function(data)
 		if data then
 			local longdesc = data.longdesc
@@ -547,6 +549,7 @@ doc.new_category("tools", {
 
 doc.new_category("craftitems", {
 	name = "Miscellaneous items",
+	description = "Item reference of items which are neither blocks, tools or weapons (esp. crafting items)",
 	build_formspec = function(data)
 		if data then
 			local longdesc = data.longdesc
