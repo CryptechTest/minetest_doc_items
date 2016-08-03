@@ -203,6 +203,9 @@ doc.new_category("nodes", {
 			formstring = formstring .. "\n"
 
 			-- Global factoids
+			if data.def.floodable == true then
+				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
+			end
 			if data.def.buildable_to == true then
 				formstring = formstring .. "This block will be replaced when building on it.\n"
 			end
