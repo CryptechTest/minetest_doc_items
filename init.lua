@@ -690,7 +690,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
