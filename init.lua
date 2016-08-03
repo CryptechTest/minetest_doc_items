@@ -202,7 +202,7 @@ doc.new_category("nodes", {
 				local range, renew, viscos
 				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
 				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
-				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscosity = 0 end
+				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscos = 0 end
 				formstring = formstring .. "Liquid range: "..range.. "\n"
 				formstring = formstring .. "Liquid viscosity: "..viscos.. "\n"
 				formstring = formstring .. "Renewable liquid: "..yesno(renew).. "\n"
