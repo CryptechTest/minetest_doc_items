@@ -5,6 +5,7 @@ local minegroups = {}
 local damagegroups= {}
 local forced_items = {}
 local item_name_overrides = {}
+local handdef_overwrite = nil
 
 local groups_to_string = function(grouptable)
 	local gstring = ""
@@ -587,6 +588,17 @@ function doc.sub.items.add_item_name_overrides(itemstrings)
 	end
 end
 
+function doc.sub.items.overwrite_hand(name, longdesc, usagehelp)
+	handdef_overwrite = {
+		name = name,
+		data = {
+			longdesc = longdesc,
+			usagehelp = usagehelp,
+			itemstring = "",
+			def = minetest.registered_items[""]
+		}
+	}
+end
 
 local function gather_descs()
 	local help = doc.sub.items.help
@@ -629,14 +641,20 @@ local function gather_descs()
 	end
 
 	-- Add the default tool (“hand”) with generic text
-	doc.new_entry("tools", "", {
-		name = "Hand",
-		data = {
-			longdesc = "Whenever you are not wielding any item, you use the hand which may or may not have have mining and attacking capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it were the hand when you start mining or punching.",
-			itemstring = "",
-			def = minetest.registered_items[""]
+	local handdef
+	if handdef_overwrite == nil then
+		handdef = {
+			name = "Hand",
+			data = {
+				longdesc = "Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.",
+				itemstring = "",
+				def = minetest.registered_items[""]
+			}
 		}
-	})
+	else
+		handdef = handdef_overwrite
+	end
+	doc.new_entry("tools", "", handdef)
 	for id, def in pairs(minetest.registered_tools) do
 		local name, ld, uh
 		local forced = false
