@@ -239,23 +239,22 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
 			end
 
-			if data.def.drops ~= "" then
-				if data.def.groups.immortal == 1 then
-					formstring = formstring .. "This block can not be dug by ordinary digging tools.\n"
-				end
+			if data.def.drop ~= "" then
 				if data.def.groups.dig_immediate == 2 then
-					formstring = formstring .. "This block can be dug by any tool in half a second.\n"
+					formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
 				elseif data.def.groups.dig_immediate == 3 then
-					formstring = formstring .. "This block can be dug by any tool immediately.\n"
+					formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
+				-- Note: “unbreakable” is an unofficial group for undiggable blocks
+				elseif data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 or #data.def.groups == 0 then
+					formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
 				end
 			else
-				if data.def.groups.immortal == 1 then
-					formstring = formstring .. "This block can not be destroyed by ordinary digging tools.\n"
-				end
 				if data.def.groups.dig_immediate == 2 then
-					formstring = formstring .. "This block can be destroyed by any tool in half a second.\n"
+					formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
 				elseif data.def.groups.dig_immediate == 3 then
-					formstring = formstring .. "This block can be destroyed by any tool immediately.\n"
+					formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
+				elseif data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 or #data.def.groups == 0 then
+					formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
 				end
 			end
 
