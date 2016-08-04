@@ -427,13 +427,18 @@ doc.new_category("nodes", {
 							end
 						end
 						local chance = (1/rarity)*100
-						-- Add circa indicator for percentages with decimal point
-						local ca = ""
-						-- FIXME: Does this actually reliable?
-						if math.fmod(chance, 1) > 0 then
-							ca = "ca. "
+						if rarity > 200 then -- <0.5%
+							-- For very low percentages
+							formstring = formstring .. " (<0.5%)"
+						else
+							-- Add circa indicator for percentages with decimal point
+							local ca = ""
+							-- FIXME: Does this actually reliable?
+							if math.fmod(chance, 1) > 0 then
+								ca = "ca. "
+							end
+							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						end
-						formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						if max ~= nil then
 							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
 						end
