@@ -1,8 +1,7 @@
 doc.sub.items = {}
 
 local groupdefs = {}
-local minegroups = {}
-local damagegroups= {}
+local miscgroups = {}
 local forced_items = {
 	["air"] = true,
 }
@@ -11,23 +10,16 @@ local item_name_overrides = {
 	["air"] = "Air"
 }
 
-local groups_to_string = function(grouptable, expose_all_groups)
+local groups_to_string = function(grouptable, filter)
 	local gstring = ""
 	local groups_count = 0
 	for id, value in pairs(grouptable) do
-		if groupdefs[id] ~= nil then
+		if groupdefs[id] ~= nil and (filter == nil or filter[id] == true) then
 			-- Readable group name
 			if groups_count > 0 then
 				gstring = gstring .. ", "
 			end
 			gstring = gstring .. groupdefs[id]
-			groups_count = groups_count + 1
-		elseif expose_all_groups == true then
-			-- Raw group name (if requested)
-			if groups_count > 0 then
-				gstring = gstring .. ", "
-			end
-			gstring = gstring .. id
 			groups_count = groups_count + 1
 		end
 	end
@@ -38,23 +30,8 @@ local groups_to_string = function(grouptable, expose_all_groups)
 	end
 end
 
-local group_to_string = function(groupname, grouptype)
-	local grouptable
-	if grouptype == "mining" then
-		grouptable = minegroups
-	elseif grouptype == "damage" then
-		grouptable = damagegroups
-	elseif grouptype == "generic" then
-		grouptable = groupdefs
-	else
-		return minetest.formspec_escape(groupname)
-	end
-
-	if grouptable[groupname] ~= nil then
-		return minetest.formspec_escape(grouptable[groupname])
-	else
-		return minetest.formspec_escape(groupname)
-	end
+local group_to_string = function(groupname)
+	return groupdeps[groupname]
 end
 
 local burntime_to_text = function(burntime)
@@ -105,7 +82,7 @@ local toolcaps_to_text = function(tool_capabilities)
 				else
 					levelstring = "any level"
 				end
-				formstring = formstring .. "- " .. group_to_string(k, "mining") .. ": "..ratingstring..", ".. levelstring .. "\n"
+				formstring = formstring .. "- " .. group_to_string(k) .. ": "..ratingstring..", ".. levelstring .. "\n"
 			end
 		end
 		formstring = formstring .. "\n"
@@ -114,7 +91,7 @@ local toolcaps_to_text = function(tool_capabilities)
 		if damage_groups ~= nil then
 			formstring = formstring .. "This is a melee weapon which deals damage by punching.\nMaximum damage per hit:\n"
 			for k,v in pairs(damage_groups) do
-				formstring = formstring .. "- " .. group_to_string(k, "damage") .. ": " .. v .. " HP\n"
+				formstring = formstring .. "- " .. group_to_string(k) .. ": " .. v .. " HP\n"
 			end
 		end
 	end
@@ -255,7 +232,7 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block connects to these blocks: "..nstring..".\n"
 				end
 
-				local gstring, gcount = groups_to_string(groups, true)
+				local gstring, gcount = groups_to_string(groups)
 				if gcount == 1 then
 					formstring = formstring .. "This block connects to blocks of the "..minetest.formspec_escape(gstring).." group.\n"
 				elseif gcount > 1 then
@@ -357,7 +334,7 @@ doc.new_category("nodes", {
 			local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
 			mstring = mstring .. "Mining ratings:\n"
 			local minegroupcount = 0
-			for g,name in pairs(minegroups) do
+			for g,name in pairs(groupdefs) do
 				local rating = data.def.groups[g]
 				if rating ~= nil then
 					mstring = mstring .. "- "..name..": "..rating.."\n"
@@ -382,7 +359,7 @@ doc.new_category("nodes", {
 			end
 
 			-- Show other “exposable” groups in quick list
-			local gstring, gcount = groups_to_string(data.def.groups)
+			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
 					formstring = formstring .. "This block belongs to the "..minetest.formspec_escape(gstring).." group.\n"
@@ -525,7 +502,7 @@ doc.new_category("tools", {
 			end
 
 			-- Show other “exposable” groups
-			local gstring, gcount = groups_to_string(data.def.groups)
+			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
 					formstring = formstring .. "This tool belongs to the "..minetest.formspec_escape(gstring).." group.\n"
@@ -586,7 +563,7 @@ doc.new_category("craftitems", {
 			end
 
 			-- Show other “exposable” groups
-			local gstring, gcount = groups_to_string(data.def.groups)
+			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
 					formstring = formstring .. "This item belongs to the "..minetest.formspec_escape(gstring).." group.\n"
@@ -631,17 +608,13 @@ function doc.sub.items.add_real_group_names(groupnames)
 	end
 end
 
--- List of “real” group names of groups intended for mining
-function doc.sub.items.add_mine_group_names(groupnames)
-	for internal, real in pairs(groupnames) do
-		minegroups[internal] = real
-	end
-end
-
--- List of “real” group names of groups intended for damage groups
-function doc.sub.items.add_damage_group_names(groupnames)
-	for internal, real in pairs(groupnames) do
-		damagegroups[internal] = real
+-- Adds groups to be displayed in the generic “misc.” groups
+-- factoid. Those groups should be neither be used as mining
+-- groups nor as damage groups and should be relevant to the
+-- player in someway.
+function doc.sub.items.add_notable_groups(groupnames)
+	for g=1,#groupnames do
+		miscgroups[groupnames[g]] = true
 	end
 end
 
