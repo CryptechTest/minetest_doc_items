@@ -31,7 +31,7 @@ local groups_to_string = function(grouptable, filter)
 end
 
 local group_to_string = function(groupname)
-	return groupdeps[groupname]
+	return groupdefs[groupname]
 end
 
 local burntime_to_text = function(burntime)
