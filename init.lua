@@ -278,33 +278,6 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
 			end
 
-			--[[ Check if there are no groups at all, helps for finding undiggable nodes,
-			-- but this approach might miss some of these; still better than nothing. ]]
-			local nogroups = true
-			for k,v in pairs(data.def.groups) do
-				-- If this is reached once, we know the groups table is not empty
-				nogroups = false
-				break
-			end
-			if data.def.drop ~= "" then
-				if data.def.groups.dig_immediate == 2 then
-					formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
-				elseif data.def.groups.dig_immediate == 3 then
-					formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
-				-- Note: “unbreakable” is an unofficial group for undiggable blocks
-				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-					formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
-				end
-			else
-				if data.def.groups.dig_immediate == 2 then
-					formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
-				elseif data.def.groups.dig_immediate == 3 then
-					formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
-				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-					formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
-				end
-			end
-
 			if data.def.groups.falling_node == 1 then
 				formstring = formstring .. "This block is affected by gravity and can fall.\n"
 			end
@@ -337,25 +310,55 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. "\n"
 
-			-- Expose mining groups (crumbly, cracky, etc.) and level group
-			local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
-			mstring = mstring .. "Mining ratings:\n"
-			local minegroupcount = 0
-			for group,_ in pairs(mininggroups) do
-				local rating = data.def.groups[group]
-				if rating ~= nil then
-					mstring = mstring .. "- "..groupdefs[group]..": "..rating.."\n"
-					minegroupcount = minegroupcount + 1
+			--[[ Check if there are no groups at all, helps for finding undiggable nodes,
+			-- but this approach might miss some of these; still better than nothing. ]]
+			local nogroups = true
+			for k,v in pairs(data.def.groups) do
+				-- If this is reached once, we know the groups table is not empty
+				nogroups = false
+				break
+			end
+			-- dig_immediate
+			if data.def.drop ~= "" then
+				if data.def.groups.dig_immediate == 2 then
+					formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
+				elseif data.def.groups.dig_immediate == 3 then
+					formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
+				-- Note: “unbreakable” is an unofficial group for undiggable blocks
+				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+					formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
+				end
+			else
+				if data.def.groups.dig_immediate == 2 then
+					formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
+				elseif data.def.groups.dig_immediate == 3 then
+					formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
+				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+					formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
 				end
 			end
-			if data.def.groups.level ~= nil then
-				mstring = mstring .. "Mining level: "..data.def.groups.level.."\n"
-			else
-				mstring = mstring .. "Mining level: 0\n"
-			end
+			-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
+			-- Skip this for immediate digging to avoid redundancy
+			if data.def.groups.dig_immediate ~= 3 then
+				local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
+				mstring = mstring .. "Mining ratings:\n"
+				local minegroupcount = 0
+				for group,_ in pairs(mininggroups) do
+					local rating = data.def.groups[group]
+					if rating ~= nil then
+						mstring = mstring .. "- "..groupdefs[group]..": "..rating.."\n"
+						minegroupcount = minegroupcount + 1
+					end
+				end
+				if data.def.groups.level ~= nil then
+					mstring = mstring .. "Mining level: "..data.def.groups.level.."\n"
+				else
+					mstring = mstring .. "Mining level: 0\n"
+				end
 
-			if minegroupcount > 0 then
-				formstring = formstring .. mstring
+				if minegroupcount > 0 then
+					formstring = formstring .. mstring
+				end
 			end
 			formstring = formstring .. "\n"
 
