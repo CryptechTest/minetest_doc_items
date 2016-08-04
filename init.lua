@@ -1,6 +1,7 @@
 doc.sub.items = {}
 
 local groupdefs = {}
+local mininggroups = {}
 local miscgroups = {}
 local forced_items = {
 	["air"] = true,
@@ -334,10 +335,10 @@ doc.new_category("nodes", {
 			local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
 			mstring = mstring .. "Mining ratings:\n"
 			local minegroupcount = 0
-			for g,name in pairs(groupdefs) do
-				local rating = data.def.groups[g]
+			for group,_ in pairs(mininggroups) do
+				local rating = data.def.groups[group]
 				if rating ~= nil then
-					mstring = mstring .. "- "..name..": "..rating.."\n"
+					mstring = mstring .. "- "..groupdefs[group]..": "..rating.."\n"
 					minegroupcount = minegroupcount + 1
 				end
 			end
@@ -610,6 +611,13 @@ end
 function doc.sub.items.add_real_group_names(groupnames)
 	for internal, real in pairs(groupnames) do
 		groupdefs[internal] = real
+	end
+end
+
+-- Declare groups as mining groups
+function doc.sub.items.add_mining_groups(groupnames)
+	for g=1,#groupnames do
+		mininggroups[groupnames[g]] = true
 	end
 end
 

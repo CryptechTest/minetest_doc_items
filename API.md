@@ -262,6 +262,13 @@ The intention of this function is to give a short rundown of the groups
 which are notable as they are important to gameplay in some way yet don't
 deserve a full-blown factoid.
 
+### `doc.sub.items.add_notable_groups(groupnames)`
+Declare a number of groups as mining groups, that is, groups which are
+primarily used for determining mining times. They will appear in the
+“Mining capabilities” factoid.
+
+`groupnames` is a table of group names.
+
 ### `doc.sub.items.add_forced_item_entries(itemstrings)`
 Adds items which will be forced to be added to the entry list, even if
 the item is not in creative inventory.
