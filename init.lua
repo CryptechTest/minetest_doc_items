@@ -308,9 +308,15 @@ doc.new_category("nodes", {
 			if data.def.groups.falling_node == 1 then
 				formstring = formstring .. "This block is affected by gravity and can fall.\n"
 			end
+
 			if data.def.groups.attached_node == 1 then
-				formstring = formstring .. "This block must be attached to another block\\, otherwise it will drop as an item.\n"
+				if data.def.paramtype2 == "wallmounted" then
+					formstring = formstring .. "This block will drop as an item when it is not attached to a surrounding block.\n"
+				else
+					formstring = formstring .. "This block will drop as an item if no collidable block is below it.\n"
+				end
 			end
+
 			if data.def.groups.disable_jump == 1 then
 				formstring = formstring .. "You can not jump while standing on this block.\n"
 			end
