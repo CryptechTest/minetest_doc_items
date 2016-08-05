@@ -759,7 +759,7 @@ local function gather_descs()
 	for id, def in pairs(minetest.registered_tools) do
 		local name, ld, uh
 		local forced = false
-		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_nodes[id] ~= nil then forced = true end
+		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_tools[id] ~= nil then forced = true end
 		if item_name_overrides[id] ~= nil then
 			name = item_name_overrides[id]
 		else
@@ -790,7 +790,7 @@ local function gather_descs()
 		local name, ld, uh
 		name = def.description
 		local forced = false
-		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_nodes[id] ~= nil then forced = true end
+		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_craftitems[id] ~= nil then forced = true end
 		if item_name_overrides[id] ~= nil then
 			name = item_name_overrides[id]
 		else
