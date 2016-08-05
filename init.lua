@@ -110,6 +110,25 @@ local toolcaps_to_text = function(tool_capabilities)
 	return formstring
 end
 
+local range_factoid = function(itemstring, def)
+	local handrange = minetest.registered_items[""].range
+	local itemrange = def.range
+	if itemstring == "" then
+		if handrange ~= nil then
+			return "Range: "..itemrange
+		else
+			return "Range: 4"
+		end
+	else
+		if handrange == nil then handrange = 4 end
+		if itemrange ~= nil then
+			return "Range: "..itemrange
+		else
+			return "Range: "..minetest.formspec_escape(item_name_overrides[""]).." ("..handrange..")"
+		end
+	end
+end
+
 -- Smelting fuel factoid
 local fuel_factoid = function(itemstring, ctype)
 	local formstring = ""
@@ -176,6 +195,14 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
 			end
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+
+			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
+
+			formstring = formstring .. "\n"
+
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
+
+			formstring = formstring .. "\n"
 
 			local yesno = function(bool)
 				if bool==true then return "Yes"
@@ -515,9 +542,7 @@ doc.new_category("tools", {
 				else return "N/A" end
 			end
 
-			local range = 4.0
-			if data.def.range ~= nil then range = data.def.range end
-			formstring = formstring .. "Range: "..range.."\n"
+			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
 			formstring = formstring .. "\n"
 
@@ -576,9 +601,7 @@ doc.new_category("craftitems", {
 				else return "N/A" end
 			end
 
-			local range = 4.0
-			if data.def.range ~= nil then range = data.def.range end
-			formstring = formstring .. "Range: "..range.."\n"
+			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
 			formstring = formstring .. "\n"
 
