@@ -101,7 +101,7 @@ local toolcaps_to_text = function(tool_capabilities)
 				else
 					levelstring = "any level"
 				end
-				formstring = formstring .. "- " .. group_to_string(k) .. ": "..ratingstring..", ".. levelstring .. "\n"
+				formstring = formstring .. "• " .. group_to_string(k) .. ": "..ratingstring..", ".. levelstring .. "\n"
 			end
 		end
 		formstring = formstring .. "\n"
@@ -110,7 +110,7 @@ local toolcaps_to_text = function(tool_capabilities)
 		if damage_groups ~= nil then
 			formstring = formstring .. "This is a melee weapon which deals damage by punching.\nMaximum damage per hit:\n"
 			for k,v in pairs(damage_groups) do
-				formstring = formstring .. "- " .. group_to_string(k) .. ": " .. v .. " HP\n"
+				formstring = formstring .. "• " .. group_to_string(k) .. ": " .. v .. " HP\n"
 			end
 		end
 	end
@@ -233,12 +233,12 @@ doc.new_category("nodes", {
 				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
 				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscos = 0 end
 				if range == 0 then
-					formstring = formstring .. "- Flowing range: 0 (no flowing)\n"
+					formstring = formstring .. "• Flowing range: 0 (no flowing)\n"
 				else
-					formstring = formstring .. "- Flowing range: "..range.. "\n"
+					formstring = formstring .. "• Flowing range: "..range.. "\n"
 				end
-				formstring = formstring .. "- Viscosity: "..viscos.. "\n"
-				formstring = formstring .. "- Renewable: "..yesno(renew).. "\n"
+				formstring = formstring .. "• Viscosity: "..viscos.. "\n"
+				formstring = formstring .. "• Renewable: "..yesno(renew).. "\n"
 			end
 
 			formstring = formstring .. "\n"
@@ -400,7 +400,7 @@ doc.new_category("nodes", {
 				for group,_ in pairs(mininggroups) do
 					local rating = data.def.groups[group]
 					if rating ~= nil then
-						mstring = mstring .. "- "..groupdefs[group]..": "..rating.."\n"
+						mstring = mstring .. "• "..groupdefs[group]..": "..rating.."\n"
 						minegroupcount = minegroupcount + 1
 					end
 				end
