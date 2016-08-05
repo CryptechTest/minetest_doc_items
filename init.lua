@@ -205,6 +205,10 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "This block points to liquids.\n"
+			end
+
 			formstring = formstring .. "\n"
 
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
@@ -235,9 +239,6 @@ doc.new_category("nodes", {
 			formstring = formstring .. "\n"
 
 			-- Global factoids
-			if data.def.liquids_pointable == true then
-				formstring = formstring .. "When you wield this block, you can point to liquids.\n"
-			end
 			if data.def.floodable == true then
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
@@ -545,16 +546,15 @@ doc.new_category("tools", {
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "This tool points to liquids.\n"
+			end
+
 			formstring = formstring .. "\n"
 
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			formstring = formstring .. "\n"
-
-			-- Global factoids
-			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This tool points to liquids.\n"
-			end
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
@@ -598,16 +598,15 @@ doc.new_category("craftitems", {
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "This item points to liquids.\n"
+			end
+
 			formstring = formstring .. "\n"
 
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			formstring = formstring .. "\n"
-
-			-- Global factoids
-			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This item points to liquids.\n"
-			end
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
