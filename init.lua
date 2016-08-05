@@ -1,5 +1,15 @@
 doc.sub.items = {}
 
+-- Template texts
+doc.sub.items.temp = {}
+doc.sub.items.temp.deco = "This is a decorational block."
+doc.sub.items.temp.build = "This block is a building block for creating various buildings."
+doc.sub.items.temp.craftitem = "This item is primarily used for crafting other items."
+
+doc.sub.items.temp.eat = "Hold it in your hand, then leftclick to eat it."
+doc.sub.items.temp.eat_bad = "Hold it in your hand, then leftclick to eat it. But why would you want to do this?"
+
+-- Local stuff
 local groupdefs = {}
 local mininggroups = {}
 local miscgroups = {}
@@ -11,6 +21,7 @@ local item_name_overrides = {
 	["air"] = "Air"
 }
 
+-- Helper functions
 local groups_to_string = function(grouptable, filter)
 	local gstring = ""
 	local groups_count = 0
@@ -123,7 +134,7 @@ local fuel_factoid = function(itemstring, ctype)
 end
 
 
-
+-- For factoids
 local factoid_generators = {}
 factoid_generators.nodes = {}
 factoid_generators.tools = {}

@@ -69,6 +69,22 @@ item can be used but it is not needed for standard mining tools and weapons.
 For more information, read the recommendations for
 `doc.sub.items.set_items_longdesc` and `doc.sub.items.set_items_usagehelp`.
 
+#### Template texts
+For your convenience, a few template texts are provided for common texts
+to avoid redundancy and to increase consistency for somple things. You can
+use these as values in the setter functions. For more complex items, you
+should of course write your own texts instead. Read `init.lua` to see the
+actual texts.
+
+##### Long description
+* `doc.sub.items.temp.build`: For building blocks like the brick block in Minetest Game
+* `doc.sub.items.temp.deco`: For other decorational blocks.
+* `doc.sub.items.temp.craftitem`: For items solely or almost solely used for crafting
+
+##### Usage help
+* `doc.sub.items.temp.eat`: For eatable items using the `on_use=minetest.item_eat(1)` idiom
+* `doc.sub.items.temp.eat_bad`: Same as above, but eating them is considered a bad idea
+
 ### Forced and suppressed items
 By default, an entry for each item is added, except for items in the group
 `not_in_creative_inventory`. This default behaviour already covers most
@@ -143,6 +159,9 @@ purpose of a simple item, like that coal lumps are primarily used as fuel.
 
 Sometimes, a long description is not neccessary because the item is already
 exhaustively explained by factoids.
+
+For very simple items, consider using one of the text templates mentioned
+above.
 
 Minimal style guide: Use complete sentences.
 
