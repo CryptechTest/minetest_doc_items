@@ -217,24 +217,28 @@ doc.new_category("nodes", {
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
 
 			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
-			local liquid
-			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
-			formstring = formstring .. "Liquid: "..yesno(liquid).. "\n"
-			if liquid then
-				local range, renew, viscos
-				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
-				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
-				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscos = 0 end
-				formstring = formstring .. "Liquid range: "..range.. "\n"
-				formstring = formstring .. "Liquid viscosity: "..viscos.. "\n"
-				formstring = formstring .. "Renewable liquid: "..yesno(renew).. "\n"
-			end
 			if data.def.pointable == true then
 				formstring = formstring .. "Pointable: Yes\n"
 			elseif liquid then
 				formstring = formstring .. "Pointable: Only by special items\n"
 			else
 				formstring = formstring .. "Pointable: No\n"
+			end
+			local liquid
+			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
+			if liquid then
+				formstring = formstring .. "This block is a liquid with these properties:\n"
+				local range, renew, viscos
+				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
+				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
+				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscos = 0 end
+				if range == 0 then
+					formstring = formstring .. "- Flowing range: 0 (no flowing)\n"
+				else
+					formstring = formstring .. "- Flowing range: "..range.. "\n"
+				end
+				formstring = formstring .. "- Viscosity: "..viscos.. "\n"
+				formstring = formstring .. "- Renewable: "..yesno(renew).. "\n"
 			end
 
 			formstring = formstring .. "\n"
