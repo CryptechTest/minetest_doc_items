@@ -201,6 +201,9 @@ doc.new_category("nodes", {
 			formstring = formstring .. "\n"
 
 			-- Global factoids
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "When you wield this block, you can point to liquids.\n"
+			end
 			if data.def.floodable == true then
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
@@ -524,7 +527,7 @@ doc.new_category("tools", {
 
 			-- Global factoids
 			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This item will point to liquids rather than ignore them.\n"
+				formstring = formstring .. "This tool points to liquids.\n"
 			end
 
 			-- Show other “exposable” groups
@@ -585,7 +588,7 @@ doc.new_category("craftitems", {
 
 			-- Global factoids
 			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This item will point to liquids rather than ignore them.\n"
+				formstring = formstring .. "This item points to liquids.\n"
 			end
 
 			-- Show other “exposable” groups
