@@ -197,13 +197,13 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Renewable liquid: "..yesno(renew).. "\n"
 			end
 			formstring = formstring .. "Pointable: "..yesno(data.def.pointable).. "\n"
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "When you wield this block, you can point to liquids.\n"
+			end
 
 			formstring = formstring .. "\n"
 
 			-- Global factoids
-			if data.def.liquids_pointable == true then
-				formstring = formstring .. "When you wield this block, you can point to liquids.\n"
-			end
 			if data.def.floodable == true then
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
