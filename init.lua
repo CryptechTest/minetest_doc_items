@@ -384,7 +384,7 @@ doc.new_category("nodes", {
 				elseif data.def.groups.dig_immediate == 3 then
 					formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
 				-- Note: “unbreakable” is an unofficial group for undiggable blocks
-				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+				elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
 					formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
 				end
 			else
@@ -392,7 +392,7 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
 				elseif data.def.groups.dig_immediate == 3 then
 					formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
-				elseif nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+				elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
 					formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
 				end
 			end
