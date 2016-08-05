@@ -224,14 +224,20 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Liquid viscosity: "..viscos.. "\n"
 				formstring = formstring .. "Renewable liquid: "..yesno(renew).. "\n"
 			end
-			formstring = formstring .. "Pointable: "..yesno(data.def.pointable).. "\n"
-			if data.def.liquids_pointable == true then
-				formstring = formstring .. "When you wield this block, you can point to liquids.\n"
+			if data.def.pointable == true then
+				formstring = formstring .. "Pointable: Yes\n"
+			elseif liquid then
+				formstring = formstring .. "Pointable: Only by special items\n"
+			else
+				formstring = formstring .. "Pointable: No\n"
 			end
 
 			formstring = formstring .. "\n"
 
 			-- Global factoids
+			if data.def.liquids_pointable == true then
+				formstring = formstring .. "When you wield this block, you can point to liquids.\n"
+			end
 			if data.def.floodable == true then
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
