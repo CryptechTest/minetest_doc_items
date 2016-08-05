@@ -208,12 +208,13 @@ doc.new_category("nodes", {
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This block points to liquids.\n"
 			end
+			if data.def.on_use ~= nil then
+				formstring = formstring .. "Punches with this block don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
+			end
 
 			formstring = formstring .. "\n"
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
-
-			formstring = formstring .. "\n"
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
 
 			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
 			local liquid
@@ -549,12 +550,13 @@ doc.new_category("tools", {
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This tool points to liquids.\n"
 			end
+			if data.def.on_use ~= nil then
+				formstring = formstring .. "Punches with this tool don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
+			end
 
 			formstring = formstring .. "\n"
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
-
-			formstring = formstring .. "\n"
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
@@ -601,12 +603,12 @@ doc.new_category("craftitems", {
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This item points to liquids.\n"
 			end
-
+			if data.def.on_use ~= nil then
+				formstring = formstring .. "Punches with this item don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
+			end
 			formstring = formstring .. "\n"
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
-
-			formstring = formstring .. "\n"
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
