@@ -22,6 +22,13 @@ local item_name_overrides = {
 }
 
 -- Helper functions
+local yesno = function(bool)
+	if bool==true then return "Yes"
+	elseif bool==false then return "No"
+	else return "N/A" end
+end
+
+
 local groups_to_string = function(grouptable, filter)
 	local gstring = ""
 	local groups_count = 0
@@ -203,12 +210,6 @@ doc.new_category("nodes", {
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			formstring = formstring .. "\n"
-
-			local yesno = function(bool)
-				if bool==true then return "Yes"
-				elseif bool==false then return "No"
-				else return "N/A" end
-			end
 
 			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
 			local liquid
@@ -536,12 +537,6 @@ doc.new_category("tools", {
 				formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 			end
 
-			local yesno = function(bool)
-				if bool==true then return "Yes"
-				elseif bool==false then return "No"
-				else return "N/A" end
-			end
-
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
 			formstring = formstring .. "\n"
@@ -594,12 +589,6 @@ doc.new_category("craftitems", {
 				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
 			end
 			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
-
-			local yesno = function(bool)
-				if bool==true then return "Yes"
-				elseif bool==false then return "No"
-				else return "N/A" end
-			end
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
