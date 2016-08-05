@@ -217,6 +217,8 @@ doc.new_category("nodes", {
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
 
 			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
+			local liquid
+			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
 			if data.def.pointable == true then
 				formstring = formstring .. "Pointable: Yes\n"
 			elseif liquid then
@@ -224,8 +226,7 @@ doc.new_category("nodes", {
 			else
 				formstring = formstring .. "Pointable: No\n"
 			end
-			local liquid
-			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
+			formstring = formstring .. "\n"
 			if liquid then
 				formstring = formstring .. "This block is a liquid with these properties:\n"
 				local range, renew, viscos
