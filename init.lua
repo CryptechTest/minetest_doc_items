@@ -50,7 +50,11 @@ local groups_to_string = function(grouptable, filter)
 end
 
 local group_to_string = function(groupname)
-	return groupdefs[groupname]
+	if groupdefs[groupname] ~= nil then
+		return groupdefs[groupname]
+	else
+		return groupname
+	end
 end
 
 local burntime_to_text = function(burntime)
