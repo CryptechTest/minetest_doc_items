@@ -313,7 +313,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "This block glows faintly. It is barely noticable.\n"
 			end
 			if data.def.paramtype == "light" and data.def.sunlight_propagates then
-				formstring = formstring .. "This block allows light to propagate with a small loss of brightness, but sunlight can go through without loss.\n"
+				formstring = formstring .. "This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.\n"
 			elseif data.def.paramtype == "light" then
 				formstring = formstring .. "This block allows light to propagate with a small loss of brightness.\n"
 			elseif data.def.sunlight_propagates then
