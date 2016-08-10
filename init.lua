@@ -322,6 +322,34 @@ doc.new_category("nodes", {
 			if data.def.climbable == true then
 				formstring = formstring .. "This block can be climbed.\n"
 			end
+			local function is_silent(def, soundtype)
+				return def.sounds == nil or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
+			end
+			local silentstep, silentdig, silentplace = false, false, false
+			if data.def.walkable and is_silent(data.def, "footstep") then
+				silentstep = true
+			end
+			if data.def.diggable and is_silent(data.def, "dig") and is_silent(data.def, "dug")  then
+				silentdig = true
+			end
+			if is_silent(data.def, "place") and data.itemstring ~= "air" then
+				silentplace = true
+			end
+			if silentstep and silentdig and silentplace then
+				formstring = formstring .. "This block is completely silent when walked on, mined or built.\n"
+			elseif silentdig and silentmine and not silentplace then
+				formstring = formstring .. "This block is completely silent when mined or built.\n"
+			else
+				if silentstep then
+					formstring = formstring .. "Walking on this block is completely silent.\n"
+				end
+				if silentdig then
+					formstring = formstring .. "Mining this block is completely silent.\n"
+				end
+				if silentplace then
+					formstring = formstring .. "Building this block is completely silent.\n"
+				end
+			end
 			if data.def.damage_per_second > 1 then
 				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit points per second.\n"
 			elseif data.def.damage_per_second == 1 then
