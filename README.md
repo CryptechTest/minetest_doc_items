@@ -1,4 +1,4 @@
-# `doc_items` (Version 0.3.0)
+# `doc_items` (Version 0.4.0)
 ## Desctiption
 Automatically generated documentation of blocks, tools, weapons, crafting
 itms and other items.
