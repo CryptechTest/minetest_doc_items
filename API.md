@@ -298,6 +298,15 @@ the item is not in creative inventory.
 to the group `in_doc=1` (see above). Only use this function when you can
 not use groups.
 
+### `doc.sub.items.add_suppressed_item_entries(itemstrings)`
+Adds items which will be forced to **not** be added to the entry list.
+
+`itemstrings` is a table of itemstrings of items to force the entries for.
+
+***Note***: The recommended way to suppress item entries is by adding the
+item to the group `not_in_doc=1` (see above). Only use this function when you
+can not use groups.
+
 ### `doc.sub.items.add_item_name_overrides(itemstrings)`
 Overrides the entry names of entries to the provided names. By default,
 each entry name equals the item's `description` field.

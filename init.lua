@@ -13,6 +13,7 @@ doc.sub.items.temp.eat_bad = "Hold it in your hand, then leftclick to eat it. Bu
 local groupdefs = {}
 local mininggroups = {}
 local miscgroups = {}
+-- List of forcefully added (true) and hidden (false) items
 local forced_items = {
 	["air"] = true,
 }
@@ -710,11 +711,18 @@ function doc.sub.items.add_notable_groups(groupnames)
 	end
 end
 
--- Add item which will be forced to be added to the item list,
+-- Add items which will be forced to be added to the item list,
 -- even if the item is not in creative inventory
 function doc.sub.items.add_forced_item_entries(itemstrings)
 	for i=1,#itemstrings do
 		forced_items[itemstrings[i]] = true
+	end
+end
+
+-- Add items which will be forced *not* to be added to the item list
+function doc.sub.items.add_suppressed_item_entries(itemstrings)
+	for i=1,#itemstrings do
+		forced_items[itemstrings[i]] = false
 	end
 end
 
@@ -748,7 +756,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc or forced_items[id] == false) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
@@ -793,7 +801,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc or forced_items[id] == false) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
@@ -824,7 +832,7 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc or forced_items[id] == false) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
