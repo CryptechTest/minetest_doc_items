@@ -434,7 +434,7 @@ doc.new_category("nodes", {
 				for group,_ in pairs(mininggroups) do
 					local rating = data.def.groups[group]
 					if rating ~= nil then
-						mstring = mstring .. "• "..groupdefs[group]..": "..rating.."\n"
+						mstring = mstring .. "• "..group_to_string(group)..": "..rating.."\n"
 						minegroupcount = minegroupcount + 1
 					end
 				end
@@ -694,13 +694,6 @@ function doc.sub.items.add_real_group_names(groupnames)
 	end
 end
 
--- Declare groups as mining groups
-function doc.sub.items.add_mining_groups(groupnames)
-	for g=1,#groupnames do
-		mininggroups[groupnames[g]] = true
-	end
-end
-
 -- Adds groups to be displayed in the generic “misc.” groups
 -- factoid. Those groups should be neither be used as mining
 -- groups nor as damage groups and should be relevant to the
@@ -736,6 +729,23 @@ end
 
 local function gather_descs()
 	local help = doc.sub.items.help
+
+	-- 1st pass
+	-- Gather all groups used for mining
+	for id, def in pairs(minetest.registered_items) do
+		if def.tool_capabilities ~= nil then
+			local groupcaps = def.tool_capabilities.groupcaps
+			if groupcaps ~= nil then
+				for k,v in pairs(groupcaps) do
+					if mininggroups[k] ~= true then
+						mininggroups[k] = true
+					end
+				end
+			end
+		end
+	end
+
+	-- 2nd pass: Add entries
 
 	-- Set default air text
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
