@@ -1,5 +1,5 @@
 # `doc_items` (Version 0.4.0)
-## Desctiption
+## Description
 Automatically generated documentation of blocks, tools, weapons, crafting
 itms and other items.
 
