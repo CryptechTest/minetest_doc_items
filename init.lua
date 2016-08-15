@@ -756,40 +756,46 @@ local function gather_descs()
 	-- NOTE: Mod introduces group “not_in_doc”: Items with this group will not have entries
 	-- NOTE: New group “in_doc”: forces an entry on this item when the item would otherwise not have one
 
-	-- Add node entries
-	for id, def in pairs(minetest.registered_nodes) do
-		local name, ld, uh
-		local forced = false
-		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_nodes[id] ~= nil then forced = true end
-		if item_name_overrides[id] ~= nil then
-			name = item_name_overrides[id]
-		else
-			name = def.description
-		end
-		if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
-			if help.longdesc[id] ~= nil then
-				ld = help.longdesc[id]
+	local add_entries = function(deftable, category_id)
+		for id, def in pairs(deftable) do
+			local name, ld, uh
+			local forced = false
+			if (forced_items[id] == true or def.groups.in_doc) and def ~= nil then forced = true end
+			if item_name_overrides[id] ~= nil then
+				name = item_name_overrides[id]
+			else
+				name = def.description
 			end
-			if help.usagehelp[id] ~= nil then
-				uh = help.usagehelp[id]
-			end
-			local hide = false
-			if def.groups.not_in_creative_inventory ~= nil and not forced then
-				hide = true
-			end
-			local infotable = {
-				name = name,
-				hidden = hide,
-				data = {
-					longdesc = ld,
-					usagehelp = uh,
-					itemstring = id,
-					def = def,
+			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
+				if help.longdesc[id] ~= nil then
+					ld = help.longdesc[id]
+				end
+				if help.usagehelp[id] ~= nil then
+					uh = help.usagehelp[id]
+				end
+				local hide = false
+				if def.groups.not_in_creative_inventory ~= nil and not forced then
+					hide = true
+				end
+				local infotable = {
+					name = name,
+					hidden = hide,
+					data = {
+						longdesc = ld,
+						usagehelp = uh,
+						itemstring = id,
+						def = def,
+					}
 				}
-			}
-			doc.new_entry("nodes", id, infotable)
+				doc.new_entry(category_id, id, infotable)
+			end
 		end
 	end
+
+
+
+	-- Add node entries
+	add_entries(minetest.registered_nodes, "nodes")
 
 	-- Add entry for the default tool (“hand”)
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
@@ -807,75 +813,10 @@ local function gather_descs()
 		}
 	})
 	-- Add tool entries
-	for id, def in pairs(minetest.registered_tools) do
-		local name, ld, uh
-		local forced = false
-		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_tools[id] ~= nil then forced = true end
-		if item_name_overrides[id] ~= nil then
-			name = item_name_overrides[id]
-		else
-			name = def.description
-		end
-		if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
-			if help.longdesc[id] ~= nil then
-				ld = help.longdesc[id]
-			end
-			if help.usagehelp[id] ~= nil then
-				uh = help.usagehelp[id]
-			end
-			local hide = false
-			if def.groups.not_in_creative_inventory ~= nil and not forced then
-				hide = true
-			end
-			local infotable = {
-				name = name,
-				hidden = hide,
-				data = {
-					longdesc = ld,
-					usagehelp = uh,
-					itemstring = id,
-					def = def,
-				}
-			}
-			doc.new_entry("tools", id, infotable)
-		end
-	end
+	add_entries(minetest.registered_tools, "tools")
 
 	-- Add craftitem entries
-	for id, def in pairs(minetest.registered_craftitems) do
-		local name, ld, uh
-		name = def.description
-		local forced = false
-		if (forced_items[id] == true or def.groups.in_doc) and minetest.registered_craftitems[id] ~= nil then forced = true end
-		if item_name_overrides[id] ~= nil then
-			name = item_name_overrides[id]
-		else
-			name = def.description
-		end
-		if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
-			if help.longdesc[id] ~= nil then
-				ld = help.longdesc[id]
-			end
-			if help.usagehelp[id] ~= nil then
-				uh = help.usagehelp[id]
-			end
-			local hide = false
-			if def.groups.not_in_creative_inventory ~= nil and not forced then
-				hide = true
-			end
-			local infotable = {
-				name = name,
-				hidden = hide,
-				data = {
-					longdesc = ld,
-					usagehelp = uh,
-					itemstring = id,
-					def = def,
-				}
-			}
-			doc.new_entry("craftitems", id, infotable)
-		end
-	end
+	add_entries(minetest.registered_craftitems, "craftitems")
 end
 
 minetest.after(0, gather_descs)
