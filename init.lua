@@ -766,15 +766,20 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc or forced_items[id] == false) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
 			if help.usagehelp[id] ~= nil then
 				uh = help.usagehelp[id]
 			end
+			local hide = false
+			if def.groups.not_in_creative_inventory ~= nil and not forced then
+				hide = true
+			end
 			local infotable = {
 				name = name,
+				hidden = hide,
 				data = {
 					longdesc = ld,
 					usagehelp = uh,
@@ -811,15 +816,20 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc or forced_items[id] == false) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
 			if help.usagehelp[id] ~= nil then
 				uh = help.usagehelp[id]
 			end
+			local hide = false
+			if def.groups.not_in_creative_inventory ~= nil and not forced then
+				hide = true
+			end
 			local infotable = {
 				name = name,
+				hidden = hide,
 				data = {
 					longdesc = ld,
 					usagehelp = uh,
@@ -842,15 +852,20 @@ local function gather_descs()
 		else
 			name = def.description
 		end
-		if not (name == nil or name == "" or def.groups.not_in_creative_inventory or def.groups.not_in_doc or forced_items[id] == false) or forced then
+		if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
 			if help.longdesc[id] ~= nil then
 				ld = help.longdesc[id]
 			end
 			if help.usagehelp[id] ~= nil then
 				uh = help.usagehelp[id]
 			end
+			local hide = false
+			if def.groups.not_in_creative_inventory ~= nil and not forced then
+				hide = true
+			end
 			local infotable = {
 				name = name,
+				hidden = hide,
 				data = {
 					longdesc = ld,
 					usagehelp = uh,
