@@ -197,7 +197,11 @@ doc.new_category("nodes", {
 
 			local formstring = ""
 			if data.itemstring ~= "air" then
-				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+				if data.image ~= nil then
+					formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
+				else
+					formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+				end
 			end
 			formstring = formstring .. "textarea[0.25,0.5;11,10;;"
 			if longdesc ~= nil then
@@ -569,6 +573,8 @@ doc.new_category("tools", {
 			if data.itemstring == "" then
 				formstring = formstring .. "image[11,0;1,1;"..minetest.formspec_escape(minetest.registered_items[""].wield_image).."]"
 			-- Other tools
+			elseif data.image ~= nil then
+				formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
@@ -626,7 +632,11 @@ doc.new_category("craftitems", {
 		if data then
 			local longdesc = data.longdesc
 			local usagehelp = data.usagehelp
-			local formstring = "item_image[11,0;1,1;"..data.itemstring.."]"
+			if data.image ~= nil then
+				formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
+			else
+				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+			end
 			formstring = formstring .. "textarea[0.25,0.5;11,10;;"
 			if longdesc ~= nil then
 				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
@@ -673,6 +683,8 @@ doc.new_category("craftitems", {
 doc.sub.items.help = {}
 doc.sub.items.help.longdesc = {}
 doc.sub.items.help.usagehelp = {}
+doc.sub.items.help.image = {}
+
 -- Sets the long description for a table of items
 function doc.sub.items.set_items_longdesc(longdesc_table)
 	for k,v in pairs(longdesc_table) do
@@ -683,6 +695,12 @@ end
 function doc.sub.items.set_items_usagehelp(usagehelp_table)
 	for k,v in pairs(usagehelp_table) do
 		doc.sub.items.help.usagehelp[k] = v
+	end
+end
+
+function doc.sub.items.add_item_image_overrides(image_overrides)
+	for itemstring, new_image in pairs(image_overrides) do
+		doc.sub.items.help.image[itemstring] = new_image
 	end
 end
 
@@ -758,7 +776,7 @@ local function gather_descs()
 
 	local add_entries = function(deftable, category_id)
 		for id, def in pairs(deftable) do
-			local name, ld, uh
+			local name, ld, uh, im
 			local forced = false
 			if (forced_items[id] == true or def.groups.in_doc) and def ~= nil then forced = true end
 			if item_name_overrides[id] ~= nil then
@@ -766,23 +784,25 @@ local function gather_descs()
 			else
 				name = def.description
 			end
-			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
+			if not (name == nil or name == "" or def.groups.not_in_doc or def.groups.not_in_creative_inventory or forced_items[id] == false) or forced then
 				if help.longdesc[id] ~= nil then
 					ld = help.longdesc[id]
 				end
 				if help.usagehelp[id] ~= nil then
 					uh = help.usagehelp[id]
 				end
-				local hide = false
-				if def.groups.not_in_creative_inventory ~= nil and not forced then
-					hide = true
+				if help.image[id] ~= nil then
+					im = help.image[id]
 				end
+				local hide = false
+				local custom_image
 				local infotable = {
 					name = name,
 					hidden = hide,
 					data = {
 						longdesc = ld,
 						usagehelp = uh,
+						image = im,
 						itemstring = id,
 						def = def,
 					}
