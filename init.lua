@@ -50,6 +50,17 @@ local groups_to_string = function(grouptable, filter)
 	end
 end
 
+-- Replaces all newlines with spaces
+local scrub_newlines = function(text)
+	local new, x = string.gsub(text, "\n", " ")
+	return new
+end
+
+-- Make item description (core field) suitable for formspec
+local description_for_formspec = function(description)
+	return minetest.formspec_escape(scrub_newlines(description))
+end
+
 local group_to_string = function(groupname)
 	if groupdefs[groupname] ~= nil then
 		return groupdefs[groupname]
@@ -157,7 +168,7 @@ local fuel_factoid = function(itemstring, ctype)
 		formstring = formstring .. string.format(base, burntime_to_text(result.time))
 		local replaced = decremented.items[1]:get_name()
 		if not decremented.items[1]:is_empty() and replaced ~= itemstring then
-			formstring = formstring .. " Using it as fuel turns it into: "..minetest.formspec_escape(minetest.registered_items[replaced].description).."."
+			formstring = formstring .. " Using it as fuel turns it into: "..description_for_formspec(minetest.registered_items[replaced].description).."."
 		end
 		formstring = formstring .. "\n"
 	end
@@ -290,7 +301,7 @@ doc.new_category("nodes", {
 						nstring = nstring .. "Unknown Node"
 					end
 				end
-				nstring = minetest.formspec_escape(nstring)
+				nstring = description_for_formspec(nstring)
 				if #nodes == 1 then
 					formstring = formstring .. "This block connects to this block: "..nstring..".\n"
 				elseif #nodes > 1 then
@@ -475,9 +486,9 @@ doc.new_category("nodes", {
 				local get_desc = function(stack)
 					local desc = minetest.registered_items[stack:get_name()].description
 					if desc == nil then
-						return stack:get_name()
+						return description_for_formspec(stack:get_name())
 					else
-						return desc
+						return description_for_formspec(desc)
 					end
 				end
 				if data.def.drop == "" then
@@ -797,6 +808,7 @@ local function gather_descs()
 				end
 				local hide = false
 				local custom_image
+				name = scrub_newlines(name)
 				local infotable = {
 					name = name,
 					hidden = hide,
