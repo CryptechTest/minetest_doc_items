@@ -632,6 +632,7 @@ doc.new_category("craftitems", {
 		if data then
 			local longdesc = data.longdesc
 			local usagehelp = data.usagehelp
+			local formstring = ""
 			if data.image ~= nil then
 				formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
 			else
