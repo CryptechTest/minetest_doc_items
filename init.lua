@@ -526,7 +526,7 @@ doc.new_category("nodes", {
 							local desc = get_desc(dropstack)
 							local count = dropstack:get_count()
 							if count ~= 1 then
-								desc = desc .. "(×"..count..")"
+								desc = count .. "×" .. desc
 							end
 							formstring = formstring .. desc
 							icount = icount + 1
