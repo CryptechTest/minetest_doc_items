@@ -530,13 +530,22 @@ doc.new_category("nodes", {
 						for j=1,#data.def.drop.items[i].items do
 							local subrarity = rarity * (#data.def.drop.items[i].items)
 							local dropstack = ItemStack(data.def.drop.items[i].items[j])
+							local itemstring = dropstack:get_name()
 							local desc = get_desc(dropstack)
 							local count = dropstack:get_count()
-							table.insert(probtable, {desc = desc, count = count, rarity = subrarity})
+							table.insert(probtable, {itemstring = itemstring, desc = desc, count = count, rarity = subrarity})
 						end
 						if max ~= nil then
 							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
 						end
+					end
+					-- Do some cleanup of the probability table
+					if max == 1 then
+						-- Sort by rarity
+						local comp = function(p1, p2) 
+							return p1.rarity < p2.rarity
+						end
+						table.sort(probtable, comp)
 					end
 					-- Output probability table
 					local icount = 0
