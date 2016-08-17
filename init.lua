@@ -518,7 +518,16 @@ doc.new_category("nodes", {
 					local icount = 0
 					local remaining_rarity = 1
 					for i=1,#data.def.drop.items do
+						local rarity = data.def.drop.items[i].rarity
+						if rarity == nil then
+							if max ~= nil then
+								rarity = remaining_rarity
+							else
+								rarity = 1
+							end
+						end
 						for j=1,#data.def.drop.items[i].items do
+							local subrarity = rarity * (#data.def.drop.items[i].items)
 							if icount > 0 then
 								formstring = formstring .. ", "
 							end
@@ -530,25 +539,18 @@ doc.new_category("nodes", {
 							end
 							formstring = formstring .. desc
 							icount = icount + 1
-						end
-						local rarity = data.def.drop.items[i].rarity
-						if rarity == nil then
-							if max ~= nil then
-								rarity = remaining_rarity
-							else
-								rarity = 1
-							end
-						end
-						local chance = (1/rarity)*100
-						if rarity > 200 then -- <0.5%
-							-- For very low percentages
-							formstring = formstring .. " (<0.5%)"
-						else
-							-- Add circa indicator for percentages with decimal point
+
+							local chance = (1/subrarity)*100
 							local ca = ""
-							-- FIXME: Does this actually reliable?
-							if math.fmod(chance, 1) > 0 then
-								ca = "ca. "
+							if subrarity > 200 then -- <0.5%
+								-- For very low percentages
+								formstring = formstring .. " (<0.5%)"
+							else
+								-- Add circa indicator for percentages with decimal point
+								-- FIXME: Is this check actually reliable?
+								if math.fmod(chance, 1) > 0 then
+									ca = "ca. "
+								end
 							end
 							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						end
