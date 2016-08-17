@@ -515,8 +515,9 @@ doc.new_category("nodes", {
 					else
 						formstring = formstring .. "This block will randomly drop up to "..max.." items of the following items when mined: "
 					end
-					local icount = 0
 					local remaining_rarity = 1
+					-- Save calculated probabilities into a table for later output
+					local probtable = {}
 					for i=1,#data.def.drop.items do
 						local rarity = data.def.drop.items[i].rarity
 						if rarity == nil then
@@ -528,35 +529,43 @@ doc.new_category("nodes", {
 						end
 						for j=1,#data.def.drop.items[i].items do
 							local subrarity = rarity * (#data.def.drop.items[i].items)
-							if icount > 0 then
-								formstring = formstring .. ", "
-							end
 							local dropstack = ItemStack(data.def.drop.items[i].items[j])
 							local desc = get_desc(dropstack)
 							local count = dropstack:get_count()
-							if count ~= 1 then
-								desc = count .. "×" .. desc
-							end
-							formstring = formstring .. desc
-							icount = icount + 1
-
-							local chance = (1/subrarity)*100
-							local ca = ""
-							if subrarity > 200 then -- <0.5%
-								-- For very low percentages
-								formstring = formstring .. " (<0.5%)"
-							else
-								-- Add circa indicator for percentages with decimal point
-								-- FIXME: Is this check actually reliable?
-								if math.fmod(chance, 1) > 0 then
-									ca = "ca. "
-								end
-							end
-							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
+							table.insert(probtable, {desc = desc, count = count, rarity = subrarity})
 						end
 						if max ~= nil then
 							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
 						end
+					end
+					-- Output probability table
+					local icount = 0
+					for i=1, #probtable do
+						if icount > 0 then
+							formstring = formstring .. ", "
+						end
+						icount = icount + 1
+						local desc = probtable[i].desc
+						local count = probtable[i].count
+						local rarity = probtable[i].rarity
+						if count ~= 1 then
+							desc = count .. "×" .. desc
+						end
+						formstring = formstring .. desc
+
+						local chance = (1/rarity)*100
+						local ca = ""
+						if rarity > 200 then -- <0.5%
+							-- For very low percentages
+							formstring = formstring .. " (<0.5%)"
+						else
+							-- Add circa indicator for percentages with decimal point
+							-- FIXME: Is this check actually reliable?
+							if math.fmod(chance, 1) > 0 then
+								ca = "ca. "
+							end
+						end
+						formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 					end
 					formstring = formstring .. ".\n"
 				end
