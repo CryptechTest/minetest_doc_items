@@ -500,11 +500,11 @@ doc.new_category("nodes", {
 						local count = dropstack:get_count()
 						local finalstring
 						if count > 1 then
-							finalstring = count .. " × "..desc
+							finalstring = count .. "×"..desc
 						else
 							finalstring = desc
 						end
-						formstring = formstring .. "This block will drop the following when mined: "..finalstring
+						formstring = formstring .. "This block will drop the following when mined: "..finalstring.."\n"
 					end
 				elseif type(data.def.drop) == "table" and data.def.drop.items ~= nil then
 					local max = data.def.drop.max_items
