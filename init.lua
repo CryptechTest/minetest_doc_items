@@ -357,7 +357,7 @@ doc.new_category("nodes", {
 			end
 			if silentstep and silentdig and silentplace then
 				formstring = formstring .. "This block is completely silent when walked on, mined or built.\n"
-			elseif silentdig and silentmine and not silentplace then
+			elseif silentdig and silentplace then
 				formstring = formstring .. "This block is completely silent when mined or built.\n"
 			else
 				if silentstep then
