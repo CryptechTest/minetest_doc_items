@@ -253,13 +253,17 @@ doc.new_category("nodes", {
 				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
 				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
 				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscos = 0 end
+				if renew then
+					formstring = formstring .. "• Renewable\n"
+				else
+					formstring = formstring .. "• Not renewable\n"
+				end
 				if range == 0 then
-					formstring = formstring .. "• Flowing range: 0 (no flowing)\n"
+					formstring = formstring .. "• No flowing\n"
 				else
 					formstring = formstring .. "• Flowing range: "..range.. "\n"
 				end
 				formstring = formstring .. "• Viscosity: "..viscos.. "\n"
-				formstring = formstring .. "• Renewable: "..yesno(renew).. "\n"
 			end
 
 			formstring = formstring .. "\n"
@@ -269,7 +273,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
 			if data.def.buildable_to == true then
-				formstring = formstring .. "This block will be replaced when building on it.\n"
+				formstring = formstring .. "Blocks are built into this block, which replaces it.\nFalling blocks can go through this block and destroy it.\n"
 			end
 			-- List nodes/groups to which this node connects to
 			if data.def.connects_to ~= nil then
