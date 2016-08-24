@@ -272,7 +272,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
 			if data.def.buildable_to == true then
-				formstring = formstring .. "Blocks are built into this block, which replaces it.\nFalling blocks can go through this block and destroy it.\n"
+				formstring = formstring .. "Building another block at this block will place it inside and replace it.\nFalling blocks can go through this block and destroy it.\n"
 			end
 			-- List nodes/groups to which this node connects to
 			if data.def.connects_to ~= nil then
