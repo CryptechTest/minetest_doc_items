@@ -234,7 +234,7 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. "\n"
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
 			local liquid
@@ -264,9 +264,8 @@ doc.new_category("nodes", {
 					formstring = formstring .. "• Flowing range: "..range.. "\n"
 				end
 				formstring = formstring .. "• Viscosity: "..viscos.. "\n"
+				formstring = formstring .. "\n"
 			end
-
-			formstring = formstring .. "\n"
 
 			-- Global factoids
 			if data.def.floodable == true then
@@ -466,8 +465,8 @@ doc.new_category("nodes", {
 				if minegroupcount > 0 then
 					formstring = formstring .. mstring
 				end
+				formstring = formstring .. "\n"
 			end
-			formstring = formstring .. "\n"
 
 			-- Custom factoids are inserted here
 			for i=1,#factoid_generators.nodes do
@@ -635,7 +634,7 @@ doc.new_category("tools", {
 
 			formstring = formstring .. "\n"
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
@@ -692,7 +691,7 @@ doc.new_category("craftitems", {
 			end
 			formstring = formstring .. "\n"
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities) .. "\n"
+			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
