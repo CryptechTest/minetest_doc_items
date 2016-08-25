@@ -536,13 +536,18 @@ doc.new_category("nodes", {
 							end
 						end
 						probtable = {}
+						probtable.items = {}
 						for j=1,#data.def.drop.items[i].items do
 							local dropstack = ItemStack(data.def.drop.items[i].items[j])
 							local itemstring = dropstack:get_name()
 							local desc = get_desc(dropstack)
 							local count = dropstack:get_count()
 							if not(itemstring == nil or itemstring == "" or count == 0) then
-								table.insert(probtable, {itemstring = itemstring, desc = desc, count = count})
+								if probtable.items[itemstring] == nil then
+									probtable.items[itemstring] = {desc = desc, count = count}
+								else
+									probtable.items[itemstring].count = probtable.items[itemstring].count + count
+								end
 							end
 						end
 						probtable.rarity = rarity
@@ -562,22 +567,24 @@ doc.new_category("nodes", {
 						table.sort(probtables, comp)
 					end
 					-- Output probability table
-					local icount = 0
+					local pcount = 0
 					for i=1, #probtables do
-						if icount > 0 then
+						if pcount > 0 then
 							formstring = formstring .. ", "
 						end
 						local probtable = probtables[i]
-						for j=1, #probtable do
-							if j>1 then
+						local icount = 0
+						for _, itemtable in pairs(probtable.items) do
+							if icount > 0 then
 								formstring = formstring .. " and "
 							end
-							local desc = probtable[j].desc
-							local count = probtable[j].count
+							local desc = itemtable.desc
+							local count = itemtable.count
 							if count ~= 1 then
 								desc = count .. "×" .. desc
 							end
 							formstring = formstring .. desc
+							icount = icount + 1
 						end
 
 						local rarity = probtable.rarity
@@ -597,7 +604,7 @@ doc.new_category("nodes", {
 							end
 							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						end
-						icount = icount + 1
+						pcount = pcount + 1
 					end
 					formstring = formstring .. ".\n"
 				end
