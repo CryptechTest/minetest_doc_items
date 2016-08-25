@@ -522,40 +522,62 @@ doc.new_category("nodes", {
 					else
 						formstring = formstring .. "This block will randomly drop up to "..max.." drops of the following possible drops when mined: "
 					end
-					local remaining_rarity = 1
 					-- Save calculated probabilities into a table for later output
 					local probtables = {}
 					local probtable
+					local rarity_history = {}
 					for i=1,#data.def.drop.items do
-						local rarity = data.def.drop.items[i].rarity
-						if rarity == nil then
-							if max ~= nil then
-								rarity = remaining_rarity
-							else
-								rarity = 1
-							end
+						local local_rarity = data.def.drop.items[i].rarity
+						local chance = 1
+						local rarity = 1
+						if local_rarity == nil then
+							local_rarity = 1
 						end
-						probtable = {}
-						probtable.items = {}
-						for j=1,#data.def.drop.items[i].items do
-							local dropstack = ItemStack(data.def.drop.items[i].items[j])
-							local itemstring = dropstack:get_name()
-							local desc = get_desc(dropstack)
-							local count = dropstack:get_count()
-							if not(itemstring == nil or itemstring == "" or count == 0) then
-								if probtable.items[itemstring] == nil then
-									probtable.items[itemstring] = {desc = desc, count = count}
+						if max == 1 then
+							-- Chained probability
+							table.insert(rarity_history, local_rarity)
+							chance = 1
+							for r=1, #rarity_history do
+								local chance_factor
+								if r > 1 and rarity_history[r-1] == 1 then
+									chance = 0
+									break
+								end
+								if r == #rarity_history then
+									chance_factor = 1/rarity_history[r]
 								else
-									probtable.items[itemstring].count = probtable.items[itemstring].count + count
+									chance_factor = (rarity_history[r]-1)/rarity_history[r]
+								end
+								chance = chance * chance_factor
+							end
+							if chance > 0 then
+								rarity = 1/chance
+							end
+						else
+							rarity = local_rarity
+							chance = 1/rarity
+						end
+						-- Exclude impossible drops
+						if chance > 0 then
+							probtable = {}
+							probtable.items = {}
+							for j=1,#data.def.drop.items[i].items do
+								local dropstack = ItemStack(data.def.drop.items[i].items[j])
+								local itemstring = dropstack:get_name()
+								local desc = get_desc(dropstack)
+								local count = dropstack:get_count()
+								if not(itemstring == nil or itemstring == "" or count == 0) then
+									if probtable.items[itemstring] == nil then
+										probtable.items[itemstring] = {desc = desc, count = count}
+									else
+										probtable.items[itemstring].count = probtable.items[itemstring].count + count
+									end
 								end
 							end
-						end
-						probtable.rarity = rarity
-						if #data.def.drop.items[i].items > 0 then
-							table.insert(probtables, probtable)
-						end
-						if max ~= nil then
-							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
+							probtable.rarity = rarity
+							if #data.def.drop.items[i].items > 0 then
+								table.insert(probtables, probtable)
+							end
 						end
 					end
 					-- Do some cleanup of the probability table
