@@ -541,10 +541,14 @@ doc.new_category("nodes", {
 							local itemstring = dropstack:get_name()
 							local desc = get_desc(dropstack)
 							local count = dropstack:get_count()
-							table.insert(probtable, {itemstring = itemstring, desc = desc, count = count})
+							if not(itemstring == nil or itemstring == "" or count == 0) then
+								table.insert(probtable, {itemstring = itemstring, desc = desc, count = count})
+							end
 						end
 						probtable.rarity = rarity
-						table.insert(probtables, probtable)
+						if #data.def.drop.items[i].items > 0 then
+							table.insert(probtables, probtable)
+						end
 						if max ~= nil then
 							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
 						end
@@ -568,7 +572,6 @@ doc.new_category("nodes", {
 							if j>1 then
 								formstring = formstring .. " and "
 							end
-								icount = icount + 1
 							local desc = probtable[j].desc
 							local count = probtable[j].count
 							if count ~= 1 then
@@ -594,6 +597,7 @@ doc.new_category("nodes", {
 							end
 							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						end
+						icount = icount + 1
 					end
 					formstring = formstring .. ".\n"
 				end
