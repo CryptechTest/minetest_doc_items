@@ -486,6 +486,7 @@ doc.new_category("nodes", {
 
 			-- Non-default drops
 			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
+				-- TODO: Calculate drop probabilities of max > 1 like for max == 1
 				local get_desc = function(stack)
 					local desc = minetest.registered_items[stack:get_name()].description
 					if desc == nil then
@@ -517,7 +518,7 @@ doc.new_category("nodes", {
 						if #data.def.drop.items == 1 then
 							formstring = formstring .. "This block will drop the following when mined: "
 						else
-							formstring = formstring .. "This block will randomly drop one of the following drops when mined: "
+							formstring = formstring .. "This block will randomly drop one of the following when mined: "
 						end
 					else
 						formstring = formstring .. "This block will randomly drop up to "..max.." drops of the following possible drops when mined: "
