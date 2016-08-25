@@ -520,7 +520,8 @@ doc.new_category("nodes", {
 					end
 					local remaining_rarity = 1
 					-- Save calculated probabilities into a table for later output
-					local probtable = {}
+					local probtables = {}
+					local probtable
 					for i=1,#data.def.drop.items do
 						local rarity = data.def.drop.items[i].rarity
 						if rarity == nil then
@@ -530,14 +531,16 @@ doc.new_category("nodes", {
 								rarity = 1
 							end
 						end
+						probtable = {}
 						for j=1,#data.def.drop.items[i].items do
-							local subrarity = rarity * (#data.def.drop.items[i].items)
 							local dropstack = ItemStack(data.def.drop.items[i].items[j])
 							local itemstring = dropstack:get_name()
 							local desc = get_desc(dropstack)
 							local count = dropstack:get_count()
-							table.insert(probtable, {itemstring = itemstring, desc = desc, count = count, rarity = subrarity})
+							table.insert(probtable, {itemstring = itemstring, desc = desc, count = count})
 						end
+						probtable.rarity = rarity
+						table.insert(probtables, probtable)
 						if max ~= nil then
 							remaining_rarity = 1/(1/remaining_rarity - 1/rarity)
 						end
@@ -548,23 +551,29 @@ doc.new_category("nodes", {
 						local comp = function(p1, p2) 
 							return p1.rarity < p2.rarity
 						end
-						table.sort(probtable, comp)
+						table.sort(probtables, comp)
 					end
 					-- Output probability table
 					local icount = 0
-					for i=1, #probtable do
+					for i=1, #probtables do
 						if icount > 0 then
 							formstring = formstring .. ", "
 						end
-						icount = icount + 1
-						local desc = probtable[i].desc
-						local count = probtable[i].count
-						local rarity = probtable[i].rarity
-						if count ~= 1 then
-							desc = count .. "×" .. desc
+						local probtable = probtables[i]
+						for j=1, #probtable do
+							if j>1 then
+								formstring = formstring .. " and "
+							end
+								icount = icount + 1
+							local desc = probtable[j].desc
+							local count = probtable[j].count
+							if count ~= 1 then
+								desc = count .. "×" .. desc
+							end
+							formstring = formstring .. desc
 						end
-						formstring = formstring .. desc
 
+						local rarity = probtable.rarity
 						local chance = (1/rarity)*100
 						local ca = ""
 						if rarity > 200 then -- <0.5%
