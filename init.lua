@@ -514,9 +514,13 @@ doc.new_category("nodes", {
 					if max == nil then
 						formstring = formstring .. "This block will drop the following items when mined: "
 					elseif max == 1 then
-						formstring = formstring .. "This block will randomly drop one of the following when mined: "
+						if #data.def.drop.items == 1 then
+							formstring = formstring .. "This block will drop the following when mined: "
+						else
+							formstring = formstring .. "This block will randomly drop one of the following drops when mined: "
+						end
 					else
-						formstring = formstring .. "This block will randomly drop up to "..max.." items of the following items when mined: "
+						formstring = formstring .. "This block will randomly drop up to "..max.." drops of the following possible drops when mined: "
 					end
 					local remaining_rarity = 1
 					-- Save calculated probabilities into a table for later output
@@ -574,19 +578,22 @@ doc.new_category("nodes", {
 						end
 
 						local rarity = probtable.rarity
-						local chance = (1/rarity)*100
-						local ca = ""
-						if rarity > 200 then -- <0.5%
+						-- No percentage if there's only one possible guaranteed drop
+						if not(rarity == 1 and #data.def.drop.items == 1) then
+							local chance = (1/rarity)*100
+							local ca = ""
+							if rarity > 200 then -- <0.5%
 							-- For very low percentages
-							formstring = formstring .. " (<0.5%)"
-						else
-							-- Add circa indicator for percentages with decimal point
-							-- FIXME: Is this check actually reliable?
-							if math.fmod(chance, 1) > 0 then
-								ca = "ca. "
+								formstring = formstring .. " (<0.5%)"
+							else
+								-- Add circa indicator for percentages with decimal point
+								-- FIXME: Is this check actually reliable?
+								if math.fmod(chance, 1) > 0 then
+									ca = "ca. "
+								end
 							end
+							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						end
-						formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 					end
 					formstring = formstring .. ".\n"
 				end
