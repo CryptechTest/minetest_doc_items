@@ -601,8 +601,8 @@ doc.new_category("nodes", {
 								if math.fmod(chance, 1) > 0 then
 									ca = "ca. "
 								end
+								formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 							end
-							formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
 						end
 						pcount = pcount + 1
 					end
