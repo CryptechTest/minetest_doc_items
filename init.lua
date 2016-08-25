@@ -581,7 +581,7 @@ doc.new_category("nodes", {
 						end
 					end
 					-- Do some cleanup of the probability table
-					if max == 1 then
+					if max == 1 or max == nil then
 						-- Sort by rarity
 						local comp = function(p1, p2) 
 							return p1.rarity < p2.rarity
