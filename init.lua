@@ -352,7 +352,7 @@ doc.new_category("nodes", {
 				end
 			end
 			if data.def.walkable == false then
-				if data.def.groups.attached_node == 1 or data.def.paramtype2 == "wallmounted" then
+				if data.def.buildable_to == false and (data.def.paramtype2 == "wallmounted" or data.def.groups.attached_node == 1) then
 					formstring = formstring .. "This block will drop as an item when a falling block ends up inside it.\n"
 				else
 					formstring = formstring .. "This block is destroyed when a falling block ends up inside it.\n"
