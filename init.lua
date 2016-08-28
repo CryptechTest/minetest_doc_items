@@ -272,7 +272,17 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
 			if data.def.buildable_to == true then
-				formstring = formstring .. "Building another block at this block will place it inside and replace it.\nFalling blocks can go through this block and destroy it.\n"
+				formstring = formstring .. "Building another block at this block will place it inside and replace it.\n"
+				if data.def.walkable then
+					formstring = formstring .. "Falling blocks can go through this block\\; they destroy it when doing so.\n"
+				end
+			end
+			if data.def.walkable == false then
+				if data.def.paramtype2 == "wallmounted" then
+					formstring = formstring .. "This block will drop as an item when a falling block ends up inside it.\n"
+				else
+					formstring = formstring .. "This block is destroyed when a falling block ends up inside it.\n"
+				end
 			end
 			-- List nodes/groups to which this node connects to
 			if data.def.connects_to ~= nil then
