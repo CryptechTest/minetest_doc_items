@@ -268,6 +268,83 @@ doc.new_category("nodes", {
 			end
 
 			-- Global factoids
+			--- Direct interaction with the player
+			---- Damage (very important)
+			if data.def.damage_per_second > 1 then
+				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit points per second.\n"
+			elseif data.def.damage_per_second == 1 then
+				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit point per second.\n"
+			elseif data.def.damage_per_second < -1 then
+				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit points per second.\n"
+			elseif data.def.damage_per_second == -1 then
+				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
+			end
+			if data.def.drowning > 1 then
+				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit points every 2 seconds.\n"
+			elseif data.def.drowning == 1 then
+				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
+			end
+			local fdap = data.def.groups.fall_damage_add_percent
+			if fdap ~= nil then
+				if fdap > 0 then
+					formstring = formstring .. "The fall damage on this block is increased by "..fdap.."%.\n"
+				elseif fdap == -100 then
+					formstring = formstring .. "This block negates all fall damage.\n"
+				else
+					formstring = formstring .. "The fall damage on this block is reduced by "..math.abs(fdap).."%.\n"
+				end
+			end
+
+			---- Movement
+			if data.def.groups.disable_jump == 1 then
+				formstring = formstring .. "You can not jump while standing on this block.\n"
+			end
+			if data.def.climbable == true then
+				formstring = formstring .. "This block can be climbed.\n"
+			end
+			local bouncy = data.def.groups.bouncy
+			if bouncy ~= nil then
+				formstring = formstring .. "This block will make you bounce off with an elasticity of "..bouncy.."%.\n"
+			end
+
+
+			---- Sounds
+			local function is_silent(def, soundtype)
+				return def.sounds == nil or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
+			end
+			local silentstep, silentdig, silentplace = false, false, false
+			if data.def.walkable and is_silent(data.def, "footstep") then
+				silentstep = true
+			end
+			if data.def.diggable and is_silent(data.def, "dig") and is_silent(data.def, "dug")  then
+				silentdig = true
+			end
+			if is_silent(data.def, "place") and data.itemstring ~= "air" then
+				silentplace = true
+			end
+			if silentstep and silentdig and silentplace then
+				formstring = formstring .. "This block is completely silent when walked on, mined or built.\n"
+			elseif silentdig and silentplace then
+				formstring = formstring .. "This block is completely silent when mined or built.\n"
+			else
+				if silentstep then
+					formstring = formstring .. "Walking on this block is completely silent.\n"
+				end
+				if silentdig then
+					formstring = formstring .. "Mining this block is completely silent.\n"
+				end
+				if silentplace then
+					formstring = formstring .. "Building this block is completely silent.\n"
+				end
+			end
+
+			-- Block activity
+			--- Gravity
+			if data.def.groups.falling_node == 1 then
+				formstring = formstring .. "This block is affected by gravity and can fall.\n"
+			end
+
+			--- Dropping and destruction
 			if data.def.floodable == true then
 				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
@@ -284,7 +361,38 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block is destroyed when a falling block ends up inside it.\n"
 				end
 			end
-			-- List nodes/groups to which this node connects to
+			if data.def.groups.attached_node == 1 then
+				if data.def.paramtype2 == "wallmounted" then
+					formstring = formstring .. "This block will drop as an item when it is not attached to a surrounding block.\n"
+				else
+					formstring = formstring .. "This block will drop as an item if no collidable block is below it.\n"
+				end
+			end
+
+			-- Block appearance
+			--- Light
+			if data.def.light_source == 15 then
+				formstring = formstring .. "This block is an extremely bright light source. It glows as bright the sun.\n"
+			elseif data.def.light_source == 14 then
+				formstring = formstring .. "This block is a very bright light source.\n"
+			elseif data.def.light_source > 12 then
+				formstring = formstring .. "This block is a bright light source.\n"
+			elseif data.def.light_source > 5 then
+				formstring = formstring .. "This block is a light source of medium luminance.\n"
+			elseif data.def.light_source > 1 then
+				formstring = formstring .. "This block is a weak light source and glows faintly.\n"
+			elseif data.def.light_source == 1 then
+				formstring = formstring .. "This block glows faintly. It is barely noticable.\n"
+			end
+			if data.def.paramtype == "light" and data.def.sunlight_propagates then
+				formstring = formstring .. "This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.\n"
+			elseif data.def.paramtype == "light" then
+				formstring = formstring .. "This block allows light to propagate with a small loss of brightness.\n"
+			elseif data.def.sunlight_propagates then
+				formstring = formstring .. "This block allows sunlight to propagate without loss in brightness.\n"
+			end
+
+			--- List nodes/groups to which this node connects to
 			if data.def.connects_to ~= nil then
 				local nodes = {}
 				local groups = {}
@@ -327,101 +435,6 @@ doc.new_category("nodes", {
 				elseif gcount > 1 then
 					formstring = formstring .. "This block connects to blocks of the following groups: "..minetest.formspec_escape(gstring)..".\n"
 				end
-			end
-			if data.def.light_source == 15 then
-				formstring = formstring .. "This block is an extremely bright light source. It glows as bright the sun.\n"
-			elseif data.def.light_source == 14 then
-				formstring = formstring .. "This block is a very bright light source.\n"
-			elseif data.def.light_source > 12 then
-				formstring = formstring .. "This block is a bright light source.\n"
-			elseif data.def.light_source > 5 then
-				formstring = formstring .. "This block is a light source of medium luminance.\n"
-			elseif data.def.light_source > 1 then
-				formstring = formstring .. "This block is a weak light source and glows faintly.\n"
-			elseif data.def.light_source == 1 then
-				formstring = formstring .. "This block glows faintly. It is barely noticable.\n"
-			end
-			if data.def.paramtype == "light" and data.def.sunlight_propagates then
-				formstring = formstring .. "This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.\n"
-			elseif data.def.paramtype == "light" then
-				formstring = formstring .. "This block allows light to propagate with a small loss of brightness.\n"
-			elseif data.def.sunlight_propagates then
-				formstring = formstring .. "This block allows sunlight to propagate without loss in brightness.\n"
-			end
-			if data.def.climbable == true then
-				formstring = formstring .. "This block can be climbed.\n"
-			end
-			local function is_silent(def, soundtype)
-				return def.sounds == nil or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
-			end
-			local silentstep, silentdig, silentplace = false, false, false
-			if data.def.walkable and is_silent(data.def, "footstep") then
-				silentstep = true
-			end
-			if data.def.diggable and is_silent(data.def, "dig") and is_silent(data.def, "dug")  then
-				silentdig = true
-			end
-			if is_silent(data.def, "place") and data.itemstring ~= "air" then
-				silentplace = true
-			end
-			if silentstep and silentdig and silentplace then
-				formstring = formstring .. "This block is completely silent when walked on, mined or built.\n"
-			elseif silentdig and silentplace then
-				formstring = formstring .. "This block is completely silent when mined or built.\n"
-			else
-				if silentstep then
-					formstring = formstring .. "Walking on this block is completely silent.\n"
-				end
-				if silentdig then
-					formstring = formstring .. "Mining this block is completely silent.\n"
-				end
-				if silentplace then
-					formstring = formstring .. "Building this block is completely silent.\n"
-				end
-			end
-			if data.def.damage_per_second > 1 then
-				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit points per second.\n"
-			elseif data.def.damage_per_second == 1 then
-				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit point per second.\n"
-			elseif data.def.damage_per_second < -1 then
-				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit points per second.\n"
-			elseif data.def.damage_per_second == -1 then
-				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
-			end
-			if data.def.drowning > 1 then
-				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit points every 2 seconds.\n"
-			elseif data.def.drowning == 1 then
-				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
-			end
-
-			if data.def.groups.falling_node == 1 then
-				formstring = formstring .. "This block is affected by gravity and can fall.\n"
-			end
-
-			if data.def.groups.attached_node == 1 then
-				if data.def.paramtype2 == "wallmounted" then
-					formstring = formstring .. "This block will drop as an item when it is not attached to a surrounding block.\n"
-				else
-					formstring = formstring .. "This block will drop as an item if no collidable block is below it.\n"
-				end
-			end
-
-			if data.def.groups.disable_jump == 1 then
-				formstring = formstring .. "You can not jump while standing on this block.\n"
-			end
-			local fdap = data.def.groups.fall_damage_add_percent 
-			if fdap ~= nil then
-				if fdap > 0 then
-					formstring = formstring .. "The fall damage on this block is increased by "..fdap.."%.\n"
-				elseif fdap == -100 then
-					formstring = formstring .. "This block negates all fall damage.\n"
-				else
-					formstring = formstring .. "The fall damage on this block is reduced by "..math.abs(fdap).."%.\n"
-				end
-			end
-			local bouncy = data.def.groups.bouncy
-			if bouncy ~= nil then
-				formstring = formstring .. "This block will make you bounce off with an elasticity of "..bouncy.."%.\n"
 			end
 
 			formstring = formstring .. "\n"
