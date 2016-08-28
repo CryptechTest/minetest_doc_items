@@ -345,9 +345,6 @@ doc.new_category("nodes", {
 			end
 
 			--- Dropping and destruction
-			if data.def.floodable == true then
-				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
-			end
 			if data.def.buildable_to == true then
 				formstring = formstring .. "Building another block at this block will place it inside and replace it.\n"
 				if data.def.walkable then
@@ -355,7 +352,7 @@ doc.new_category("nodes", {
 				end
 			end
 			if data.def.walkable == false then
-				if data.def.paramtype2 == "wallmounted" then
+				if data.def.groups.attached_node == 1 or data.def.paramtype2 == "wallmounted" then
 					formstring = formstring .. "This block will drop as an item when a falling block ends up inside it.\n"
 				else
 					formstring = formstring .. "This block is destroyed when a falling block ends up inside it.\n"
@@ -365,8 +362,11 @@ doc.new_category("nodes", {
 				if data.def.paramtype2 == "wallmounted" then
 					formstring = formstring .. "This block will drop as an item when it is not attached to a surrounding block.\n"
 				else
-					formstring = formstring .. "This block will drop as an item if no collidable block is below it.\n"
+					formstring = formstring .. "This block will drop as an item when no collidable block is below it.\n"
 				end
+			end
+			if data.def.floodable == true then
+				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
 			end
 
 			-- Block appearance
