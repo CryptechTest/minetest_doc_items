@@ -15,8 +15,9 @@ local mininggroups = {}
 local miscgroups = {}
 -- List of forcefully added (true) and hidden (false) items
 local forced_items = {
-	["air"] = true,
+	["ignore"] = false
 }
+local hidden_items = {}
 local item_name_overrides = {
 	[""] = "Hand",
 	["air"] = "Air"
@@ -848,6 +849,14 @@ function doc.sub.items.add_suppressed_item_entries(itemstrings)
 	end
 end
 
+-- Add items which will be hidden from the entry list, but their entries
+-- are still created.
+function doc.sub.items.add_hidden_item_entries(itemstrings)
+	for i=1,#itemstrings do
+		hidden_items[itemstrings[i]] = true
+	end
+end
+
 -- Register a list of entry names where the entry name should differ
 -- from the original item description
 function doc.sub.items.add_item_name_overrides(itemstrings)
@@ -882,8 +891,8 @@ local function gather_descs()
 		help.longdesc["air"] = "A transparent block, basically empty space. It is usually left behind after digging something."
 	end
 
-	-- NOTE: Mod introduces group “not_in_doc”: Items with this group will not have entries
-	-- NOTE: New group “in_doc”: forces an entry on this item when the item would otherwise not have one
+	-- NOTE: New group “not_in_doc”: Items with this group will not have entries
+	-- NOTE: New group “hide_from_doc”: Items with this group will not be visible in the entry list initially
 
 	local add_entries = function(deftable, category_id)
 		for id, def in pairs(deftable) do
@@ -905,7 +914,7 @@ local function gather_descs()
 				if help.image[id] ~= nil then
 					im = help.image[id]
 				end
-				local hide = def.groups.not_in_creative_inventory == 1 and not forced
+				local hide = def.groups.hide_from_doc == 1 or hidden_items[id] == true
 				local custom_image
 				name = scrub_newlines(name)
 				local infotable = {
