@@ -86,34 +86,37 @@ actual texts.
 * `doc.sub.items.temp.eat_bad`: Same as above, but eating them is considered a bad idea
 
 ### Forced and suppressed items
-By default, an entry for each item is added, except for items in the group
-`not_in_creative_inventory`. This default behaviour already covers most
-useful items, but it still sometimes needs tweaking.
+By default, an entry for each item is added, except for items without a
+description (`description == nil`). This default behaviour can be changed.
 
 Entries can be forced, which means they will be forcefully added, against the
 default behaviour. Entries can be suppressed which means they will not
 be added at all.
 
-The default behaviour can be overridden by two ways: Groups and a funciton call.
+The default behaviour can be overridden by two ways: Groups and a function call.
 
 Use groups when you can directly define an item (in other words, in **your**
 mods).
 
-To force the entry of an items, add the item to the group `in_doc = 1`.
+To force the entry of an item, add the item to the group `in_doc = 1`.
 To suppress the entry of an item, add the item to the group `not_in_doc = 1`.
 
-There is also the function `doc.sub.items.add_forced_item_entries` which
-forces entries for a number of entries. You should **only** use this function
-when you can not use groups.
+There are also the functions `doc.sub.items.add_forced_item_entries` and
+`doc.sub.items.add_suppressed_item_entries` which forces or suppress certain
+item entries. You should **only** use these functions when you can not use groups.
 
 When there are contradictions, forcing a group takes precedence over suppressing
 a group.
 
-#### Example
-Think of a node which is supposed to be indestructible. Because such a node is
-quite dangerous in Creative Mode, it has been added to the
-`not_in_creative_inventory` group. However, documentation of this node is
-obviously required, so the entry for this node needs to be **forced**.
+### Hidden entries
+Hidden entries are entries which are not visible in the list of entries. This
+concept directly comes from the Documentation System. The entry will still be
+created, it is just not selectable by normal means. Players might be able to
+“unlock” an entry later. Refer to the API documentation of the Documentation
+System to learn more.
+
+To hide an entry, add the item in question to the group `hidden_from_doc = 1`.
+If this is not possible, use `doc.sub.items.add_hidden_item_entries`.
 
 ## Functions
 This is the reference of all available functions in this API.
@@ -305,6 +308,17 @@ Adds items which will be forced to **not** be added to the entry list.
 
 ***Note***: The recommended way to suppress item entries is by adding the
 item to the group `not_in_doc=1` (see above). Only use this function when you
+can not use groups.
+
+### `doc.sub.items.add_hidden_item_entries(itemstrings)`
+Adds items which will be hidden from the entry list initially. Note the
+entries still exist and might be unlocked later.
+
+`itemstrings` is a table of itemstrings of items for which their entries should
+be hidden.
+
+***Note***: The recommended way to hide item entries is by adding the
+item to the group `hide_from_doc=1` (see above). Only use this function when you
 can not use groups.
 
 ### `doc.sub.items.add_item_name_overrides(itemstrings)`
