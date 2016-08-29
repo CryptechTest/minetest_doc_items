@@ -892,7 +892,7 @@ local function gather_descs()
 			else
 				name = def.description
 			end
-			if not (name == nil or name == "" or def.groups.not_in_doc or def.groups.not_in_creative_inventory or forced_items[id] == false) or forced then
+			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
 				if help.longdesc[id] ~= nil then
 					ld = help.longdesc[id]
 				end
@@ -902,7 +902,7 @@ local function gather_descs()
 				if help.image[id] ~= nil then
 					im = help.image[id]
 				end
-				local hide = false
+				local hide = def.groups.not_in_creative_inventory == 1
 				local custom_image
 				name = scrub_newlines(name)
 				local infotable = {
