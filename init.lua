@@ -439,56 +439,59 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. "\n"
 
-			--[[ Check if there are no groups at all, helps for finding undiggable nodes,
-			-- but this approach might miss some of these; still better than nothing. ]]
-			local nogroups = true
-			for k,v in pairs(data.def.groups) do
-				-- If this is reached once, we know the groups table is not empty
-				nogroups = false
-				break
-			end
-			-- dig_immediate
-			if data.def.drop ~= "" then
-				if data.def.groups.dig_immediate == 2 then
-					formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
-				elseif data.def.groups.dig_immediate == 3 then
-					formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
-				-- Note: “unbreakable” is an unofficial group for undiggable blocks
-				elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-					formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
-				end
-			else
-				if data.def.groups.dig_immediate == 2 then
-					formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
-				elseif data.def.groups.dig_immediate == 3 then
-					formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
-				elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-					formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
-				end
-			end
-			-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
-			-- Skip this for immediate digging to avoid redundancy
-			if data.def.groups.dig_immediate ~= 3 then
-				local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
-				mstring = mstring .. "Mining ratings:\n"
-				local minegroupcount = 0
-				for group,_ in pairs(mininggroups) do
-					local rating = data.def.groups[group]
-					if rating ~= nil then
-						mstring = mstring .. "• "..group_to_string(group)..": "..rating.."\n"
-						minegroupcount = minegroupcount + 1
+			-- Mining groups
+			if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
+				-- Check if there are no mining groups at all
+				local nogroups = true
+				for groupname,_ in pairs(mininggroups) do
+					if data.def.groups[groupname] ~= nil or groupname == dig_immediate then
+						nogroups = false
+						break
 					end
 				end
-				if data.def.groups.level ~= nil then
-					mstring = mstring .. "Mining level: "..data.def.groups.level.."\n"
+				-- dig_immediate
+				if data.def.drop ~= "" then
+					if data.def.groups.dig_immediate == 2 then
+						formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
+					elseif data.def.groups.dig_immediate == 3 then
+						formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
+					-- Note: “unbreakable” is an unofficial group for undiggable blocks
+					elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+						formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
+					end
 				else
-					mstring = mstring .. "Mining level: 0\n"
+					if data.def.groups.dig_immediate == 2 then
+						formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
+					elseif data.def.groups.dig_immediate == 3 then
+						formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
+					elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+						formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
+					end
 				end
+				-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
+				-- Skip this for immediate digging to avoid redundancy
+				if data.def.groups.dig_immediate ~= 3 then
+					local mstring = "This block can be mined by mining tools which match any of the following mining ratings and its mining level.\n"
+					mstring = mstring .. "Mining ratings:\n"
+					local minegroupcount = 0
+					for group,_ in pairs(mininggroups) do
+						local rating = data.def.groups[group]
+						if rating ~= nil then
+							mstring = mstring .. "• "..group_to_string(group)..": "..rating.."\n"
+							minegroupcount = minegroupcount + 1
+						end
+					end
+					if data.def.groups.level ~= nil then
+						mstring = mstring .. "Mining level: "..data.def.groups.level.."\n"
+					else
+						mstring = mstring .. "Mining level: 0\n"
+					end
 
-				if minegroupcount > 0 then
-					formstring = formstring .. mstring
+					if minegroupcount > 0 then
+						formstring = formstring .. mstring
+					end
+					formstring = formstring .. "\n"
 				end
-				formstring = formstring .. "\n"
 			end
 
 			-- Custom factoids are inserted here
