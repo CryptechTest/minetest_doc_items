@@ -905,7 +905,7 @@ local function gather_descs()
 				if help.image[id] ~= nil then
 					im = help.image[id]
 				end
-				local hide = def.groups.not_in_creative_inventory == 1
+				local hide = def.groups.not_in_creative_inventory == 1 and not forced
 				local custom_image
 				name = scrub_newlines(name)
 				local infotable = {
