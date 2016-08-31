@@ -1,4 +1,4 @@
-# API documentation for `doc_items` (Version 0.4.0)
+# API documentation for `doc_items` (Version 0.5.0)
 ## Introduction
 This document explains the API of `doc_items`. It contains a reference of
 all functions.
