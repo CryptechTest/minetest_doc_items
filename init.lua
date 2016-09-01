@@ -1007,12 +1007,19 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
 	reveal_item(puncher:get_player_name(), node.name)
 end)
 
+minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+	reveal_item(placer:get_player_name(), itemstack:get_name())
+end)
+
 minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv)
 	reveal_item(player:get_player_name(), itemstack:get_name())
 end)
 
-minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
-	reveal_item(placer:get_player_name(), itemstack:get_name())
+minetest.register_on_item_eat(function(hp_change, replace_with_item, itemstack, user, pointed_thing)
+	reveal_item(user:get_player_name(), itemstack:get_name())
+	if replace_with_item ~= nil then
+		reveal_item(user:get_player_name(), replace_with_item)
+	end
 end)
 
 minetest.register_on_joinplayer(function(player)
