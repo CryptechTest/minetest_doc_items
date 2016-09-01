@@ -960,4 +960,37 @@ local function gather_descs()
 	add_entries(minetest.registered_craftitems, "craftitems")
 end
 
+local function reveal_item(playername, itemstring)
+	local category_id
+	if minetest.registered_nodes[itemstring] ~= nil then
+		category_id = "nodes"
+	elseif minetest.registered_tools[itemstring] ~= nil then
+		category_id = "tools"
+	elseif minetest.registered_craftitems[itemstring] ~= nil then
+		category_id = "craftitems"
+	elseif minetest.registered_items[itemstring] ~= nil then
+		category_id = "craftiems"
+	else
+		return false
+	end
+	doc.mark_entry_as_revealed(playername, category_id, itemstring)
+	return true
+end
+
+minetest.register_on_dignode(function(pos, oldnode, digger)
+	reveal_item(digger:get_player_name(), oldnode.name)
+end)
+
+minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
+	reveal_item(puncher:get_player_name(), node.name)
+end)
+
+minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv)
+	reveal_item(player:get_player_name(), itemstack:get_name())
+end)
+
+minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+	reveal_item(placer:get_player_name(), itemstack:get_name())
+end)
+
 minetest.after(0, gather_descs)
