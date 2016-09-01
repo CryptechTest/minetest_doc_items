@@ -200,6 +200,7 @@ function doc.sub.items.register_factoid(category_id, factoid_type, factoid_gener
 end
 
 doc.new_category("nodes", {
+	hide_entries_by_default = true,
 	name = "Blocks",
 	description = "Item reference of blocks and other things which are capable of occupying space",
 	build_formspec = function(data)
@@ -673,6 +674,7 @@ doc.new_category("nodes", {
 })
 
 doc.new_category("tools", {
+	hide_entries_by_default = true,
 	name = "Tools and weapons",
 	description = "Item reference of all wieldable tools and weapons",
 	build_formspec = function(data)
@@ -737,6 +739,7 @@ doc.new_category("tools", {
 
 
 doc.new_category("craftitems", {
+	hide_entries_by_default = true,
 	name = "Miscellaneous items",
 	description = "Item reference of items which are neither blocks, tools or weapons (esp. crafting items)",
 	build_formspec = function(data)
@@ -914,12 +917,13 @@ local function gather_descs()
 				if help.image[id] ~= nil then
 					im = help.image[id]
 				end
-				local hide = def.groups.hide_from_doc == 1 or hidden_items[id] == true
+				local hidden
+				if id == "air" then hidden = false end
 				local custom_image
 				name = scrub_newlines(name)
 				local infotable = {
 					name = name,
-					hidden = hide,
+					hidden = hidden,
 					data = {
 						longdesc = ld,
 						usagehelp = uh,
@@ -946,6 +950,7 @@ local function gather_descs()
 	end
 	doc.new_entry("tools", "", {
 		name = item_name_overrides[""],
+		hidden = false,
 		data = {
 			longdesc = help.longdesc[""],
 			usagehelp = help.usagehelp[""],
@@ -960,6 +965,12 @@ local function gather_descs()
 	add_entries(minetest.registered_craftitems, "craftitems")
 end
 
+--[[ Reveal items as the player progresses through the game.
+Items are revealed by:
+* Digging, punching or placing node,
+* Crafting
+* Having item in inventory (not instantly revealed) ]]
+
 local function reveal_item(playername, itemstring)
 	local category_id
 	if minetest.registered_nodes[itemstring] ~= nil then
@@ -969,7 +980,7 @@ local function reveal_item(playername, itemstring)
 	elseif minetest.registered_craftitems[itemstring] ~= nil then
 		category_id = "craftitems"
 	elseif minetest.registered_items[itemstring] ~= nil then
-		category_id = "craftiems"
+		category_id = "craftitems"
 	else
 		return false
 	end
@@ -977,8 +988,19 @@ local function reveal_item(playername, itemstring)
 	return true
 end
 
+local function reveal_items_in_inventory(player)
+	local inv = player:get_inventory()
+	local list = inv:get_list("main")
+	for l=1, #list do
+		reveal_item(player:get_player_name(), list[l]:get_name())
+	end
+end
+
 minetest.register_on_dignode(function(pos, oldnode, digger)
-	reveal_item(digger:get_player_name(), oldnode.name)
+	if digger ~= nil then
+		reveal_item(digger:get_player_name(), oldnode.name)
+		reveal_items_in_inventory(digger)
+	end
 end)
 
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
@@ -991,6 +1013,28 @@ end)
 
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
 	reveal_item(placer:get_player_name(), itemstack:get_name())
+end)
+
+minetest.register_on_joinplayer(function(player)
+	reveal_items_in_inventory(player)
+end)
+
+--[[ Periodically check all items in player inventory and reveal them all.
+TODO: Check whether there's a serious performance impact on servers with many players.
+TODO: If possible, try to replace this functionality by updating the revealed items as
+      soon the player obtained a new item (probably needs new Minetest callbacks). ]]
+local checktime = 8
+local timer = 0
+minetest.register_globalstep(function(dtime)
+	timer = timer + dtime
+	if timer > checktime then
+		local players = minetest.get_connected_players()
+		for p=1, #players do
+			reveal_items_in_inventory(players[p])
+		end
+
+		timer = math.fmod(timer, checktime)
+	end
 end)
 
 minetest.after(0, gather_descs)
