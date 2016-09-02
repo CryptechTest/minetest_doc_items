@@ -446,7 +446,7 @@ doc.new_category("nodes", {
 				-- Check if there are no mining groups at all
 				local nogroups = true
 				for groupname,_ in pairs(mininggroups) do
-					if data.def.groups[groupname] ~= nil or groupname == dig_immediate then
+					if data.def.groups[groupname] ~= nil or groupname == "dig_immediate" then
 						nogroups = false
 						break
 					end
