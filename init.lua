@@ -57,9 +57,14 @@ local scrub_newlines = function(text)
 	return new
 end
 
--- Make item description (core field) suitable for formspec
-local description_for_formspec = function(description)
-	return minetest.formspec_escape(scrub_newlines(description))
+-- Extract suitable item description for formspec
+local description_for_formspec = function(itemstring)
+	local description = minetest.registered_items[itemstring].description
+	if description == nil or description == "" then
+		return minetest.formspec_escape(itemstring)
+	else
+		return minetest.formspec_escape(scrub_newlines(description))
+	end
 end
 
 local group_to_string = function(groupname)
@@ -169,7 +174,7 @@ local fuel_factoid = function(itemstring, ctype)
 		formstring = formstring .. string.format(base, burntime_to_text(result.time))
 		local replaced = decremented.items[1]:get_name()
 		if not decremented.items[1]:is_empty() and replaced ~= itemstring then
-			formstring = formstring .. " Using it as fuel turns it into: "..description_for_formspec(minetest.registered_items[replaced].description).."."
+			formstring = formstring .. " Using it as fuel turns it into: "..description_for_formspec(replaced).."."
 		end
 		formstring = formstring .. "\n"
 	end
@@ -413,7 +418,7 @@ doc.new_category("nodes", {
 					if item_name_overrides[nodes[n]] ~= nil then
 						name = item_name_overrides[nodes[n]]
 					else
-						name = minetest.registered_nodes[nodes[n]].description
+						name = description_for_formspec(minetest.registered_nodes[nodes[n]])
 					end
 					if n > 1 then
 						nstring = nstring .. ", "
@@ -424,7 +429,6 @@ doc.new_category("nodes", {
 						nstring = nstring .. "Unknown Node"
 					end
 				end
-				nstring = description_for_formspec(nstring)
 				if #nodes == 1 then
 					formstring = formstring .. "This block connects to this block: "..nstring..".\n"
 				elseif #nodes > 1 then
@@ -516,12 +520,7 @@ doc.new_category("nodes", {
 			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
 				-- TODO: Calculate drop probabilities of max > 1 like for max == 1
 				local get_desc = function(stack)
-					local desc = minetest.registered_items[stack:get_name()].description
-					if desc == nil then
-						return description_for_formspec(stack:get_name())
-					else
-						return description_for_formspec(desc)
-					end
+					return description_for_formspec(stack:get_name())
 				end
 				if data.def.drop == "" then
 					formstring = formstring .. "This block won't drop anything when mined.\n"
