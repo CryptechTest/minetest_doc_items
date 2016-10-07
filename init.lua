@@ -57,6 +57,28 @@ local scrub_newlines = function(text)
 	return new
 end
 
+--[[ Append a newline to text, unless it already ends with a newline. ]]
+local newline = function(text)
+	if string.sub(text, #text, #text) == "\n" then
+		return text
+	else
+		return text .. "\n"
+	end
+end
+
+--[[ Make sure the text ends with two newlines by appending any missing newlines at the end, if neccessary. ]]
+local newline2 = function(text)
+	if string.sub(text, #text-1, #text) == "\n\n" then
+		return text
+	elseif string.sub(text, #text, #text) == "\n" then
+		return text .. "\n"
+	else
+		return text .. "\n\n"
+	end
+end
+
+
+
 -- Extract suitable item description for formspec
 local description_for_formspec = function(itemstring)
 	local description = minetest.registered_items[itemstring].description
@@ -126,7 +148,7 @@ local toolcaps_to_text = function(tool_capabilities)
 				formstring = formstring .. "• " .. group_to_string(k) .. ": "..ratingstring..", ".. levelstring .. "\n"
 			end
 		end
-		formstring = formstring .. "\n"
+		formstring = newline2(formstring)
 
 		local damage_groups = tool_capabilities.damage_groups
 		if damage_groups ~= nil then
@@ -176,7 +198,7 @@ local fuel_factoid = function(itemstring, ctype)
 		if not decremented.items[1]:is_empty() and replaced ~= itemstring then
 			formstring = formstring .. " Using it as fuel turns it into: "..description_for_formspec(replaced).."."
 		end
-		formstring = formstring .. "\n"
+		formstring = newline(formstring)
 	end
 	return formstring
 end
@@ -232,6 +254,8 @@ doc.new_category("nodes", {
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
+			formstring = newline2(formstring)
+
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This block points to liquids.\n"
 			end
@@ -239,7 +263,7 @@ doc.new_category("nodes", {
 				formstring = formstring .. "Punches with this block don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
 			end
 
-			formstring = formstring .. "\n"
+			formstring = newline2(formstring)
 
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
 
@@ -253,8 +277,9 @@ doc.new_category("nodes", {
 			else
 				formstring = formstring .. "Pointable: No\n"
 			end
-			formstring = formstring .. "\n"
+			formstring = newline2(formstring)
 			if liquid then
+				formstring = newline(formstring, false)
 				formstring = formstring .. "This block is a liquid with these properties:\n"
 				local range, renew, viscos
 				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
@@ -271,8 +296,8 @@ doc.new_category("nodes", {
 					formstring = formstring .. "• Flowing range: "..range.. "\n"
 				end
 				formstring = formstring .. "• Viscosity: "..viscos.. "\n"
-				formstring = formstring .. "\n"
 			end
+			formstring = newline2(formstring)
 
 			-- Global factoids
 			--- Direct interaction with the player
@@ -443,7 +468,7 @@ doc.new_category("nodes", {
 				end
 			end
 
-			formstring = formstring .. "\n"
+			formstring = newline2(formstring)
 
 			-- Mining groups
 			if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
@@ -496,15 +521,16 @@ doc.new_category("nodes", {
 					if minegroupcount > 0 then
 						formstring = formstring .. mstring
 					end
-					formstring = formstring .. "\n"
 				end
 			end
+			formstring = newline2(formstring)
 
 			-- Custom factoids are inserted here
 			for i=1,#factoid_generators.nodes do
 				formstring = formstring .. factoid_generators.nodes[i].fgen(data.itemstring, data.def)
-				formstring = formstring .. "\n"
+				formstring = newline(formstring)
 			end
+			formstring = newline2(formstring)
 
 			-- Show other “exposable” groups in quick list
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
@@ -515,6 +541,7 @@ doc.new_category("nodes", {
 					formstring = formstring .. "This block belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
 				end
 			end
+			formstring = newline2(formstring)
 
 			-- Non-default drops
 			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
@@ -656,11 +683,13 @@ doc.new_category("nodes", {
 						end
 						pcount = pcount + 1
 					end
-					formstring = formstring .. ".\n"
+					formtring = formstring .. "."
+					formstring = newline(formstring)
 				end
 			end
 	
 			-- Show fuel recipe
+			formstring = newline2(formstring)
 			formstring = formstring .. fuel_factoid(data.itemstring, "nodes")
 
 			formstring = formstring .. ";]"
@@ -692,16 +721,20 @@ doc.new_category("tools", {
 			end
 			formstring = formstring .. "textarea[0.25,0.5;11,10;;"
 			if longdesc ~= nil then
-				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
+				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc)
+				formstring = newline2(formstring)
 			end
 			if usagehelp ~= nil then
-				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
+				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp)
+				formstring = newline2(formstring)
 			end
 			if data.itemstring ~= "" then
 				formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 			end
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
+
+			formstring = newline2(formstring)
 
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This tool points to liquids.\n"
@@ -710,9 +743,11 @@ doc.new_category("tools", {
 				formstring = formstring .. "Punches with this tool don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
 			end
 
-			formstring = formstring .. "\n"
+			formstring = newline(formstring)
 
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
+
+			formstring = newline2(formstring)
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
@@ -725,6 +760,7 @@ doc.new_category("tools", {
 			end
 
 			-- Show fuel recipe
+			formstring = newline2(formstring)
 			formstring = formstring .. fuel_factoid(data.itemstring, "tools")
 
 			formstring = formstring .. ";]"
@@ -762,15 +798,19 @@ doc.new_category("craftitems", {
 
 			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
 
+			formstring = newline2(formstring)
+
 			if data.def.liquids_pointable == true then
 				formstring = formstring .. "This item points to liquids.\n"
 			end
 			if data.def.on_use ~= nil then
 				formstring = formstring .. "Punches with this item don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
 			end
-			formstring = formstring .. "\n"
+			formstring = newline(formstring)
 
 			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
+
+			formstring = newline2(formstring)
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
@@ -783,6 +823,7 @@ doc.new_category("craftitems", {
 			end
 
 			-- Show fuel recipe
+			formstring = newline2(formstring)
 			formstring = formstring .. fuel_factoid(data.itemstring, "craftitems")
 
 			formstring = formstring .. ";]"
