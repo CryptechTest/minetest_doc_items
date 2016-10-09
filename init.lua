@@ -175,7 +175,7 @@ local range_factoid = function(itemstring, def)
 		if itemrange ~= nil then
 			return "Range: "..itemrange
 		else
-			return "Range: "..minetest.formspec_escape(item_name_overrides[""]).." ("..handrange..")"
+			return "Range: "..item_name_overrides[""].." ("..handrange..")"
 		end
 	end
 end
@@ -243,100 +243,100 @@ doc.new_category("nodes", {
 					formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 				end
 			end
-			formstring = formstring .. "textarea[0.25,0.5;11,10;;"
+			local datastring = ""
 			if longdesc ~= nil then
-				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
+				datastring = datastring .. "Description: "..longdesc.."\n\n"
 			end
 			if usagehelp ~= nil then
-				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
+				datastring = datastring .. "Usage help: "..usagehelp.. "\n\n"
 			end
-			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+			datastring = datastring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
-			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
+			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This block points to liquids.\n"
+				datastring = datastring .. "This block points to liquids.\n"
 			end
 			if data.def.on_use ~= nil then
-				formstring = formstring .. "Punches with this block don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
+				datastring = datastring .. "Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.\n"
 			end
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
 
-			formstring = formstring .. "Collidable: "..yesno(data.def.walkable).. "\n"
+			datastring = datastring .. "Collidable: "..yesno(data.def.walkable).. "\n"
 			local liquid
 			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
 			if data.def.pointable == true then
-				formstring = formstring .. "Pointable: Yes\n"
+				datastring = datastring .. "Pointable: Yes\n"
 			elseif liquid then
-				formstring = formstring .. "Pointable: Only by special items\n"
+				datastring = datastring .. "Pointable: Only by special items\n"
 			else
-				formstring = formstring .. "Pointable: No\n"
+				datastring = datastring .. "Pointable: No\n"
 			end
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 			if liquid then
-				formstring = newline(formstring, false)
-				formstring = formstring .. "This block is a liquid with these properties:\n"
+				datastring = newline(datastring, false)
+				datastring = datastring .. "This block is a liquid with these properties:\n"
 				local range, renew, viscos
 				if data.def.liquid_range then range = data.def.liquid_range else range = 8 end
 				if data.def.liquid_renewable ~= nil then renew = data.def.liquid_renewable else renew = true end
 				if data.def.liquid_viscosity then viscos = data.def.liquid_viscosity else viscos = 0 end
 				if renew then
-					formstring = formstring .. "• Renewable\n"
+					datastring = datastring .. "• Renewable\n"
 				else
-					formstring = formstring .. "• Not renewable\n"
+					datastring = datastring .. "• Not renewable\n"
 				end
 				if range == 0 then
-					formstring = formstring .. "• No flowing\n"
+					datastring = datastring .. "• No flowing\n"
 				else
-					formstring = formstring .. "• Flowing range: "..range.. "\n"
+					datastring = datastring .. "• Flowing range: "..range.. "\n"
 				end
-				formstring = formstring .. "• Viscosity: "..viscos.. "\n"
+				datastring = datastring .. "• Viscosity: "..viscos.. "\n"
 			end
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Global factoids
 			--- Direct interaction with the player
 			---- Damage (very important)
 			if data.def.damage_per_second > 1 then
-				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit points per second.\n"
+				datastring = datastring .. "This block causes a damage of "..data.def.damage_per_second.." hit points per second.\n"
 			elseif data.def.damage_per_second == 1 then
-				formstring = formstring .. "This block causes a damage of "..data.def.damage_per_second.." hit point per second.\n"
+				datastring = datastring .. "This block causes a damage of "..data.def.damage_per_second.." hit point per second.\n"
 			elseif data.def.damage_per_second < -1 then
-				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit points per second.\n"
+				datastring = datastring .. "This block heals "..data.def.damage_per_second.." hit points per second.\n"
 			elseif data.def.damage_per_second == -1 then
-				formstring = formstring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
+				datastring = datastring .. "This block heals "..data.def.damage_per_second.." hit point per second.\n"
 			end
 			if data.def.drowning > 1 then
-				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit points every 2 seconds.\n"
+				datastring = datastring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit points every 2 seconds.\n"
 			elseif data.def.drowning == 1 then
-				formstring = formstring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
+				datastring = datastring .. "This block decreases your breath and causes a drowning damage of "..data.def.drowning.." hit point every 2 seconds.\n"
 			end
 			local fdap = data.def.groups.fall_damage_add_percent
 			if fdap ~= nil then
 				if fdap > 0 then
-					formstring = formstring .. "The fall damage on this block is increased by "..fdap.."%.\n"
+					datastring = datastring .. "The fall damage on this block is increased by "..fdap.."%.\n"
 				elseif fdap == -100 then
-					formstring = formstring .. "This block negates all fall damage.\n"
+					datastring = datastring .. "This block negates all fall damage.\n"
 				else
-					formstring = formstring .. "The fall damage on this block is reduced by "..math.abs(fdap).."%.\n"
+					datastring = datastring .. "The fall damage on this block is reduced by "..math.abs(fdap).."%.\n"
 				end
 			end
 
 			---- Movement
 			if data.def.groups.disable_jump == 1 then
-				formstring = formstring .. "You can not jump while standing on this block.\n"
+				datastring = datastring .. "You can not jump while standing on this block.\n"
 			end
 			if data.def.climbable == true then
-				formstring = formstring .. "This block can be climbed.\n"
+				datastring = datastring .. "This block can be climbed.\n"
 			end
 			local bouncy = data.def.groups.bouncy
 			if bouncy ~= nil then
-				formstring = formstring .. "This block will make you bounce off with an elasticity of "..bouncy.."%.\n"
+				datastring = datastring .. "This block will make you bounce off with an elasticity of "..bouncy.."%.\n"
 			end
 
 
@@ -355,73 +355,73 @@ doc.new_category("nodes", {
 				silentplace = true
 			end
 			if silentstep and silentdig and silentplace then
-				formstring = formstring .. "This block is completely silent when walked on, mined or built.\n"
+				datastring = datastring .. "This block is completely silent when walked on, mined or built.\n"
 			elseif silentdig and silentplace then
-				formstring = formstring .. "This block is completely silent when mined or built.\n"
+				datastring = datastring .. "This block is completely silent when mined or built.\n"
 			else
 				if silentstep then
-					formstring = formstring .. "Walking on this block is completely silent.\n"
+					datastring = datastring .. "Walking on this block is completely silent.\n"
 				end
 				if silentdig then
-					formstring = formstring .. "Mining this block is completely silent.\n"
+					datastring = datastring .. "Mining this block is completely silent.\n"
 				end
 				if silentplace then
-					formstring = formstring .. "Building this block is completely silent.\n"
+					datastring = datastring .. "Building this block is completely silent.\n"
 				end
 			end
 
 			-- Block activity
 			--- Gravity
 			if data.def.groups.falling_node == 1 then
-				formstring = formstring .. "This block is affected by gravity and can fall.\n"
+				datastring = datastring .. "This block is affected by gravity and can fall.\n"
 			end
 
 			--- Dropping and destruction
 			if data.def.buildable_to == true then
-				formstring = formstring .. "Building another block at this block will place it inside and replace it.\n"
+				datastring = datastring .. "Building another block at this block will place it inside and replace it.\n"
 				if data.def.walkable then
-					formstring = formstring .. "Falling blocks can go through this block\\; they destroy it when doing so.\n"
+					datastring = datastring .. "Falling blocks can go through this block; they destroy it when doing so.\n"
 				end
 			end
 			if data.def.walkable == false then
 				if data.def.buildable_to == false and (data.def.paramtype2 == "wallmounted" or data.def.groups.attached_node == 1) then
-					formstring = formstring .. "This block will drop as an item when a falling block ends up inside it.\n"
+					datastring = datastring .. "This block will drop as an item when a falling block ends up inside it.\n"
 				else
-					formstring = formstring .. "This block is destroyed when a falling block ends up inside it.\n"
+					datastring = datastring .. "This block is destroyed when a falling block ends up inside it.\n"
 				end
 			end
 			if data.def.groups.attached_node == 1 then
 				if data.def.paramtype2 == "wallmounted" then
-					formstring = formstring .. "This block will drop as an item when it is not attached to a surrounding block.\n"
+					datastring = datastring .. "This block will drop as an item when it is not attached to a surrounding block.\n"
 				else
-					formstring = formstring .. "This block will drop as an item when no collidable block is below it.\n"
+					datastring = datastring .. "This block will drop as an item when no collidable block is below it.\n"
 				end
 			end
 			if data.def.floodable == true then
-				formstring = formstring .. "Liquids can flow into this block and destroy it.\n"
+				datastring = datastring .. "Liquids can flow into this block and destroy it.\n"
 			end
 
 			-- Block appearance
 			--- Light
 			if data.def.light_source == 15 then
-				formstring = formstring .. "This block is an extremely bright light source. It glows as bright the sun.\n"
+				datastring = datastring .. "This block is an extremely bright light source. It glows as bright the sun.\n"
 			elseif data.def.light_source == 14 then
-				formstring = formstring .. "This block is a very bright light source.\n"
+				datastring = datastring .. "This block is a very bright light source.\n"
 			elseif data.def.light_source > 12 then
-				formstring = formstring .. "This block is a bright light source.\n"
+				datastring = datastring .. "This block is a bright light source.\n"
 			elseif data.def.light_source > 5 then
-				formstring = formstring .. "This block is a light source of medium luminance.\n"
+				datastring = datastring .. "This block is a light source of medium luminance.\n"
 			elseif data.def.light_source > 1 then
-				formstring = formstring .. "This block is a weak light source and glows faintly.\n"
+				datastring = datastring .. "This block is a weak light source and glows faintly.\n"
 			elseif data.def.light_source == 1 then
-				formstring = formstring .. "This block glows faintly. It is barely noticable.\n"
+				datastring = datastring .. "This block glows faintly. It is barely noticable.\n"
 			end
 			if data.def.paramtype == "light" and data.def.sunlight_propagates then
-				formstring = formstring .. "This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.\n"
+				datastring = datastring .. "This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.\n"
 			elseif data.def.paramtype == "light" then
-				formstring = formstring .. "This block allows light to propagate with a small loss of brightness.\n"
+				datastring = datastring .. "This block allows light to propagate with a small loss of brightness.\n"
 			elseif data.def.sunlight_propagates then
-				formstring = formstring .. "This block allows sunlight to propagate without loss in brightness.\n"
+				datastring = datastring .. "This block allows sunlight to propagate without loss in brightness.\n"
 			end
 
 			--- List nodes/groups to which this node connects to
@@ -455,20 +455,20 @@ doc.new_category("nodes", {
 					end
 				end
 				if #nodes == 1 then
-					formstring = formstring .. "This block connects to this block: "..nstring..".\n"
+					datastring = datastring .. "This block connects to this block: "..nstring..".\n"
 				elseif #nodes > 1 then
-					formstring = formstring .. "This block connects to these blocks: "..nstring..".\n"
+					datastring = datastring .. "This block connects to these blocks: "..nstring..".\n"
 				end
 
 				local gstring, gcount = groups_to_string(groups)
 				if gcount == 1 then
-					formstring = formstring .. "This block connects to blocks of the "..minetest.formspec_escape(gstring).." group.\n"
+					datastring = datastring .. "This block connects to blocks of the "..gstring.." group.\n"
 				elseif gcount > 1 then
-					formstring = formstring .. "This block connects to blocks of the following groups: "..minetest.formspec_escape(gstring)..".\n"
+					datastring = datastring .. "This block connects to blocks of the following groups: "..gstring..".\n"
 				end
 			end
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Mining groups
 			if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
@@ -483,20 +483,20 @@ doc.new_category("nodes", {
 				-- dig_immediate
 				if data.def.drop ~= "" then
 					if data.def.groups.dig_immediate == 2 then
-						formstring = formstring .. "This block can be mined by any mining tool in half a second.\n"
+						datastring = datastring .. "This block can be mined by any mining tool in half a second.\n"
 					elseif data.def.groups.dig_immediate == 3 then
-						formstring = formstring .. "This block can be mined by any mining tool immediately.\n"
+						datastring = datastring .. "This block can be mined by any mining tool immediately.\n"
 					-- Note: “unbreakable” is an unofficial group for undiggable blocks
 					elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-						formstring = formstring .. "This block can not be mined by ordinary mining tools.\n"
+						datastring = datastring .. "This block can not be mined by ordinary mining tools.\n"
 					end
 				else
 					if data.def.groups.dig_immediate == 2 then
-						formstring = formstring .. "This block can be destroyed by any mining tool in half a second.\n"
+						datastring = datastring .. "This block can be destroyed by any mining tool in half a second.\n"
 					elseif data.def.groups.dig_immediate == 3 then
-						formstring = formstring .. "This block can be destroyed by any mining tool immediately.\n"
+						datastring = datastring .. "This block can be destroyed by any mining tool immediately.\n"
 					elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-						formstring = formstring .. "This block can not be destroyed by ordinary mining tools.\n"
+						datastring = datastring .. "This block can not be destroyed by ordinary mining tools.\n"
 					end
 				end
 				-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
@@ -519,29 +519,29 @@ doc.new_category("nodes", {
 					end
 
 					if minegroupcount > 0 then
-						formstring = formstring .. mstring
+						datastring = datastring .. mstring
 					end
 				end
 			end
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Custom factoids are inserted here
 			for i=1,#factoid_generators.nodes do
-				formstring = formstring .. factoid_generators.nodes[i].fgen(data.itemstring, data.def)
-				formstring = newline(formstring)
+				datastring = datastring .. factoid_generators.nodes[i].fgen(data.itemstring, data.def)
+				datastring = newline(datastring)
 			end
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups in quick list
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					formstring = formstring .. "This block belongs to the "..minetest.formspec_escape(gstring).." group.\n"
+					datastring = datastring .. "This block belongs to the "..gstring.." group.\n"
 				else
-					formstring = formstring .. "This block belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
+					datastring = datastring .. "This block belongs to these groups: "..gstring..".\n"
 				end
 			end
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Non-default drops
 			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
@@ -550,7 +550,7 @@ doc.new_category("nodes", {
 					return description_for_formspec(stack:get_name())
 				end
 				if data.def.drop == "" then
-					formstring = formstring .. "This block won't drop anything when mined.\n"
+					datastring = datastring .. "This block won't drop anything when mined.\n"
 				elseif type(data.def.drop) == "string" then
 					local dropstack = ItemStack(data.def.drop)
 					if dropstack:get_name() ~= data.itemstring and dropstack:get_name() ~= 1 then
@@ -562,20 +562,20 @@ doc.new_category("nodes", {
 						else
 							finalstring = desc
 						end
-						formstring = formstring .. "This block will drop the following when mined: "..finalstring.."\n"
+						datastring = datastring .. "This block will drop the following when mined: "..finalstring.."\n"
 					end
 				elseif type(data.def.drop) == "table" and data.def.drop.items ~= nil then
 					local max = data.def.drop.max_items
 					if max == nil then
-						formstring = formstring .. "This block will drop the following items when mined: "
+						datastring = datastring .. "This block will drop the following items when mined: "
 					elseif max == 1 then
 						if #data.def.drop.items == 1 then
-							formstring = formstring .. "This block will drop the following when mined: "
+							datastring = datastring .. "This block will drop the following when mined: "
 						else
-							formstring = formstring .. "This block will randomly drop one of the following when mined: "
+							datastring = datastring .. "This block will randomly drop one of the following when mined: "
 						end
 					else
-						formstring = formstring .. "This block will randomly drop up to "..max.." drops of the following possible drops when mined: "
+						datastring = datastring .. "This block will randomly drop up to "..max.." drops of the following possible drops when mined: "
 					end
 					-- Save calculated probabilities into a table for later output
 					local probtables = {}
@@ -647,20 +647,20 @@ doc.new_category("nodes", {
 					local pcount = 0
 					for i=1, #probtables do
 						if pcount > 0 then
-							formstring = formstring .. ", "
+							datastring = datastring .. ", "
 						end
 						local probtable = probtables[i]
 						local icount = 0
 						for _, itemtable in pairs(probtable.items) do
 							if icount > 0 then
-								formstring = formstring .. " and "
+								datastring = datastring .. " and "
 							end
 							local desc = itemtable.desc
 							local count = itemtable.count
 							if count ~= 1 then
 								desc = count .. "×" .. desc
 							end
-							formstring = formstring .. desc
+							datastring = datastring .. desc
 							icount = icount + 1
 						end
 
@@ -671,28 +671,28 @@ doc.new_category("nodes", {
 							local ca = ""
 							if rarity > 200 then -- <0.5%
 							-- For very low percentages
-								formstring = formstring .. " (<0.5%)"
+								datastring = datastring .. " (<0.5%)"
 							else
 								-- Add circa indicator for percentages with decimal point
 								-- FIXME: Is this check actually reliable?
 								if math.fmod(chance, 1) > 0 then
 									ca = "ca. "
 								end
-								formstring = formstring .. string.format(" (%s%.0f%%)", ca, chance)
+								datastring = datastring .. string.format(" (%s%.0f%%)", ca, chance)
 							end
 						end
 						pcount = pcount + 1
 					end
-					formtring = formstring .. "."
-					formstring = newline(formstring)
+					formtring = datastring .. "."
+					datastring = newline(datastring)
 				end
 			end
 	
 			-- Show fuel recipe
-			formstring = newline2(formstring)
-			formstring = formstring .. fuel_factoid(data.itemstring, "nodes")
+			datastring = newline2(datastring)
+			datastring = datastring .. fuel_factoid(data.itemstring, "nodes")
 
-			formstring = formstring .. ";]"
+			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
 
 			return formstring
 		else
@@ -712,58 +712,58 @@ doc.new_category("tools", {
 			local formstring = ""
 			-- Hand
 			if data.itemstring == "" then
-				formstring = formstring .. "image[11,0;1,1;"..minetest.formspec_escape(minetest.registered_items[""].wield_image).."]"
+				formstring = formstring .. "image[11,0;1,1;"..minetest.registered_items[""].wield_image.."]"
 			-- Other tools
 			elseif data.image ~= nil then
 				formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
-			formstring = formstring .. "textarea[0.25,0.5;11,10;;"
+			local datastring = ""
 			if longdesc ~= nil then
-				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc)
-				formstring = newline2(formstring)
+				datastring = datastring .. "Description: "..longdesc
+				datastring = newline2(datastring)
 			end
 			if usagehelp ~= nil then
-				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp)
-				formstring = newline2(formstring)
+				datastring = datastring .. "Usage help: "..usagehelp
+				datastring = newline2(datastring)
 			end
 			if data.itemstring ~= "" then
-				formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+				datastring = datastring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 			end
 
-			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
+			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This tool points to liquids.\n"
+				datastring = datastring .. "This tool points to liquids.\n"
 			end
 			if data.def.on_use ~= nil then
-				formstring = formstring .. "Punches with this tool don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
+				datastring = datastring .. "Punches with this tool don't work as usual; melee combat and mining are either not possible or work differently.\n"
 			end
 
-			formstring = newline(formstring)
+			datastring = newline(datastring)
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					formstring = formstring .. "This tool belongs to the "..minetest.formspec_escape(gstring).." group.\n"
+					datastring = datastring .. "This tool belongs to the "..gstring.." group.\n"
 				else
-					formstring = formstring .. "This tool belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
+					datastring = datastring .. "This tool belongs to these groups: "..gstring..".\n"
 				end
 			end
 
 			-- Show fuel recipe
-			formstring = newline2(formstring)
-			formstring = formstring .. fuel_factoid(data.itemstring, "tools")
+			datastring = newline2(datastring)
+			datastring = datastring .. fuel_factoid(data.itemstring, "tools")
 
-			formstring = formstring .. ";]"
+			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
 
 			return formstring
 		else
@@ -787,46 +787,46 @@ doc.new_category("craftitems", {
 			else
 				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
 			end
-			formstring = formstring .. "textarea[0.25,0.5;11,10;;"
+			local datastring = ""
 			if longdesc ~= nil then
-				formstring = formstring .. "Description: "..minetest.formspec_escape(longdesc).."\n\n"
+				datastring = datastring .. "Description: "..longdesc.."\n\n"
 			end
 			if usagehelp ~= nil then
-				formstring = formstring .. "Usage help: "..minetest.formspec_escape(usagehelp).. "\n\n"
+				datastring = datastring .. "Usage help: "..usagehelp.. "\n\n"
 			end
-			formstring = formstring .. "Maximum stack size: "..data.def.stack_max.. "\n"
+			datastring = datastring .. "Maximum stack size: "..data.def.stack_max.. "\n"
 
-			formstring = formstring .. range_factoid(data.itemstring, data.def) .. "\n"
+			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			if data.def.liquids_pointable == true then
-				formstring = formstring .. "This item points to liquids.\n"
+				datastring = datastring .. "This item points to liquids.\n"
 			end
 			if data.def.on_use ~= nil then
-				formstring = formstring .. "Punches with this item don't work as usual\\; melee combat and mining are either not possible or work differently.\n"
+				datastring = datastring .. "Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.\n"
 			end
-			formstring = newline(formstring)
+			datastring = newline(datastring)
 
-			formstring = formstring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
 
-			formstring = newline2(formstring)
+			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					formstring = formstring .. "This item belongs to the "..minetest.formspec_escape(gstring).." group.\n"
+					datastring = datastring .. "This item belongs to the "..gstring.." group.\n"
 				else
-					formstring = formstring .. "This item belongs to these groups: "..minetest.formspec_escape(gstring)..".\n"
+					datastring = datastring .. "This item belongs to these groups: "..gstring..".\n"
 				end
 			end
 
 			-- Show fuel recipe
-			formstring = newline2(formstring)
-			formstring = formstring .. fuel_factoid(data.itemstring, "craftitems")
+			datastring = newline2(datastring)
+			datastring = datastring .. fuel_factoid(data.itemstring, "craftitems")
 
-			formstring = formstring .. ";]"
+			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
 
 			return formstring
 		else
