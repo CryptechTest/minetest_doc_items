@@ -320,7 +320,7 @@ doc.new_category("nodes", {
 			if fdap ~= nil then
 				if fdap > 0 then
 					datastring = datastring .. "The fall damage on this block is increased by "..fdap.."%.\n"
-				elseif fdap == -100 then
+				elseif fdap <= -100 then
 					datastring = datastring .. "This block negates all fall damage.\n"
 				else
 					datastring = datastring .. "The fall damage on this block is reduced by "..math.abs(fdap).."%.\n"
