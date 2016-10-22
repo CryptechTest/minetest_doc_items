@@ -683,7 +683,7 @@ doc.new_category("nodes", {
 						end
 						pcount = pcount + 1
 					end
-					formtring = datastring .. "."
+					formstring = datastring .. "."
 					datastring = newline(datastring)
 				end
 			end
