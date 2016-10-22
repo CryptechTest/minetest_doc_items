@@ -1013,6 +1013,9 @@ Items are revealed by:
 
 local function reveal_item(playername, itemstring)
 	local category_id
+	if itemstring == nil or itemstring == "" or playername == nil or playername == "" then
+		return false
+	end
 	if minetest.registered_nodes[itemstring] ~= nil then
 		category_id = "nodes"
 	elseif minetest.registered_tools[itemstring] ~= nil then
@@ -1037,28 +1040,41 @@ local function reveal_items_in_inventory(player)
 end
 
 minetest.register_on_dignode(function(pos, oldnode, digger)
-	if digger ~= nil then
-		reveal_item(digger:get_player_name(), oldnode.name)
+	local playername = digger:get_player_name()
+	if digger ~= nil and playername ~= nil and playername ~= "" and oldnode ~= nil then
+		reveal_item(playername, oldnode.name)
 		reveal_items_in_inventory(digger)
 	end
 end)
 
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
-	reveal_item(puncher:get_player_name(), node.name)
+	local playername = puncher:get_player_name()
+	if playername ~= nil and playername ~= "" and node ~= nil then
+		reveal_item(playername, node.name)
+	end
 end)
 
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
-	reveal_item(placer:get_player_name(), itemstack:get_name())
+	local playername = placer:get_player_name()
+	if placer ~= nil and playername ~= nil and playername ~= "" and itemstack ~= nil and not itemstack:is_empty() then
+		reveal_item(playername, itemstack:get_name())
+	end
 end)
 
 minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv)
-	reveal_item(player:get_player_name(), itemstack:get_name())
+	local playername = player:get_player_name()
+	if player ~= nil and playername ~= nil and playername ~= "" and itemstack ~= nil and not itemstack:is_empty() then
+		reveal_item(playername, itemstack:get_name())
+	end
 end)
 
 minetest.register_on_item_eat(function(hp_change, replace_with_item, itemstack, user, pointed_thing)
-	reveal_item(user:get_player_name(), itemstack:get_name())
-	if replace_with_item ~= nil then
-		reveal_item(user:get_player_name(), replace_with_item)
+	local playername = user:get_player_name()
+	if user ~= nil and playername ~= nil and playername ~= "" and itemstack ~= nil and not itemstack:is_empty() then
+		reveal_item(playername, itemstack:get_name())
+		if replace_with_item ~= nil then
+			reveal_item(playername, replace_with_item)
+		end
 	end
 end)
 
