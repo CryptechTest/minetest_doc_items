@@ -1,12 +1,11 @@
 -- Boilerplate to support localized strings if intllib mod is installed.
-local S, F
+local S
 if minetest.get_modpath("intllib") then
 	dofile(minetest.get_modpath("intllib").."/intllib.lua")
 	S = intllib.Getter(minetest.get_current_modname())
 else
 	S = function(s) return s end
 end
-F = function(f) return minetest.formspec_escape(S(f)) end
 
 doc.sub.items = {}
 
@@ -40,7 +39,6 @@ local yesno = function(bool)
 	else return "N/A" end
 end
 
--- FIXME/TODO: I18N
 local groups_to_string = function(grouptable, filter)
 	local gstring = ""
 	local groups_count = 0
@@ -48,7 +46,8 @@ local groups_to_string = function(grouptable, filter)
 		if groupdefs[id] ~= nil and (filter == nil or filter[id] == true) then
 			-- Readable group name
 			if groups_count > 0 then
-				gstring = gstring .. ", "
+				-- List seperator
+				gstring = gstring .. S(", ")
 			end
 			gstring = gstring .. groupdefs[id]
 			groups_count = groups_count + 1
@@ -459,8 +458,7 @@ doc.new_category("nodes", {
 						name = description_for_formspec(minetest.registered_nodes[nodes[n]])
 					end
 					if n > 1 then
-						-- FIXME: I18N for commas
-						nstring = nstring .. ", "
+						nstring = nstring .. S(", ")
 					end
 					if name ~= nil then
 						nstring = nstring .. name
@@ -550,9 +548,9 @@ doc.new_category("nodes", {
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					datastring = datastring .. string.format(S("This block belongs to the %s group."), gstring), "\n"
+					datastring = datastring .. string.format(S("This block belongs to the %s group."), gstring) .. "\n"
 				else
-					datastring = datastring .. string.format(S("This block belongs to these groups: %s."), gstring), "\n"
+					datastring = datastring .. string.format(S("This block belongs to these groups: %s."), gstring) .. "\n"
 				end
 			end
 			datastring = newline2(datastring)
@@ -570,27 +568,26 @@ doc.new_category("nodes", {
 					if dropstack:get_name() ~= data.itemstring and dropstack:get_name() ~= 1 then
 						local desc = get_desc(dropstack)
 						local count = dropstack:get_count()
-						local finalstring
 						if count > 1 then
-							finalstring = string.format(S("%d×%s"), count, desc)
+							datastring = datastring .. string.format(S("This block will drop the following when mined: %d×%s."), count, desc).."\n"
 						else
-							finalstring = desc
+							datastring = datastring .. string.format(S("This block will drop the following when mined: %s."), desc).."\n"
 						end
-						datastring = datastring .. string.format(S("This block will drop the following when mined: %s"), finalstring).."\n"
 					end
 				elseif type(data.def.drop) == "table" and data.def.drop.items ~= nil then
-				-- FIXME+TODO: I18N
 					local max = data.def.drop.max_items
+					local dropstring = ""
+					local dropstring_base = ""
 					if max == nil then
-						datastring = datastring .. "This block will drop the following items when mined: "
+						dropstring_base = S("This block will drop the following items when mined: %s.")
 					elseif max == 1 then
 						if #data.def.drop.items == 1 then
-							datastring = datastring .. "This block will drop the following when mined: "
+							dropstring_base = S("This block will drop the following when mined: %s.")
 						else
-							datastring = datastring .. "This block will randomly drop one of the following when mined: "
+							dropstring_base = S("This block will randomly drop one of the following when mined: %s.")
 						end
 					else
-						datastring = datastring .. "This block will randomly drop up to "..max.." drops of the following possible drops when mined: "
+						dropstring_base = S("This block will randomly drop up to %d drops of the following possible drops when mined: %s.")
 					end
 					-- Save calculated probabilities into a table for later output
 					local probtables = {}
@@ -662,43 +659,52 @@ doc.new_category("nodes", {
 					local pcount = 0
 					for i=1, #probtables do
 						if pcount > 0 then
-							datastring = datastring .. ", "
+							-- List seperator
+							dropstring = dropstring .. S(", ")
 						end
 						local probtable = probtables[i]
 						local icount = 0
+						local dropstring_this = ""
 						for _, itemtable in pairs(probtable.items) do
 							if icount > 0 then
-								datastring = datastring .. " and "
+								-- Final list seperator
+								dropstring_this = dropstring_this .. S(" and ")
 							end
-							local desc = itemtable.desc
+							local desc = S(itemtable.desc)
 							local count = itemtable.count
 							if count ~= 1 then
-								desc = count .. "×" .. desc
+								desc = string.format(S("%d×%s"), count, desc)
 							end
-							datastring = datastring .. desc
+							dropstring_this = dropstring_this .. desc
 							icount = icount + 1
 						end
 
 						local rarity = probtable.rarity
+						local raritystring = ""
 						-- No percentage if there's only one possible guaranteed drop
 						if not(rarity == 1 and #data.def.drop.items == 1) then
 							local chance = (1/rarity)*100
-							local ca = ""
 							if rarity > 200 then -- <0.5%
 							-- For very low percentages
-								datastring = datastring .. " (<0.5%)"
+								dropstring_this = string.format(S("%s (<0.5%)"), dropstring_this)
 							else
 								-- Add circa indicator for percentages with decimal point
 								-- FIXME: Is this check actually reliable?
 								if math.fmod(chance, 1) > 0 then
-									ca = "ca. "
+									dropstring_this = string.format(S("%s (ca. %.0f%%)"), dropstring_this, chance)
+								else
+									dropstring_this = string.format(S("%s (%.0f%%)"), dropstring_this, chance)
 								end
-								datastring = datastring .. string.format(" (%s%.0f%%)", ca, chance)
 							end
 						end
+						dropstring = dropstring .. dropstring_this
 						pcount = pcount + 1
 					end
-					datastring = datastring .. "."
+					if max ~= nil and max > 1 then
+						datastring = datastring .. string.format(dropstring_base, max, dropstring)
+					else
+						datastring = datastring .. string.format(dropstring_base, dropstring)
+					end
 					datastring = newline(datastring)
 				end
 			end
