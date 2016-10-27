@@ -307,14 +307,14 @@ doc.new_category("nodes", {
 				else
 					datastring = datastring .. string.format(S("• Flowing range: %d"), range) .. "\n"
 				end
-				datastring = datastring .. string.format(S("• Viscosity: %d", viscos)) .. "\n"
+				datastring = datastring .. string.format(S("• Viscosity: %d"), viscos) .. "\n"
 			end
 			datastring = newline2(datastring)
 
 			-- Global factoids
 			--- Direct interaction with the player
 			---- Damage (very important)
-			if data.def.damage_per_second ~= nil and data.def.damage_per_second ~= 1 then
+			if data.def.damage_per_second ~= nil and data.def.damage_per_second > 1 then
 				datastring = datastring .. string.format(S("This block causes a damage of %d hit points per second."), data.def.damage_per_second) .. "\n"
 			elseif data.def.damage_per_second == 1 then
 				datastring = datastring .. string.format(S("This block causes a damage of %d hit point per second."), data.def.damage_per_second) .. "\n"
