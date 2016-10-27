@@ -123,7 +123,7 @@ local toolcaps_to_text = function(tool_capabilities)
 		if tool_capabilities.full_punch_interval ~= nil then
 			punch = tool_capabilities.full_punch_interval
 		end
-		formstring = formstring .. string.format(S("Full punch interval: %d s"), punch)
+		formstring = formstring .. string.format(S("Full punch interval: %.1f s"), punch)
 		formstring = formstring .. "\n\n"
 
 		local groupcaps = tool_capabilities.groupcaps
@@ -314,14 +314,10 @@ doc.new_category("nodes", {
 			-- Global factoids
 			--- Direct interaction with the player
 			---- Damage (very important)
-			if data.def.damage_per_second > 1 then
+			if data.def.damage_per_second ~= nil and data.def.damage_per_second ~= 1 then
 				datastring = datastring .. string.format(S("This block causes a damage of %d hit points per second."), data.def.damage_per_second) .. "\n"
 			elseif data.def.damage_per_second == 1 then
 				datastring = datastring .. string.format(S("This block causes a damage of %d hit point per second."), data.def.damage_per_second) .. "\n"
-			elseif data.def.damage_per_second < -1 then
-				datastring = datastring .. string.format(S("This block heals %d hit points per second."), data.def.damage_per_second) .. "\n"
-			elseif data.def.damage_per_second == -1 then
-				datastring = datastring .. string.format(S("This block heals %d hit point per second."), data.def.damage_per_second) .. "\n"
 			end
 			if data.def.drowning > 1 then
 				datastring = datastring .. string.format(S("This block decreases your breath and causes a drowning damage of %d hit points every 2 seconds."), data.def.drowning) .. "\n"
@@ -469,7 +465,7 @@ doc.new_category("nodes", {
 				if #nodes == 1 then
 					datastring = datastring .. string.format(S("This block connects to this block: %s."), nstring) .. "\n"
 				elseif #nodes > 1 then
-					datastring = datastring .. string.format(S("This block connects to these block: %s."), nstring) .. "\n"
+					datastring = datastring .. string.format(S("This block connects to these blocks: %s."), nstring) .. "\n"
 				end
 
 				local gstring, gcount = groups_to_string(groups)
