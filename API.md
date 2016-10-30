@@ -172,6 +172,8 @@ This mod adds support for new fields of the item definition:
 * `x_doc_items_image`: Entry image (default: inventory image)
 * `x_doc_items_hidden`: Whether entry is hidden (default: `false` for Air, `true` for everything else)
 * `x_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
+* `x_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
+  of the item, or “Nameless entry” if it is `nil`.
 
 ## Functions
 This is the reference of all available functions in this API.

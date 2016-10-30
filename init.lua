@@ -952,16 +952,21 @@ local function gather_descs()
 	end
 
 	local add_entries = function(deftable, category_id)
+		-- TODO: Remove legacy support: Groups in_doc, not_in_doc; forced_items, help table, etc.
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
 			if (forced_items[id] == true or def.groups.in_doc or def.x_doc_items_create_entry == true) and def ~= nil then forced = true end
+			if def.x_doc_items_entry_name ~= nil then
+				name = def.x_doc_items_entry_name
+			end
 			if item_name_overrides[id] ~= nil then
 				name = item_name_overrides[id]
-			else
+			end
+			if name == nil then
 				name = def.description
 			end
-			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false or def.x_doc_items_create_entry == false) or forced then
+			if not (((def.description == nil or def.description == "") and def.x_doc_items_entry_name == nil) or def.groups.not_in_doc or forced_items[id] == false or def.x_doc_items_create_entry == false) or forced then
 				if def.x_doc_items_longdesc then
 					ld = def.x_doc_items_longdesc
 				end
