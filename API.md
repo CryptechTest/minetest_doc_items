@@ -140,10 +140,8 @@ as for long descriptions.
 
 #### Template texts
 For your convenience, a few template texts are provided for common texts
-to avoid redundancy and to increase consistency for somple things. You can
-use these as values in the setter functions. For more complex items, you
-should of course write your own texts instead. Read `init.lua` to see the
-actual texts.
+to avoid redundancy and to increase consistency for simple things. Read
+`init.lua` to see the actual texts.
 
 ##### Long description
 * `doc.sub.items.temp.build`: For building blocks like the brick block in Minetest Game
