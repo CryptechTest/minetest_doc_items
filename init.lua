@@ -951,8 +951,6 @@ local function gather_descs()
 		help.longdesc["air"] = S("A transparent block, basically empty space. It is usually left behind after digging something.")
 	end
 
-	-- NOTE: New group “not_in_doc”: Items with this group will not have entries
-
 	local add_entries = function(deftable, category_id)
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
@@ -964,7 +962,6 @@ local function gather_descs()
 				name = def.description
 			end
 			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false or def.x_doc_items_create_entry == false) or forced then
-				-- TODO: Document custom fields in API.md
 				if def.x_doc_items_longdesc then
 					ld = def.x_doc_items_longdesc
 				end
