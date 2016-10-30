@@ -965,11 +965,21 @@ local function gather_descs()
 				name = def.description
 			end
 			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
+				-- TODO: Document custom fields in API.md
+				if def.x_doc_items_longdesc then
+					ld = def.x_doc_items_longdesc
+				end
 				if help.longdesc[id] ~= nil then
 					ld = help.longdesc[id]
 				end
+				if def.x_doc_items_usagehelp then
+					uh = def.x_doc_items_usagehelp
+				end
 				if help.usagehelp[id] ~= nil then
 					uh = help.usagehelp[id]
+				end
+				if def.x_doc_items_image then
+					im = def.x_doc_items_image
 				end
 				if help.image[id] ~= nil then
 					im = help.image[id]
