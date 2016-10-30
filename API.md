@@ -7,8 +7,38 @@ all functions.
 features!
 
 ## Quick start
-A common use case for using this API requires only to set some hand-written
-help texts for a few items.
+The most common use case for using this API requires only to set some
+hand-written help texts for your items. There are two methods, you should
+generally use only the preferred method.
+
+### Preferred
+The preferred way is to add the following fields into the item definition
+when using `minetest.register_node`, `minetest.register_tool` or
+`minetest.register_craftitem`:
+
+* `x_doc_items_longdesc`: Long description of this item.
+  Describe here what this item is, what it is for, its purpose, etc.
+* `x_doc_items_usagehelp`: Description of *how* this item can be used.
+
+Example:
+
+    minetest.register_node("example:dice", {
+        description = "Dice",
+        x_doc_items_longdesc = "A decorative dice which shows the numbers 1-6 on its sides.",
+        x_doc_items_usagehelp = "Rightclick the dice to roll it.",
+        tiles = { "example_dice.png" },
+        is_ground_content = false,
+        --[[ and so on … ]]
+    })
+
+When using this method, your mod does not need additional dependencies.
+
+See below for some recommendations on writing good help texts.
+
+### Alternative
+If the preferred method is not possible, for example, you want to add
+help texts for items which your mods do not register, you can use the
+alternative method which uses function calls.
 
 To add your description and/or usage help to items, optionally depend on
 `doc_items`, use the functions `doc.sub.items.set_items_longdesc` and
@@ -64,10 +94,49 @@ Those are two texts which are written manually for a specific item.
 
 Roughly, the long description is for describing **what** the item is, how it
 acts, what it is for. The usage help is for explaining **how** the
-item can be used but it is not needed for standard mining tools and weapons.
+item can be used. It is less important for standard mining tools and weapons.
 
-For more information, read the recommendations for
-`doc.sub.items.set_items_longdesc` and `doc.sub.items.set_items_usagehelp`.
+There is no hard length limit for the long description and the usage help.
+
+#### Recommendations for long description
+The long description should roughly contain the following info:
+
+* What the item does
+* What it is good for
+* How it may be generated in the world
+* Maybe some background info if you're in a funny mood
+* Notable information which does't fit elsewhere
+
+The desciption should normally **not** contain:
+
+* Information which is already covered by factoids, like digging groups,
+  damage, group memberships, etc.
+* How the item can be used
+* Direct information about other items
+* Any other redundant information
+* Crafting recipes
+
+One exception from the rule may be for highlighting the most important
+purpose of a simple item, like that coal lumps are primarily used as fuel.
+
+Sometimes, a long description is not neccessary because the item is already
+exhaustively explained by factoids.
+
+For very simple items, consider using one of the template texts (see below).
+
+Minimal style guide: Use complete sentences.
+
+#### Recommendations for usage help
+The usage help should only be set for items which are in some way special
+in their usage. Standard tools and weapons should never have an usage help.
+
+The rule of thumb is this: If a new player who already knows the Minetest
+basics, but not this item, will not direcly know how to use this item,
+then the usage help should be added. If basic Minetest knowledge or
+existing factoids are completely sufficient, usage help should not be added.
+
+The recommendations for what not to put into the usage help is the same
+as for long descriptions.
 
 #### Template texts
 For your convenience, a few template texts are provided for common texts
@@ -118,6 +187,12 @@ System to learn more.
 To hide an entry, add the item in question to the group `hidden_from_doc = 1`.
 If this is not possible, use `doc.sub.items.add_hidden_item_entries`.
 
+## New item fields
+This mod adds support for new fields of the item definition:
+
+* `x_doc_items_longdesc`: Long description
+* `x_doc_items_usagehelp`: Usage help
+
 ## Functions
 This is the reference of all available functions in this API.
 
@@ -126,47 +201,20 @@ Sets the long description of items. `longdesc_table` is
 a table where the keys are the itemstrings and the values
 are the the description strings for each item.
 
-The long description of an item is a manually written text
-to describe a particular item.
+Note the preferred method to set the long description is by using
+the item definition field `x_doc_items_longdesc`.
+
+This function is intended to be used to set the long description
+for items which your mods do not register by themselves.
 
 #### Default long descriptions
 `doc_items` registers two long descriptions by default: For air
 and the hand (default tool).
-It is possible to overwrite each of them, just call the funcion
-as usual.
+By using this function, you can overwrite these default descriptions.
 
-The hand description is kept very generic, but it might miss
+The default hand description is kept very generic, but it might miss
 some information on more complex subgames. In this case, the hand's
 long description might need overwriting.
-
-#### Recommendations
-The long description should roughly contain the following info:
-
-* What the item does
-* What it is good for
-* How it may be generated in the world
-* Maybe some background info if you're in a funny mood
-* Notable information which does't fit elsewhere
-
-The desciption should normally **not** contain:
-
-* Information which is already covered by factoids, like digging groups,
-  damage, group memberships, etc.
-* How the item can be used
-* Direct information about other items
-* Any other redundant information
-* Crafting recipes
-
-One exception from the rule may be for highlighting the most important
-purpose of a simple item, like that coal lumps are primarily used as fuel.
-
-Sometimes, a long description is not neccessary because the item is already
-exhaustively explained by factoids.
-
-For very simple items, consider using one of the text templates mentioned
-above.
-
-Minimal style guide: Use complete sentences.
 
 #### Example
     doc.sub.items.set_items_longdesc({
@@ -179,24 +227,10 @@ Sets the usage help texts of items. The function is completely analog
 to `doc.sub.items.set_items_longdesc` and has the same syntax, it
 only differs in semantics.
 
-The usage help is supposed to describe how the item can be used.
-
 #### Example
     doc.sub.items.set_items_usagehelp({
          ["example:painter"] = "Punch any block to paint it red.",
     })
-
-#### Recommendations
-The usage help should only be set for items which are in some way special
-in their usage. Standard tools and weapons should never have an usage help.
-
-The rule of thumb is this: If a new player who already knows the Minetest
-basics, but not this item, will not direcly know how to use this item,
-then the usage help should be added. If basic Minetest knowledge or
-existing factoids are completely sufficient, usage help should not be added.
-
-The recommendations for what not to put into the usage help is the same
-as for long descriptions.
 
 ### `doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)`
 ***Note***: This function not fully implemented. It currently supports only
