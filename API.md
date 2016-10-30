@@ -8,17 +8,15 @@ features!
 
 ## Quick start
 The most common use case for using this API requires only to set some
-hand-written help texts for your items. There are two methods, you should
-generally use only the preferred method.
+hand-written help texts for your items.
 
-### Preferred
-The preferred way is to add the following fields into the item definition
-when using `minetest.register_node`, `minetest.register_tool` or
-`minetest.register_craftitem`:
+The preferred way is to add the following optional fields to the
+item definition when using `minetest.register_node`, etc.:
 
 * `x_doc_items_longdesc`: Long description of this item.
   Describe here what this item is, what it is for, its purpose, etc.
 * `x_doc_items_usagehelp`: Description of *how* this item can be used.
+  Only set this if needed, e.g. standard mining tools don't need this.
 
 Example:
 
@@ -35,28 +33,9 @@ When using this method, your mod does not need additional dependencies.
 
 See below for some recommendations on writing good help texts.
 
-### Alternative
-If the preferred method is not possible, for example, you want to add
-help texts for items which your mods do not register, you can use the
-alternative method which uses function calls.
-
-To add your description and/or usage help to items, optionally depend on
-`doc_items`, use the functions `doc.sub.items.set_items_longdesc` and
-`doc.sub.items.set_items_usagehelp` in the following programming idiom:
-
-    if minetest.get_modpath("doc_items") ~= nil then
-        doc.sub.items.set_items.longdesc({
-            ["example:item1"] = "Long description goes here.",
-            ["example:item2"] = "Lour long description goes here.",
-        })
-        doc.sub.items.set_items.usagehelp({
-            ["example:item1"] = "Describe here how this item can be used.",
-            ["example:item2"] = "Describe here how this item can be used.",
-        })
-    end
-
-Don't forget to read at least the documentation of these functions.
-
+If you need to set the help texts of nodes you don't register, or you
+want to overwrite existing help texts, use `doc.sub.items.set_items_longdesc`
+and `doc.sub.items.set_items_longdesc` (see below).
 If you need more customization, read ahead. ;-)
 
 ## Concepts
