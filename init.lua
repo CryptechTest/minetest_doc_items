@@ -952,19 +952,18 @@ local function gather_descs()
 	end
 
 	-- NOTE: New group “not_in_doc”: Items with this group will not have entries
-	-- NOTE: New group “hide_from_doc”: Items with this group will not be visible in the entry list initially
 
 	local add_entries = function(deftable, category_id)
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
-			if (forced_items[id] == true or def.groups.in_doc) and def ~= nil then forced = true end
+			if (forced_items[id] == true or def.groups.in_doc or def.x_doc_items_create_entry == true) and def ~= nil then forced = true end
 			if item_name_overrides[id] ~= nil then
 				name = item_name_overrides[id]
 			else
 				name = def.description
 			end
-			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false) or forced then
+			if not (name == nil or name == "" or def.groups.not_in_doc or forced_items[id] == false or def.x_doc_items_create_entry == false) or forced then
 				-- TODO: Document custom fields in API.md
 				if def.x_doc_items_longdesc then
 					ld = def.x_doc_items_longdesc
@@ -986,6 +985,9 @@ local function gather_descs()
 				end
 				local hidden
 				if id == "air" then hidden = false end
+				if type(def.x_doc_items_hidden) == "boolean" then
+					hidden = def.x_doc_items_hidden
+				end
 				local custom_image
 				name = scrub_newlines(name)
 				local infotable = {
