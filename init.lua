@@ -18,6 +18,13 @@ doc.sub.items.temp.craftitem = S("This item is primarily used for crafting other
 doc.sub.items.temp.eat = S("Hold it in your hand, then leftclick to eat it.")
 doc.sub.items.temp.eat_bad = S("Hold it in your hand, then leftclick to eat it. But why would you want to do this?")
 
+doc.sub.items.settings = {}
+doc.sub.items.settings.friendly_group_names = false
+local setting = minetest.setting_getbool("doc_items_friendly_group_names")
+if setting ~= nil then
+	doc.sub.items.settings.friendly_group_names = setting
+end
+
 -- Local stuff
 local groupdefs = {}
 local mininggroups = {}
@@ -49,7 +56,11 @@ local groups_to_string = function(grouptable, filter)
 				-- List seperator
 				gstring = gstring .. S(", ")
 			end
-			gstring = gstring .. groupdefs[id]
+			if groupdefs[id] ~= nil and doc.sub.items.settings.friendly_group_names == true then
+				gstring = gstring .. groupdefs[id]
+			else
+				gstring = gstring .. id
+			end
 			groups_count = groups_count + 1
 		end
 	end
@@ -99,7 +110,7 @@ local description_for_formspec = function(itemstring)
 end
 
 local group_to_string = function(groupname)
-	if groupdefs[groupname] ~= nil then
+	if groupdefs[groupname] ~= nil and doc.sub.items.settings.friendly_group_names == true then
 		return groupdefs[groupname]
 	else
 		return groupname
