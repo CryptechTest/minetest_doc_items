@@ -888,8 +888,9 @@ function doc.sub.items.add_item_image_overrides(image_overrides)
 end
 
 -- Register group definition stuff
--- “Real” group names to replace the rather technical names
-function doc.sub.items.add_real_group_names(groupnames)
+-- More (user-)friendly group names to replace the rather technical names
+-- for better understanding
+function doc.sub.items.add_friendly_group_names(groupnames)
 	for internal, real in pairs(groupnames) do
 		groupdefs[internal] = real
 	end

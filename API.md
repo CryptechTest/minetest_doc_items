@@ -256,7 +256,7 @@ to all blocks which are member of the group `puts_out_fire`.
         end
     end)
 
-### `doc.sub.items.add_real_group_names(groupnames)`
+### `doc.sub.items.add_friendly_group_names(groupnames)`
 Use this function so set some more readable group names to show them
 in the formspec, since the internal group names are somewhat cryptic
 to players.
@@ -266,7 +266,7 @@ the values are the group names which will be actually shown in the
 Documentation System.
 
 ***Note***: This function is mostly there to work around a problem in
-Minetest as it does not support “real” group names, which means exposing
+Minetest as it does not support “friendly” group names, which means exposing
 groups to an interface is not pretty. Therefore, this function may be
 deprecated when Minetest supports such a thing.
 
