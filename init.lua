@@ -403,7 +403,7 @@ doc.new_category("nodes", {
 				end
 			end
 			if data.def.walkable == false then
-				if data.def.buildable_to == false and drop ~= "" then
+				if data.def.buildable_to == false and data.def.drop ~= "" then
 					datastring = datastring .. S("This block will drop as an item when a falling block ends up inside it.").."\n"
 				else
 					datastring = datastring .. S("This block is destroyed when a falling block ends up inside it.").."\n"
