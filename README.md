@@ -1,7 +1,7 @@
 # `doc_items` (Version 0.6.0)
 ## Description
 Automatically generated documentation of blocks, tools, weapons, crafting
-itms and other items.
+items and other items.
 
 The goal is to tell the player as much about basically almost all items as
 possible, making it very convenient to look up simple things.
@@ -11,11 +11,11 @@ a complete in-game documentation so no item leaves you confused.
 
 This mod is useful to learn the hard facts about practically all items, like
 how much damage weapon XYZ deals or whether you can dig that block.
-This modes does NOT give you long explanations about how to use certain
+This mod does *not* give you long explanations about how to use certain
 nontrivial things, like the furnace from Minetest Game. This info might be
 provided by other mods and insert it into the documentation system.
 
-This mod provides 3 new categories for the Documentation System [doc]:
+This mod provides 3 new categories for the Documentation System [`doc`]:
 
 * Blocks (e.g. dirt, stone, wooden stair)
 * Tools and weapons (e.g. wooden pickaxe, steel sword, screwdriver)
@@ -34,7 +34,9 @@ For all items, their range and stack size is shown.
 
 This mod also allows for mods to adding custom written description
 and usage help texts in freeform and even custom automatically generated texts
-for mod-specific information like flammability in Minetest Game.
+for mod-specific information like flammability in Minetest Game. This is
+one of the core features of this mod; the mod relies on other mods to
+provide their custom help texts for a full documentation.
 
 If you find a particular item which is lacking an explanation on usage,
 request the mod author to add `doc_items` support. (But please wait
