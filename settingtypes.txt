@@ -7,3 +7,7 @@
 #understanding, they are not official.
 #This feature might be removed in later versions if it becomes obsolete.
 doc_items_friendly_group_names (Show “friendly” group names) bool false
+
+#If enabled, the mod will show the itemstring of the entry for each item.
+#This is mostly for programmers and power users.
+doc_items_show_itemstrings (Show itemstrings) bool false

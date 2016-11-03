@@ -24,6 +24,10 @@ local setting = minetest.setting_getbool("doc_items_friendly_group_names")
 if setting ~= nil then
 	doc.sub.items.settings.friendly_group_names = setting
 end
+setting = minetest.setting_getbool("doc_items_show_itemstrings")
+if setting ~= nil then
+	doc.sub.items.settings.itemstring = setting
+end
 
 -- Local stuff
 local groupdefs = {}
@@ -720,6 +724,11 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "nodes")
 
+			if doc.sub.items.settings.itemstring ~= nil then
+				datastring = newline2(datastring)
+				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
+			end
+
 			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
 
 			return formstring
@@ -791,6 +800,11 @@ doc.new_category("tools", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "tools")
 
+			if doc.sub.items.settings.itemstring ~= nil then
+				datastring = newline2(datastring)
+				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
+			end
+
 			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
 
 			return formstring
@@ -853,6 +867,11 @@ doc.new_category("craftitems", {
 			-- Show fuel recipe
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "craftitems")
+
+			if doc.sub.items.settings.itemstring ~= nil then
+				datastring = newline2(datastring)
+				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
+			end
 
 			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
 
