@@ -270,6 +270,14 @@ Minetest as it does not support “friendly” group names, which means exposing
 groups to an interface is not pretty. Therefore, this function may be
 deprecated when Minetest supports such a thing.
 
+### `doc.sub.items.get_group_name(internal_group_name)`
+Returns the group name of the specified group as displayed by this mod.
+If the setting `doc_items_friendly_group_names` is `true`, this might
+return a “friendly” group name (see above). If no friendly group name
+exists, `internal_group_name` is returned.
+If `doc_items_friendly_group_names` is `false`, the argument is always
+returned.
+
 ### `doc.sub.items.add_notable_groups(groupnames)`
 Add a list of groups you think are notable enough to be mentioned in the
 “This item belongs to the following groups: (…)” factoid.
@@ -299,13 +307,6 @@ Do not add groups if:
 The intention of this function is to give a short rundown of the groups
 which are notable as they are important to gameplay in some way yet don't
 deserve a full-blown factoid.
-
-### `doc.sub.items.add_notable_groups(groupnames)`
-Declare a number of groups as mining groups, that is, groups which are
-primarily used for determining mining times. They will appear in the
-“Mining capabilities” factoid.
-
-`groupnames` is a table of group names.
 
 ### `doc.sub.items.add_forced_item_entries(itemstrings)`
 Adds items which will be forced to be added to the entry list, even if
@@ -358,3 +359,5 @@ It is possible to override **these** names, just use the function normally.
         ["farming:wheat_8"] = "Wheat Plant", -- Item description was empty
         ["example:node"] = "My Custom Name",
     })
+
+

@@ -109,7 +109,7 @@ local description_for_formspec = function(itemstring)
 	end
 end
 
-local group_to_string = function(groupname)
+doc.sub.items.get_group_name = function(groupname)
 	if groupdefs[groupname] ~= nil and doc.sub.items.settings.friendly_group_names == true then
 		return groupdefs[groupname]
 	else
@@ -166,7 +166,7 @@ local toolcaps_to_text = function(tool_capabilities)
 				else
 					levelstring = S("any level")
 				end
-				formstring = formstring .. string.format(S("• %s: %s, %s"), group_to_string(k), ratingstring, levelstring)
+				formstring = formstring .. string.format(S("• %s: %s, %s"), doc.sub.items.get_group_name(k), ratingstring, levelstring)
 				formstring = formstring .. "\n"
 			end
 		end
@@ -176,7 +176,7 @@ local toolcaps_to_text = function(tool_capabilities)
 		if damage_groups ~= nil then
 			formstring = formstring .. S("This is a melee weapon which deals damage by punching.\nMaximum damage per hit:\n")
 			for k,v in pairs(damage_groups) do
-				formstring = formstring .. string.format(S("• %s: %d HP"), group_to_string(k), v)
+				formstring = formstring .. string.format(S("• %s: %d HP"), doc.sub.items.get_group_name(k), v)
 				formstring = formstring .. "\n"
 			end
 		end
@@ -527,7 +527,7 @@ doc.new_category("nodes", {
 					for group,_ in pairs(mininggroups) do
 						local rating = data.def.groups[group]
 						if rating ~= nil then
-							mstring = mstring .. string.format(S("• %s: %d"), group_to_string(group), rating).."\n"
+							mstring = mstring .. string.format(S("• %s: %d"), doc.sub.items.get_group_name(group), rating).."\n"
 							minegroupcount = minegroupcount + 1
 						end
 					end
