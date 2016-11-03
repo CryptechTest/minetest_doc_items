@@ -724,7 +724,7 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "nodes")
 
-			if doc.sub.items.settings.itemstring ~= nil then
+			if doc.sub.items.settings.itemstring == true then
 				datastring = newline2(datastring)
 				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
 			end
@@ -800,7 +800,7 @@ doc.new_category("tools", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "tools")
 
-			if doc.sub.items.settings.itemstring ~= nil then
+			if doc.sub.items.settings.itemstring == true then
 				datastring = newline2(datastring)
 				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
 			end
@@ -868,7 +868,7 @@ doc.new_category("craftitems", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "craftitems")
 
-			if doc.sub.items.settings.itemstring ~= nil then
+			if doc.sub.items.settings.itemstring == true then
 				datastring = newline2(datastring)
 				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
 			end
