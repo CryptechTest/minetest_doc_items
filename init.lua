@@ -724,7 +724,7 @@ doc.new_category("nodes", {
 
 			return formstring
 		else
-			return "label[0,1;NO DATA AVALIABLE!"
+			return "label[0,1;NO DATA AVALIABLE!]"
 		end
 	end
 })
@@ -795,7 +795,7 @@ doc.new_category("tools", {
 
 			return formstring
 		else
-			return "label[0,1;NO DATA AVALIABLE!"
+			return "label[0,1;NO DATA AVALIABLE!]"
 		end
 	end
 })
@@ -858,7 +858,7 @@ doc.new_category("craftitems", {
 
 			return formstring
 		else
-			return "label[0,1;NO DATA AVALIABLE!"
+			return "label[0,1;NO DATA AVALIABLE!]"
 		end
 	end
 })
