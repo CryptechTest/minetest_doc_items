@@ -265,9 +265,9 @@ doc.new_category("nodes", {
 			local formstring = ""
 			if data.itemstring ~= "air" then
 				if data.image ~= nil then
-					formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
+					formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
 				else
-					formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+					formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
 				end
 			end
 			local datastring = ""
@@ -729,7 +729,7 @@ doc.new_category("nodes", {
 				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
 			end
 
-			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
+			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
 			return formstring
 		else
@@ -749,12 +749,13 @@ doc.new_category("tools", {
 			local formstring = ""
 			-- Hand
 			if data.itemstring == "" then
-				formstring = formstring .. "image[11,0;1,1;"..minetest.registered_items[""].wield_image.."]"
+				formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..
+					minetest.registered_items[""].wield_image.."]"
 			-- Other tools
 			elseif data.image ~= nil then
-				formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
+				formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
 			else
-				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+				formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
 			end
 			local datastring = ""
 			if longdesc ~= nil then
@@ -805,7 +806,7 @@ doc.new_category("tools", {
 				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
 			end
 
-			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
+			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
 			return formstring
 		else
@@ -825,9 +826,9 @@ doc.new_category("craftitems", {
 			local usagehelp = data.usagehelp
 			local formstring = ""
 			if data.image ~= nil then
-				formstring = formstring .. "image[11,0;1,1;"..data.image.."]"
+				formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
 			else
-				formstring = formstring .. "item_image[11,0;1,1;"..data.itemstring.."]"
+				formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
 			end
 			local datastring = ""
 			if longdesc ~= nil then
@@ -873,7 +874,7 @@ doc.new_category("craftitems", {
 				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
 			end
 
-			formstring = formstring .. doc.widgets.text(datastring, 0, 0.5, 10.8, 8)
+			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
 			return formstring
 		else
