@@ -987,9 +987,9 @@ local function gather_descs()
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
-			if (forced_items[id] == true or def.groups.in_doc or def.x_doc_items_create_entry == true) and def ~= nil then forced = true end
-			if def.x_doc_items_entry_name ~= nil then
-				name = def.x_doc_items_entry_name
+			if (forced_items[id] == true or def.groups.in_doc or def._doc_items_create_entry == true) and def ~= nil then forced = true end
+			if def._doc_items_entry_name ~= nil then
+				name = def._doc_items_entry_name
 			end
 			if item_name_overrides[id] ~= nil then
 				name = item_name_overrides[id]
@@ -997,29 +997,29 @@ local function gather_descs()
 			if name == nil then
 				name = def.description
 			end
-			if not (((def.description == nil or def.description == "") and def.x_doc_items_entry_name == nil) or def.groups.not_in_doc or forced_items[id] == false or def.x_doc_items_create_entry == false) or forced then
-				if def.x_doc_items_longdesc then
-					ld = def.x_doc_items_longdesc
+			if not (((def.description == nil or def.description == "") and def._doc_items_entry_name == nil) or def.groups.not_in_doc or forced_items[id] == false or def._doc_items_create_entry == false) or forced then
+				if def._doc_items_longdesc then
+					ld = def._doc_items_longdesc
 				end
 				if help.longdesc[id] ~= nil then
 					ld = help.longdesc[id]
 				end
-				if def.x_doc_items_usagehelp then
-					uh = def.x_doc_items_usagehelp
+				if def._doc_items_usagehelp then
+					uh = def._doc_items_usagehelp
 				end
 				if help.usagehelp[id] ~= nil then
 					uh = help.usagehelp[id]
 				end
-				if def.x_doc_items_image then
-					im = def.x_doc_items_image
+				if def._doc_items_image then
+					im = def._doc_items_image
 				end
 				if help.image[id] ~= nil then
 					im = help.image[id]
 				end
 				local hidden
 				if id == "air" then hidden = false end
-				if type(def.x_doc_items_hidden) == "boolean" then
-					hidden = def.x_doc_items_hidden
+				if type(def._doc_items_hidden) == "boolean" then
+					hidden = def._doc_items_hidden
 				end
 				local custom_image
 				name = scrub_newlines(name)

@@ -13,17 +13,17 @@ hand-written help texts for your items.
 The preferred way is to add the following optional fields to the
 item definition when using `minetest.register_node`, etc.:
 
-* `x_doc_items_longdesc`: Long description of this item.
+* `_doc_items_longdesc`: Long description of this item.
   Describe here what this item is, what it is for, its purpose, etc.
-* `x_doc_items_usagehelp`: Description of *how* this item can be used.
+* `_doc_items_usagehelp`: Description of *how* this item can be used.
   Only set this if needed, e.g. standard mining tools don't need this.
 
 Example:
 
     minetest.register_node("example:dice", {
         description = "Dice",
-        x_doc_items_longdesc = "A decorative dice which shows the numbers 1-6 on its sides.",
-        x_doc_items_usagehelp = "Rightclick the dice to roll it.",
+        _doc_items_longdesc = "A decorative dice which shows the numbers 1-6 on its sides.",
+        _doc_items_usagehelp = "Rightclick the dice to roll it.",
         tiles = { "example_dice.png" },
         is_ground_content = false,
         --[[ and so on … ]]
@@ -167,12 +167,12 @@ If this is not possible, use `doc.sub.items.add_hidden_item_entries`.
 ## New item fields
 This mod adds support for new fields of the item definition:
 
-* `x_doc_items_longdesc`: Long description
-* `x_doc_items_usagehelp`: Usage help
-* `x_doc_items_image`: Entry image (default: inventory image)
-* `x_doc_items_hidden`: Whether entry is hidden (default: `false` for Air, `true` for everything else)
-* `x_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
-* `x_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
+* `_doc_items_longdesc`: Long description
+* `_doc_items_usagehelp`: Usage help
+* `_doc_items_image`: Entry image (default: inventory image)
+* `_doc_items_hidden`: Whether entry is hidden (default: `false` for Air, `true` for everything else)
+* `_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
+* `_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
   of the item, or “Nameless entry” if it is `nil`.
 
 ## Functions
@@ -184,7 +184,7 @@ a table where the keys are the itemstrings and the values
 are the the description strings for each item.
 
 Note the preferred method to set the long description is by using
-the item definition field `x_doc_items_longdesc`.
+the item definition field `_doc_items_longdesc`.
 
 This function is intended to be used to set the long description
 for items which your mods do not register by themselves.
