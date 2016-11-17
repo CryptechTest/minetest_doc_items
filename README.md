@@ -53,4 +53,4 @@ explanation, this mod can help you in adding documentation for them.
 Read `API.md` to learn more.
 
 ## License
-Everything in this mod is licensed under WTFPL.
+Everything in this mod is licensed under the MIT License.
