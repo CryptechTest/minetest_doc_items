@@ -3,7 +3,7 @@ local S
 if minetest.get_modpath("intllib") then
 	S = intllib.Getter()
 else
-	S = function(s) return s end
+	S = function(s,a,...)a={a,...}return s:gsub("@(%d+)",function(n)return a[tonumber(n)]end)end
 end
 
 doc.sub.items = {}
@@ -131,7 +131,7 @@ local burntime_to_text = function(burntime)
 	elseif burntime == 1 then
 		return S("1 second")
 	else
-		return string.format(S("%d seconds"), burntime)
+		return S("@1 seconds", burntime)
 	end
 end
 
@@ -142,7 +142,7 @@ local toolcaps_to_text = function(tool_capabilities)
 		if tool_capabilities.full_punch_interval ~= nil then
 			punch = tool_capabilities.full_punch_interval
 		end
-		formstring = formstring .. string.format(S("Full punch interval: %.1f s"), punch)
+		formstring = formstring .. S("Full punch interval: @1 s", string.format("%.1f", punch))
 		formstring = formstring .. "\n\n"
 
 		local groupcaps = tool_capabilities.groupcaps
@@ -161,20 +161,20 @@ local toolcaps_to_text = function(tool_capabilities)
 				local ratingstring = "Unknown rating"
 				if minrating ~= nil and maxrating ~= nil then
 					if minrating == maxrating then
-						ratingstring = string.format(S("Rating %d"), minrating)
+						ratingstring = S("Rating @1", minrating)
 					else
-						ratingstring = string.format(S("Rating %d-%d"), minrating, maxrating)
+						ratingstring = S("Rating @1-@2", minrating, maxrating)
 					end
 				end
 				local levelstring
 				if v.maxlevel == 0 then
 					levelstring = S("level 0")
 				elseif v.maxlevel ~= nil then
-					levelstring = string.format(S("level 0-%d"), v.maxlevel)
+					levelstring = S("level 0-@1", v.maxlevel)
 				else
 					levelstring = S("any level")
 				end
-				formstring = formstring .. string.format(S("• %s: %s, %s"), doc.sub.items.get_group_name(k), ratingstring, levelstring)
+				formstring = formstring .. S("• @1: @2, @3", doc.sub.items.get_group_name(k), ratingstring, levelstring)
 				formstring = formstring .. "\n"
 			end
 		end
@@ -184,7 +184,7 @@ local toolcaps_to_text = function(tool_capabilities)
 		if damage_groups ~= nil then
 			formstring = formstring .. S("This is a melee weapon which deals damage by punching.\nMaximum damage per hit:\n")
 			for k,v in pairs(damage_groups) do
-				formstring = formstring .. string.format(S("• %s: %d HP"), doc.sub.items.get_group_name(k), v)
+				formstring = formstring .. S("• @1: @2 HP", doc.sub.items.get_group_name(k), v)
 				formstring = formstring .. "\n"
 			end
 		end
@@ -197,16 +197,16 @@ local range_factoid = function(itemstring, def)
 	local itemrange = def.range
 	if itemstring == "" then
 		if handrange ~= nil then
-			return string.format(S("Range: %d"), itemrange)
+			return S("Range: @1", itemrange)
 		else
 			return S("Range: 4")
 		end
 	else
 		if handrange == nil then handrange = 4 end
 		if itemrange ~= nil then
-			return string.format(S("Range: %d"), itemrange)
+			return S("Range: @1", itemrange)
 		else
-			return string.format(S("Range: %s (%d)"), item_name_overrides[""], handrange)
+			return S("Range: @1 (@2)", item_name_overrides[""], handrange)
 		end
 	end
 end
@@ -217,17 +217,18 @@ local fuel_factoid = function(itemstring, ctype)
 	local result, decremented =  minetest.get_craft_result({method = "fuel", items = {itemstring}})
 	if result ~= nil and result.time > 0 then
 		local base
+		local burntext = burntime_to_text(result.time)
 		if ctype == "tools" then
-			base = S("This tool can serve as a smelting fuel with a burning time of %s.")
+			base = S("This tool can serve as a smelting fuel with a burning time of @1.", burntext)
 		elseif ctype == "nodes" then
-			base = S("This block can serve as a smelting fuel with a burning time of %s.")
+			base = S("This block can serve as a smelting fuel with a burning time of @1.", burntext)
 		else
-			base = S("This item can serve as a smelting fuel with a burning time of %s.")
+			base = S("This item can serve as a smelting fuel with a burning time of @1.", burntext)
 		end
-		formstring = formstring .. string.format(base, burntime_to_text(result.time))
+		formstring = formstring .. base
 		local replaced = decremented.items[1]:get_name()
 		if not decremented.items[1]:is_empty() and replaced ~= itemstring then
-			formstring = formstring .. string.format(S(" Using it as fuel turns it into: %s."), description_for_formspec(replaced))
+			formstring = formstring .. S(" Using it as fuel turns it into: @1.", description_for_formspec(replaced))
 		end
 		formstring = newline(formstring)
 	end
@@ -276,29 +277,29 @@ doc.new_category("nodes", {
 			end
 			local datastring = ""
 			if longdesc ~= nil then
-				datastring = datastring .. string.format(S("Description: %s"), longdesc) .."\n\n"
+				datastring = datastring .. S("Description: @1", longdesc) .."\n\n"
 			end
 			if usagehelp ~= nil then
-				datastring = datastring .. string.format(S("Usage help: %s"), usagehelp) .. "\n\n"
+				datastring = datastring .. S("Usage help: @1", usagehelp) .. "\n\n"
 			end
-			datastring = datastring .. string.format(S("Maximum stack size: %d"), data.def.stack_max) .. "\n"
+			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max) .. "\n"
 
 			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
 
 			datastring = newline2(datastring)
 
 			if data.def.liquids_pointable == true then
-				datastring = datastring .. string.format(S("This block points to liquids.")).. "\n"
+				datastring = datastring .. S("This block points to liquids.").. "\n"
 			end
 			if data.def.on_use ~= nil then
-				datastring = datastring .. string.format(S("Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.")) .. "\n"
+				datastring = datastring .. S("Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.") .. "\n"
 			end
 
 			datastring = newline2(datastring)
 
 			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
 
-			datastring = datastring .. string.format(S("Collidable: %s"), yesno(data.def.walkable)) .. "\n"
+			datastring = datastring .. S("Collidable: @1", yesno(data.def.walkable)) .. "\n"
 			local liquid
 			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
 			if data.def.pointable == true then
@@ -324,9 +325,9 @@ doc.new_category("nodes", {
 				if range == 0 then
 					datastring = datastring .. S("• No flowing") .. "\n"
 				else
-					datastring = datastring .. string.format(S("• Flowing range: %d"), range) .. "\n"
+					datastring = datastring .. S("• Flowing range: @1", range) .. "\n"
 				end
-				datastring = datastring .. string.format(S("• Viscosity: %d"), viscos) .. "\n"
+				datastring = datastring .. S("• Viscosity: @1", viscos) .. "\n"
 			end
 			datastring = newline2(datastring)
 
@@ -334,23 +335,23 @@ doc.new_category("nodes", {
 			--- Direct interaction with the player
 			---- Damage (very important)
 			if data.def.damage_per_second ~= nil and data.def.damage_per_second > 1 then
-				datastring = datastring .. string.format(S("This block causes a damage of %d hit points per second."), data.def.damage_per_second) .. "\n"
+				datastring = datastring .. S("This block causes a damage of @1 hit points per second.", data.def.damage_per_second) .. "\n"
 			elseif data.def.damage_per_second == 1 then
-				datastring = datastring .. string.format(S("This block causes a damage of %d hit point per second."), data.def.damage_per_second) .. "\n"
+				datastring = datastring .. S("This block causes a damage of @1 hit point per second.", data.def.damage_per_second) .. "\n"
 			end
 			if data.def.drowning > 1 then
-				datastring = datastring .. string.format(S("This block decreases your breath and causes a drowning damage of %d hit points every 2 seconds."), data.def.drowning) .. "\n"
+				datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit points every 2 seconds.", data.def.drowning) .. "\n"
 			elseif data.def.drowning == 1 then
-				datastring = datastring .. string.format(S("This block decreases your breath and causes a drowning damage of %d hit point every 2 seconds."), data.def.drowning) .. "\n"
+				datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit point every 2 seconds.", data.def.drowning) .. "\n"
 			end
 			local fdap = data.def.groups.fall_damage_add_percent
 			if fdap ~= nil then
 				if fdap > 0 then
-					datastring = datastring .. string.format(S("The fall damage on this block is increased by %d%%."), fdap) .. "\n"
+					datastring = datastring .. S("The fall damage on this block is increased by @1%.", fdap) .. "\n"
 				elseif fdap <= -100 then
 					datastring = datastring .. S("This block negates all fall damage.") .. "\n"
 				else
-					datastring = datastring .. string.format(S("The fall damage on this block is reduced by %d%%"), math.abs(fdap)) .. "\n"
+					datastring = datastring .. S("The fall damage on this block is reduced by @1%.", math.abs(fdap)) .. "\n"
 				end
 			end
 
@@ -363,7 +364,7 @@ doc.new_category("nodes", {
 			end
 			local bouncy = data.def.groups.bouncy
 			if bouncy ~= nil then
-				datastring = datastring .. string.format(S("This block will make you bounce off with an elasticity of %d%%"), bouncy).."\n"
+				datastring = datastring .. S("This block will make you bounce off with an elasticity of @1%.", bouncy).."\n"
 			end
 
 
@@ -482,16 +483,16 @@ doc.new_category("nodes", {
 					end
 				end
 				if #nodes == 1 then
-					datastring = datastring .. string.format(S("This block connects to this block: %s."), nstring) .. "\n"
+					datastring = datastring .. S("This block connects to this block: @1.", nstring) .. "\n"
 				elseif #nodes > 1 then
-					datastring = datastring .. string.format(S("This block connects to these blocks: %s."), nstring) .. "\n"
+					datastring = datastring .. S("This block connects to these blocks: @1.", nstring) .. "\n"
 				end
 
 				local gstring, gcount = groups_to_string(groups)
 				if gcount == 1 then
-					datastring = datastring .. string.format(S("This block connects to blocks of the %s group."), gstring) .. "\n"
+					datastring = datastring .. S("This block connects to blocks of the @1 group.", gstring) .. "\n"
 				elseif gcount > 1 then
-					datastring = datastring .. string.format(S("This block connects to blocks of the following groups: %s."), gstring) .. "\n"
+					datastring = datastring .. S("This block connects to blocks of the following groups: @1.", gstring) .. "\n"
 				end
 			end
 
@@ -535,12 +536,12 @@ doc.new_category("nodes", {
 					for group,_ in pairs(mininggroups) do
 						local rating = data.def.groups[group]
 						if rating ~= nil then
-							mstring = mstring .. string.format(S("• %s: %d"), doc.sub.items.get_group_name(group), rating).."\n"
+							mstring = mstring .. S("• @1: @2", doc.sub.items.get_group_name(group), rating).."\n"
 							minegroupcount = minegroupcount + 1
 						end
 					end
 					if data.def.groups.level ~= nil then
-						mstring = mstring .. string.format(S("Mining level: %d"), data.def.groups.level).."\n"
+						mstring = mstring .. S("Mining level: @1", data.def.groups.level).."\n"
 					else
 						mstring = mstring .. S("Mining level: 0").."\n"
 					end
@@ -563,9 +564,9 @@ doc.new_category("nodes", {
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					datastring = datastring .. string.format(S("This block belongs to the %s group."), gstring) .. "\n"
+					datastring = datastring .. S("This block belongs to the @1 group.", gstring) .. "\n"
 				else
-					datastring = datastring .. string.format(S("This block belongs to these groups: %s."), gstring) .. "\n"
+					datastring = datastring .. S("This block belongs to these groups: @1.", gstring) .. "\n"
 				end
 			end
 			datastring = newline2(datastring)
@@ -584,9 +585,9 @@ doc.new_category("nodes", {
 						local desc = get_desc(dropstack)
 						local count = dropstack:get_count()
 						if count > 1 then
-							datastring = datastring .. string.format(S("This block will drop the following when mined: %d×%s."), count, desc).."\n"
+							datastring = datastring .. S("This block will drop the following when mined: @1×@2.", count, desc).."\n"
 						else
-							datastring = datastring .. string.format(S("This block will drop the following when mined: %s."), desc).."\n"
+							datastring = datastring .. S("This block will drop the following when mined: @1.", desc).."\n"
 						end
 					end
 				elseif type(data.def.drop) == "table" and data.def.drop.items ~= nil then
@@ -688,7 +689,7 @@ doc.new_category("nodes", {
 							local desc = S(itemtable.desc)
 							local count = itemtable.count
 							if count ~= 1 then
-								desc = string.format(S("%d×%s"), count, desc)
+								desc = S("@1×@2", count, desc)
 							end
 							dropstring_this = dropstring_this .. desc
 							icount = icount + 1
@@ -701,14 +702,15 @@ doc.new_category("nodes", {
 							local chance = (1/rarity)*100
 							if rarity > 200 then -- <0.5%
 							-- For very low percentages
-								dropstring_this = string.format(S("%s (<0.5%)"), dropstring_this)
+								dropstring_this = S("@1 (<0.5%)", dropstring_this)
 							else
 								-- Add circa indicator for percentages with decimal point
 								-- FIXME: Is this check actually reliable?
+								local fchance = string.format("%.0f", chance)
 								if math.fmod(chance, 1) > 0 then
-									dropstring_this = string.format(S("%s (ca. %.0f%%)"), dropstring_this, chance)
+									dropstring_this = S("@1 (ca. @2%)", dropstring_this, fchance)
 								else
-									dropstring_this = string.format(S("%s (%.0f%%)"), dropstring_this, chance)
+									dropstring_this = S("@1 (@2%)", dropstring_this, fchance)
 								end
 							end
 						end
@@ -730,7 +732,7 @@ doc.new_category("nodes", {
 
 			if doc.sub.items.settings.itemstring == true then
 				datastring = newline2(datastring)
-				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
+				datastring = datastring .. S("Itemstring: \"@1\"", data.itemstring)
 			end
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
@@ -763,15 +765,15 @@ doc.new_category("tools", {
 			end
 			local datastring = ""
 			if longdesc ~= nil then
-				datastring = datastring .. string.format(S("Description: %s"), longdesc)
+				datastring = datastring .. S("Description: @1", longdesc)
 				datastring = newline2(datastring)
 			end
 			if usagehelp ~= nil then
-				datastring = datastring .. string.format(S("Usage help: %s"), usagehelp)
+				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
 			if data.itemstring ~= "" then
-				datastring = datastring .. string.format(S("Maximum stack size: %d"), data.def.stack_max).. "\n"
+				datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
 			end
 
 			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
@@ -795,9 +797,9 @@ doc.new_category("tools", {
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					datastring = datastring .. string.format(S("This tool belongs to the %s group."), gstring).."\n"
+					datastring = datastring .. S("This tool belongs to the @1 group.", gstring).."\n"
 				else
-					datastring = datastring .. string.format(S("This tool belongs to these groups: %s."), gstring).."\n"
+					datastring = datastring .. S("This tool belongs to these groups: @1.", gstring).."\n"
 				end
 			end
 
@@ -807,7 +809,7 @@ doc.new_category("tools", {
 
 			if doc.sub.items.settings.itemstring == true then
 				datastring = newline2(datastring)
-				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
+				datastring = datastring .. S("Itemstring: \"@1\"", data.itemstring)
 			end
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
@@ -836,12 +838,12 @@ doc.new_category("craftitems", {
 			end
 			local datastring = ""
 			if longdesc ~= nil then
-				datastring = datastring .. string.format(S("Description: %s"), longdesc).."\n\n"
+				datastring = datastring .. S("Description: @1", longdesc).."\n\n"
 			end
 			if usagehelp ~= nil then
-				datastring = datastring .. string.format(S("Usage help: %s"), usagehelp).. "\n\n"
+				datastring = datastring .. S("Usage help: @1", usagehelp).. "\n\n"
 			end
-			datastring = datastring .. string.format(S("Maximum stack size: %d"), data.def.stack_max).. "\n"
+			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
 
 			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
 
@@ -863,9 +865,9 @@ doc.new_category("craftitems", {
 			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 			if gstring ~= nil then
 				if gcount == 1 then
-					datastring = datastring .. string.format(S("This item belongs to the %s group."), gstring) .. "\n"
+					datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
 				else
-					datastring = datastring .. string.format(S("This item belongs to these groups: %s."), gstring) .. "\n"
+					datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
 				end
 			end
 
@@ -875,7 +877,7 @@ doc.new_category("craftitems", {
 
 			if doc.sub.items.settings.itemstring == true then
 				datastring = newline2(datastring)
-				datastring = datastring .. string.format(S("Itemstring: \"%s\""), data.itemstring)
+				datastring = datastring .. S("Itemstring: \"@1\"", data.itemstring)
 			end
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
