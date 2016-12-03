@@ -104,6 +104,11 @@ end
 
 -- Extract suitable item description for formspec
 local description_for_formspec = function(itemstring)
+	if minetest.registered_items[itemstring] == nil then
+		-- Huh? The item doesn't exist for some reason. Better give a dummy string
+		minetest.log("warning", "[doc] Unknown item detected: "..tostring(itemstring))
+		return S("Unknown item (@1)", tostring(itemstring))
+	end
 	local description = minetest.registered_items[itemstring].description
 	if description == nil or description == "" then
 		return minetest.formspec_escape(itemstring)

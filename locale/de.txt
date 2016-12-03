@@ -121,6 +121,7 @@ any level = beliebige Stufe
 level 0 = Stufe 0
 level 0-%d = Stufen 0-%d
 unknown = unbekannt
+Unknown item (@1) = Unbekannter Gegenstand (@1)
 • %s: %d = • %s: %d
 • %s: %d HP = • %s: %d TP
 • %s: %s, %s = • %s: %s, %s

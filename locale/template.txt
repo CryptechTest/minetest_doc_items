@@ -121,6 +121,7 @@ any level =
 level 0 =
 level 0-%d =
 unknown =
+Unknown item (@1) =
 • %s: %d =
 • %s: %d HP =
 • %s: %s, %s =
