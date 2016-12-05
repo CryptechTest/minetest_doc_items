@@ -23,6 +23,7 @@ local setting = minetest.setting_getbool("doc_items_friendly_group_names")
 if setting ~= nil then
 	doc.sub.items.settings.friendly_group_names = setting
 end
+doc.sub.items.settings.itemstring = true
 setting = minetest.setting_getbool("doc_items_show_itemstrings")
 if setting ~= nil then
 	doc.sub.items.settings.itemstring = setting

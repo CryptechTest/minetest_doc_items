@@ -9,5 +9,5 @@
 doc_items_friendly_group_names (Show “friendly” group names) bool false
 
 #If enabled, the mod will show the itemstring of the entry for each item.
-#This is mostly for programmers and power users.
-doc_items_show_itemstrings (Show itemstrings) bool false
+#This is useful for power users and programmers.
+doc_items_show_itemstrings (Show itemstrings) bool true
