@@ -8,6 +8,9 @@
 #This feature might be removed in later versions if it becomes obsolete.
 doc_items_friendly_group_names (Show “friendly” group names) bool false
 
-#If enabled, the mod will show the itemstring of the entry for each item.
-#This is useful for power users and programmers.
-doc_items_show_itemstrings (Show itemstrings) bool true
+#If enabled, the mod will show the itemstring of the entry for each item to
+#all players. If disabled, the itemstring will only be shown to players
+#with the “give” or “debug” privilege.
+#The itemstring is useful to power users and programmers and
+#is used e.g. for the /give and /giveme commands.
+doc_items_show_itemstrings (Show itemstrings) bool false

@@ -23,7 +23,7 @@ local setting = minetest.setting_getbool("doc_items_friendly_group_names")
 if setting ~= nil then
 	doc.sub.items.settings.friendly_group_names = setting
 end
-doc.sub.items.settings.itemstring = true
+doc.sub.items.settings.itemstring = false
 setting = minetest.setting_getbool("doc_items_show_itemstrings")
 if setting ~= nil then
 	doc.sub.items.settings.itemstring = setting
@@ -238,7 +238,7 @@ end
 
 local itemstring_factoid = function(itemstring, playername)
 	local privs = minetest.get_player_privs(playername)
-	if doc.sub.items.settings.itemstring and (privs.give or privs.debug) then
+	if doc.sub.items.settings.itemstring or (privs.give or privs.debug) then
 		return S("Itemstring: \"@1\"", itemstring)
 	else
 		return ""
