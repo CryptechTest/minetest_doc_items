@@ -236,6 +236,14 @@ local fuel_factoid = function(itemstring, ctype)
 	return formstring
 end
 
+local itemstring_factoid = function(itemstring, playername)
+	local privs = minetest.get_player_privs(playername)
+	if doc.sub.items.settings.itemstring and (privs.give or privs.debug) then
+		return S("Itemstring: \"@1\"", itemstring)
+	else
+		return ""
+	end
+end
 
 -- For factoids
 local factoid_generators = {}
@@ -263,7 +271,7 @@ doc.new_category("nodes", {
 	hide_entries_by_default = true,
 	name = S("Blocks"),
 	description = S("Item reference of blocks and other things which are capable of occupying space"),
-	build_formspec = function(data)
+	build_formspec = function(data, playername)
 		if data then
 			local longdesc = data.longdesc
 			local usagehelp = data.usagehelp
@@ -731,10 +739,8 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "nodes")
 
-			if doc.sub.items.settings.itemstring == true then
-				datastring = newline2(datastring)
-				datastring = datastring .. S("Itemstring: \"@1\"", data.itemstring)
-			end
+			datastring = newline2(datastring)
+			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -749,7 +755,7 @@ doc.new_category("tools", {
 	hide_entries_by_default = true,
 	name = S("Tools and weapons"),
 	description = S("Item reference of all wieldable tools and weapons"),
-	build_formspec = function(data)
+	build_formspec = function(data, playername)
 		if data then
 			local longdesc = data.longdesc
 			local usagehelp = data.usagehelp
@@ -808,10 +814,8 @@ doc.new_category("tools", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "tools")
 
-			if doc.sub.items.settings.itemstring == true then
-				datastring = newline2(datastring)
-				datastring = datastring .. S("Itemstring: \"@1\"", data.itemstring)
-			end
+			datastring = newline2(datastring)
+			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -827,7 +831,7 @@ doc.new_category("craftitems", {
 	hide_entries_by_default = true,
 	name = S("Miscellaneous items"),
 	description = S("Item reference of items which are neither blocks, tools or weapons (esp. crafting items)"),
-	build_formspec = function(data)
+	build_formspec = function(data, playername)
 		if data then
 			local longdesc = data.longdesc
 			local usagehelp = data.usagehelp
@@ -876,10 +880,8 @@ doc.new_category("craftitems", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "craftitems")
 
-			if doc.sub.items.settings.itemstring == true then
-				datastring = newline2(datastring)
-				datastring = datastring .. S("Itemstring: \"@1\"", data.itemstring)
-			end
+			datastring = newline2(datastring)
+			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
