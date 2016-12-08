@@ -251,6 +251,23 @@ factoid_generators.nodes = {}
 factoid_generators.tools = {}
 factoid_generators.craftitems = {}
 
+--[[ Returns a list of all registered factoids for the specified category and type
+* category_id: Identifier of the Documentation System category in which the factoid appears
+* factoid_type: If set, oly returns factoid with a matching factoid_type.
+                If nil, all factoids for this category will be generated ]]
+local get_custom_factoids = function(category_id, factoid_type, data)
+	local ftable = factoid_generators[category_id]
+	local datastring = ""
+	-- Custom factoids are inserted here
+	for i=1,#ftable do
+		if factoid_type == nil or ftable[i].ftype == factoid_type then
+			datastring = datastring .. ftable[i].fgen(data.itemstring, data.def)
+			datastring = newline(datastring)
+		end
+	end
+	return datastring
+end
+
 function doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)
 	local ftable = { fgen = factoid_generator, ftype = factoid_type }
 	if category_id == "nodes" then
@@ -562,11 +579,7 @@ doc.new_category("nodes", {
 			end
 			datastring = newline2(datastring)
 
-			-- Custom factoids are inserted here
-			for i=1,#factoid_generators.nodes do
-				datastring = datastring .. factoid_generators.nodes[i].fgen(data.itemstring, data.def)
-				datastring = newline(datastring)
-			end
+			datastring = datastring .. get_custom_factoids("nodes", "groups", data)
 			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups in quick list
@@ -797,7 +810,9 @@ doc.new_category("tools", {
 			datastring = newline(datastring)
 
 			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = newline2(datastring)
 
+			datastring = datastring .. get_custom_factoids("tools", "groups", data)
 			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups
@@ -863,7 +878,9 @@ doc.new_category("craftitems", {
 			datastring = newline(datastring)
 
 			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = newline2(datastring)
 
+			datastring = datastring .. get_custom_factoids("craftitems", "groups", data)
 			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups
