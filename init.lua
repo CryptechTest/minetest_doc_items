@@ -988,7 +988,9 @@ local function gather_descs()
 
 	-- Set default air text
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
-	if help.longdesc["air"] == nil then
+	if minetest.registered_items["air"]._doc_items_longdesc then
+		help.longdesc["air"] = minetest.registered_items["air"]._doc.items_longdesc
+	elseif help.longdesc["air"] == nil then
 		help.longdesc["air"] = S("A transparent block, basically empty space. It is usually left behind after digging something.")
 	end
 
@@ -1056,7 +1058,9 @@ local function gather_descs()
 
 	-- Add entry for the default tool (“hand”)
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
-	if help.longdesc[""] == nil then
+	if minetest.registered_items[""]._doc_items_longdesc then
+		help.longdesc[""] = minetest.registered_items[""]._doc_items_longdesc
+	elseif help.longdesc[""] == nil then
 		-- Default text
 		help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
 	end
