@@ -270,16 +270,13 @@ end
 
 function doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)
 	local ftable = { fgen = factoid_generator, ftype = factoid_type }
-	if category_id == "nodes" then
+	if category_id == "nodes" or category_id == "tools" or category_id == "craftitems" then
+		table.insert(factoid_generators[category_id], ftable)
+		return true
+	elseif category_id == nil then
 		table.insert(factoid_generators.nodes, ftable)
-		return true
-	elseif category_id == "tools" then
 		table.insert(factoid_generators.tools, ftable)
-		return true
-	elseif category_id == "craftitems" then
 		table.insert(factoid_generators.craftitems, ftable)
-		return true
-	else
 		return false
 	end
 end

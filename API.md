@@ -224,6 +224,7 @@ Add a custom factoid (see above) for the specified category.
     * `"nodes"`: Blocks
     * `"tools"`: Tools and weapons
     * `"craftitems"`: Misc. items
+    * `nil`: All of the above
 * `factoid_type`: Rough categorization of the factoid's content. Controls
   where in the text the factoid appears. Possible values:
     * `"groups"`: Factoid appears near groups
