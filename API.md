@@ -23,7 +23,7 @@ Example:
     minetest.register_node("example:dice", {
         description = "Dice",
         _doc_items_longdesc = "A decorative dice which shows the numbers 1-6 on its sides.",
-        _doc_items_usagehelp = "Rightclick the dice to roll it.",
+        _doc_items_usagehelp = "Right-click the dice to roll it.",
         tiles = { "example_dice.png" },
         is_ground_content = false,
         --[[ and so on … ]]
@@ -46,7 +46,7 @@ of the item definition to useful, readable, understandable text.
 
 Example: It's a fact that `default:sand` has the group `falling_node=1`.
 A factoid for this is basically just a simple conditional which puts the
-the sentence “This block is affectet to gravity and can fall.” into the
+the sentence “This block is affected to gravity and can fall.” into the
 text if the node is member of said group.
 
 Factoids can be more complex than that. The factoid for node drops needs to
@@ -59,14 +59,14 @@ and much more.
 Custom factoids can be added with `doc.sub.items.register_factoid`.
 
 The idea behind factoids is to generate as much information as possible
-automatically to reduce reduncancy, inconsistencs and the workload of hand-
+automatically to reduce redundancy, inconsistencies and the workload of hand-
 written descriptions.
 
 ### Long description and usage help
 Factoids are not always sufficient to describe an item. This is the case
 for facts where the item definition can not be used to automatically
 generate texts. Examples: Custom formspecs, ABMs, special tool action
-on rightclick.
+on right-click.
 
 That's where the long description and usage help comes into play.
 Those are two texts which are written manually for a specific item.
@@ -84,9 +84,9 @@ The long description should roughly contain the following info:
 * What it is good for
 * How it may be generated in the world
 * Maybe some background info if you're in a funny mood
-* Notable information which does't fit elsewhere
+* Notable information which doesn't fit elsewhere
 
-The desciption should normally **not** contain:
+The description should normally **not** contain:
 
 * Information which is already covered by factoids, like digging groups,
   damage, group memberships, etc.
@@ -98,7 +98,7 @@ The desciption should normally **not** contain:
 One exception from the rule may be for highlighting the most important
 purpose of a simple item, like that coal lumps are primarily used as fuel.
 
-Sometimes, a long description is not neccessary because the item is already
+Sometimes, a long description is not necessary because the item is already
 exhaustively explained by factoids.
 
 For very simple items, consider using one of the template texts (see below).
@@ -110,7 +110,7 @@ The usage help should only be set for items which are in some way special
 in their usage. Standard tools and weapons should never have an usage help.
 
 The rule of thumb is this: If a new player who already knows the Minetest
-basics, but not this item, will not direcly know how to use this item,
+basics, but not this item, will not directly know how to use this item,
 then the usage help should be added. If basic Minetest knowledge or
 existing factoids are completely sufficient, usage help should not be added.
 
@@ -220,7 +220,7 @@ factoids for nodes.
 
 Add a custom factoid (see above) for the specified category.
 
-* `category_id`: The documentation category fow which the factoid applies:
+* `category_id`: The documentation category for which the factoid applies:
     * `"nodes"`: Blocks
     * `"tools"`: Tools and weapons
     * `"craftitems"`: Misc. items
@@ -299,7 +299,7 @@ You should add groups with this function if:
 Do not add groups if:
 
 * The group is only used internally
-* The group is unteresting for the player
+* The group is uninteresting for the player
 * A factoid covering this group already exists
 * Writing a factoid would be more useful
 * The group is a mining or damage group
