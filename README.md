@@ -22,7 +22,7 @@ This mod provides 3 new categories for the Documentation System [`doc`]:
 * Misc. items (e.g. dye, stick, flour)
 
 Entries are automatically added. The information in the entries is
-mostly automatically generated. It countains information about a wide range
+mostly automatically generated. It contains information about a wide range
 of topics:
 
 For blocks, it tells you about physics, digging properties, drops (including
@@ -33,7 +33,7 @@ damage.
 For all items, their range and stack size is shown.
 
 This mod also allows for mods to adding custom written description
-and usage help texts in freeform and even custom automatically generated texts
+and usage help texts in free-form and even custom automatically generated texts
 for mod-specific information like flammability in Minetest Game. This is
 one of the core features of this mod; the mod relies on other mods to
 provide their custom help texts for a full documentation.
@@ -45,7 +45,7 @@ for version 1.0.0 first).
 ## API
 This mod has a programming API for adding your own custom help texts,
 your custom factoids (single pieces of information extracted from the
-item defintion) and more.
+item definition) and more.
 
 For example, if your mods have some complex items which need
 explanation, this mod can help you in adding documentation for them.
