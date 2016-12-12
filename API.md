@@ -188,9 +188,17 @@ Add a custom factoid (see above) for the specified category.
     * `nil`: All of the above
 * `factoid_type`: Rough categorization of the factoid's content. Controls
   where in the text the factoid appears. Possible values:
-    * `"groups"`: Factoid appears near groups
-    * `"misc"`: Factoid of other type, appears near the end
-    * **(more to come)**
+    * For all items:
+        * `"groups"`: Group-related factoid
+        * `"misc"`: Factoid doesn't fit anywhere else, is shown near the end
+    * For nodes only:
+        * `damage`: Related to player/mob damage or health
+        * `movement`: Related to player movement on, in or at node
+        * `sound`: Related to node sounds
+        * `gravity`: Related to gravity (e.g. falling node)
+        * `drop_detroy`: Related to node being destroyed or node dropping as an item
+        * `light`: Related to node light (luminance)
+        * `mining`: Related to mining
 * `factoid_generator`: A function which turns item definition into a string
   (see blow)
 
