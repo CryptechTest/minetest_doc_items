@@ -33,12 +33,25 @@ When using this method, your mod does not need additional dependencies.
 
 See below for some recommendations on writing good help texts.
 
-If you need to set the help texts of nodes you don't register, or you
-want to overwrite existing help texts, use `doc.sub.items.set_items_longdesc`
-and `doc.sub.items.set_items_longdesc` (see below).
 If you need more customization, read ahead. ;-)
 
+## New item fields
+This mod adds support for new fields of the item definition. They allow for
+easy and quick manipulation of the item help entries. All fields are optional.
+
+* `_doc_items_longdesc`: Long description
+* `_doc_items_usagehelp`: Usage help
+* `_doc_items_image`: Entry image (default: inventory image)
+* `_doc_items_hidden`: Whether entry is hidden (default: `false` for air and hand, `true` for everything else)
+* `_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
+* `_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
+  of the item, or “Nameless entry” if it is `nil`.
+
+A full explanation of these fields is provided below.
+
 ## Concepts
+This section explains the core concepts of an item help entry in-depth.
+
 ### Factoids
 Basically, a factoid is usually a single sentence telling the player a specific
 fact about the item. The task of each factoid is to basically convert parts
@@ -131,28 +144,22 @@ to avoid redundancy and to increase consistency for simple things. Read
 * `doc.sub.items.temp.eat`: For eatable items using the `on_use=minetest.item_eat(1)` idiom
 * `doc.sub.items.temp.eat_bad`: Same as above, but eating them is considered a bad idea
 
-### Forced and suppressed items
-By default, an entry for each item is added, except for items without a
-description (`description == nil`). This default behaviour can be changed.
+### Entry creation
+By default, an entry for each item is added automatically, except for items
+without a description (`description == nil`). This behaviour can be changed
+on a per-item basis.
 
-Entries can be forced, which means they will be forcefully added, against the
-default behaviour. Entries can be suppressed which means they will not
-be added at all.
+By setting the item definition's field `_doc_items_create_entry` to `true`
+or `false`you can explicitly define whether this item should get its own
+entry.
 
-The default behaviour can be overridden by two ways: Groups and a function call.
-
-Use groups when you can directly define an item (in other words, in **your**
-mods).
-
-To force the entry of an item, add the item to the group `in_doc = 1`.
-To suppress the entry of an item, add the item to the group `not_in_doc = 1`.
-
-There are also the functions `doc.sub.items.add_forced_item_entries` and
-`doc.sub.items.add_suppressed_item_entries` which forces or suppress certain
-item entries. You should **only** use these functions when you can not use groups.
-
-When there are contradictions, forcing a group takes precedence over suppressing
-a group.
+Suppressing an entry is useful for items which aren't supposed to be directly
+seen or obtained by the player or if they are only used for technical
+and/or internal purposes. Another possible reason to suppress an entry is
+to scrub the entry list of lots of very similar related items where the
+difference is too small to justify two seperate entries (e.g.
+burning furnace vs inactive furnace, because the gameplay mechanics are
+identical for both).
 
 ### Hidden entries
 Hidden entries are entries which are not visible in the list of entries. This
@@ -161,62 +168,16 @@ created, it is just not selectable by normal means. Players might be able to
 “unlock” an entry later. Refer to the API documentation of the Documentation
 System to learn more.
 
-To hide an entry, add the item in question to the group `hidden_from_doc = 1`.
-If this is not possible, use `doc.sub.items.add_hidden_item_entries`.
+By default, all entries are hidden except air and the hand.
 
-## New item fields
-This mod adds support for new fields of the item definition:
-
-* `_doc_items_longdesc`: Long description
-* `_doc_items_usagehelp`: Usage help
-* `_doc_items_image`: Entry image (default: inventory image)
-* `_doc_items_hidden`: Whether entry is hidden (default: `false` for Air, `true` for everything else)
-* `_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
-* `_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
-  of the item, or “Nameless entry” if it is `nil`.
+To mark an entry as hidden, add the field `_doc_items_hidden=true` to its
+item definition. To mark an entry 
 
 ## Functions
 This is the reference of all available functions in this API.
 
-### `doc.sub.items.set_items_longdesc(longdesc_table)`
-Sets the long description of items. `longdesc_table` is
-a table where the keys are the itemstrings and the values
-are the the description strings for each item.
-
-Note the preferred method to set the long description is by using
-the item definition field `_doc_items_longdesc`.
-
-This function is intended to be used to set the long description
-for items which your mods do not register by themselves.
-
-#### Default long descriptions
-`doc_items` registers two long descriptions by default: For air
-and the hand (default tool).
-By using this function, you can overwrite these default descriptions.
-
-The default hand description is kept very generic, but it might miss
-some information on more complex subgames. In this case, the hand's
-long description might need overwriting.
-
-#### Example
-    doc.sub.items.set_items_longdesc({
-         ["example:painter"] = "Paints blocks.",
-         ["example:flower"] = "Likes to grow on grass when it is near water.",
-    })
-
-### `doc.sub.items.set_items_usagehelp(usagehelp_table)`
-Sets the usage help texts of items. The function is completely analog
-to `doc.sub.items.set_items_longdesc` and has the same syntax, it
-only differs in semantics.
-
-#### Example
-    doc.sub.items.set_items_usagehelp({
-         ["example:painter"] = "Punch any block to paint it red.",
-    })
-
 ### `doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)`
-***Note***: This function not fully implemented. It currently supports only
-factoids for nodes.
+***Note***: This function not fully implemented. It currently supports group-based factoids.
 
 Add a custom factoid (see above) for the specified category.
 
@@ -309,56 +270,9 @@ The intention of this function is to give a short rundown of the groups
 which are notable as they are important to gameplay in some way yet don't
 deserve a full-blown factoid.
 
-### `doc.sub.items.add_forced_item_entries(itemstrings)`
-Adds items which will be forced to be added to the entry list, even if
-the item is not in creative inventory.
-
-`itemstrings` is a table of itemstrings of items to force the entries for.
-
-***Note***: The recommended way to force item entries is by adding the item
-to the group `in_doc=1` (see above). Only use this function when you can
-not use groups.
-
-### `doc.sub.items.add_suppressed_item_entries(itemstrings)`
-Adds items which will be forced to **not** be added to the entry list.
-
-`itemstrings` is a table of itemstrings of items to force the entries for.
-
-***Note***: The recommended way to suppress item entries is by adding the
-item to the group `not_in_doc=1` (see above). Only use this function when you
-can not use groups.
-
-### `doc.sub.items.add_hidden_item_entries(itemstrings)`
-Adds items which will be hidden from the entry list initially. Note the
-entries still exist and might be unlocked later.
-
-`itemstrings` is a table of itemstrings of items for which their entries should
-be hidden.
-
-***Note***: The recommended way to hide item entries is by adding the
-item to the group `hide_from_doc=1` (see above). Only use this function when you
-can not use groups.
-
-### `doc.sub.items.add_item_name_overrides(itemstrings)`
-Overrides the entry names of entries to the provided names. By default,
-each entry name equals the item's `description` field.
-
-`itemstrings` is a table in which the keys are itemstrings and the values
-are the entry titles you want to use for those items.
-
-#### Preset overrides
-The following item name overrides are defined by default:
-
-    { [""] = "Hand", 
-      ["air"] = "Air" }
-
-It is possible to override **these** names, just use the function normally.
-
-#### Example
-    doc.sub.items.add_item_name_overrides({
-        ["air"] = "Air", -- original description: “Air (You hacker you!)”
-        ["farming:wheat_8"] = "Wheat Plant", -- Item description was empty
-        ["example:node"] = "My Custom Name",
-    })
 
 
+## Dependencies
+If you only add the custom fields to your items, you do *not* need to depend
+on this mod. If you use anything else from this mod (e.g. a function), you
+probably *do* need to depend (optionally or mandatorily) on this mod.

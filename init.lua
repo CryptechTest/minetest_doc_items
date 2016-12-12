@@ -33,11 +33,6 @@ end
 local groupdefs = {}
 local mininggroups = {}
 local miscgroups = {}
--- List of forcefully added (true) and hidden (false) items
-local forced_items = {
-	["ignore"] = false
-}
-local hidden_items = {}
 local item_name_overrides = {
 	[""] = S("Hand"),
 	["air"] = S("Air")
@@ -911,25 +906,6 @@ doc.sub.items.help.longdesc = {}
 doc.sub.items.help.usagehelp = {}
 doc.sub.items.help.image = {}
 
--- Sets the long description for a table of items
-function doc.sub.items.set_items_longdesc(longdesc_table)
-	for k,v in pairs(longdesc_table) do
-		doc.sub.items.help.longdesc[k] = v
-	end
-end
--- Sets the usage help texts for a table of items
-function doc.sub.items.set_items_usagehelp(usagehelp_table)
-	for k,v in pairs(usagehelp_table) do
-		doc.sub.items.help.usagehelp[k] = v
-	end
-end
-
-function doc.sub.items.add_item_image_overrides(image_overrides)
-	for itemstring, new_image in pairs(image_overrides) do
-		doc.sub.items.help.image[itemstring] = new_image
-	end
-end
-
 -- Register group definition stuff
 -- More (user-)friendly group names to replace the rather technical names
 -- for better understanding
@@ -946,37 +922,6 @@ end
 function doc.sub.items.add_notable_groups(groupnames)
 	for g=1,#groupnames do
 		miscgroups[groupnames[g]] = true
-	end
-end
-
--- Add items which will be forced to be added to the item list,
--- even if the item is not in creative inventory
-function doc.sub.items.add_forced_item_entries(itemstrings)
-	for i=1,#itemstrings do
-		forced_items[itemstrings[i]] = true
-	end
-end
-
--- Add items which will be forced *not* to be added to the item list
-function doc.sub.items.add_suppressed_item_entries(itemstrings)
-	for i=1,#itemstrings do
-		forced_items[itemstrings[i]] = false
-	end
-end
-
--- Add items which will be hidden from the entry list, but their entries
--- are still created.
-function doc.sub.items.add_hidden_item_entries(itemstrings)
-	for i=1,#itemstrings do
-		hidden_items[itemstrings[i]] = true
-	end
-end
-
--- Register a list of entry names where the entry name should differ
--- from the original item description
-function doc.sub.items.add_item_name_overrides(itemstrings)
-	for internal, real in pairs(itemstrings) do
-		item_name_overrides[internal] = real
 	end
 end
 
@@ -1004,7 +949,7 @@ local function gather_descs()
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
 	if minetest.registered_items["air"]._doc_items_longdesc then
 		help.longdesc["air"] = minetest.registered_items["air"]._doc.items_longdesc
-	elseif help.longdesc["air"] == nil then
+	else
 		help.longdesc["air"] = S("A transparent block, basically empty space. It is usually left behind after digging something.")
 	end
 
@@ -1013,7 +958,7 @@ local function gather_descs()
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
-			if (forced_items[id] == true or def.groups.in_doc or def._doc_items_create_entry == true) and def ~= nil then forced = true end
+			if (def._doc_items_create_entry == true) and def ~= nil then forced = true end
 			if def._doc_items_entry_name ~= nil then
 				name = def._doc_items_entry_name
 			end
@@ -1023,7 +968,7 @@ local function gather_descs()
 			if name == nil then
 				name = def.description
 			end
-			if not (((def.description == nil or def.description == "") and def._doc_items_entry_name == nil) or def.groups.not_in_doc or forced_items[id] == false or def._doc_items_create_entry == false) or forced then
+			if not (((def.description == nil or def.description == "") and def._doc_items_entry_name == nil) or def._doc_items_create_entry == false) or forced then
 				if def._doc_items_longdesc then
 					ld = def._doc_items_longdesc
 				end
@@ -1072,11 +1017,15 @@ local function gather_descs()
 
 	-- Add entry for the default tool (“hand”)
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
-	if minetest.registered_items[""]._doc_items_longdesc then
-		help.longdesc[""] = minetest.registered_items[""]._doc_items_longdesc
-	elseif help.longdesc[""] == nil then
+	local handdef = minetest.registered_items[""]
+	if handdef._doc_items_longdesc then
+		help.longdesc[""] = handdef._doc_items_longdesc
+	else
 		-- Default text
 		help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
+	end
+	if handdef._doc_items_entry_name then
+		item_name_overrides[""] = handdef._doc_items.entry_name
 	end
 	doc.new_entry("tools", "", {
 		name = item_name_overrides[""],
@@ -1085,7 +1034,7 @@ local function gather_descs()
 			longdesc = help.longdesc[""],
 			usagehelp = help.usagehelp[""],
 			itemstring = "",
-			def = minetest.registered_items[""]
+			def = handdef,
 		}
 	})
 	-- Add tool entries
