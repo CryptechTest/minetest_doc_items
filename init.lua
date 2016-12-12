@@ -904,7 +904,6 @@ doc.new_category("craftitems", {
 doc.sub.items.help = {}
 doc.sub.items.help.longdesc = {}
 doc.sub.items.help.usagehelp = {}
-doc.sub.items.help.image = {}
 
 -- Register group definition stuff
 -- More (user-)friendly group names to replace the rather technical names
@@ -983,9 +982,6 @@ local function gather_descs()
 				end
 				if def._doc_items_image then
 					im = def._doc_items_image
-				end
-				if help.image[id] ~= nil then
-					im = help.image[id]
 				end
 				local hidden
 				if id == "air" then hidden = false end
