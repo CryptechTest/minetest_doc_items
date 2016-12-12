@@ -220,7 +220,7 @@ factoids for nodes.
 
 Add a custom factoid (see above) for the specified category.
 
-* `category_id`: The documentation category for which the factoid applies:
+* `category_id`: The help category for which the factoid applies:
     * `"nodes"`: Blocks
     * `"tools"`: Tools and weapons
     * `"craftitems"`: Misc. items

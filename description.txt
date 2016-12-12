@@ -1,1 +1,1 @@
-Adds automatically generated help texts for items using the Documentation System mod.
+Adds automatically generated help texts for items.
