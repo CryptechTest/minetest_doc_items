@@ -45,7 +45,7 @@ easy and quick manipulation of the item help entries. All fields are optional.
 * `_doc_items_hidden`: Whether entry is hidden (default: `false` for air and hand, `true` for everything else)
 * `_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
 * `_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
-  of the item, or “Nameless entry” if it is `nil`.
+  of the item. This field is required if the `description` is empty
 
 A full explanation of these fields is provided below.
 
