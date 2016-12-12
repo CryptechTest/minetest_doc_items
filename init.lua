@@ -995,7 +995,6 @@ local function gather_descs()
 	end
 
 	local add_entries = function(deftable, category_id)
-		-- TODO: Remove legacy support: Groups in_doc, not_in_doc; forced_items, help table, etc.
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
