@@ -177,8 +177,6 @@ item definition. To mark an entry
 This is the reference of all available functions in this API.
 
 ### `doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)`
-***Note***: This function not fully implemented. It currently supports group-based factoids.
-
 Add a custom factoid (see above) for the specified category.
 
 * `category_id`: The help category for which the factoid applies:
@@ -186,10 +184,11 @@ Add a custom factoid (see above) for the specified category.
     * `"tools"`: Tools and weapons
     * `"craftitems"`: Misc. items
     * `nil`: All of the above
-* `factoid_type`: Rough categorization of the factoid's content. Controls
-  where in the text the factoid appears. Possible values:
+* `factoid_type`: Rough categorization of the factoid's content, used to
+  optimize the final text display. This currently determines where in the
+  entry text the factoid appears. Possible values:
     * For all items:
-        * `"groups"`: Group-related factoid
+        * `"groups"`: Group-related factoid (very vague)
         * `"misc"`: Factoid doesn't fit anywhere else, is shown near the end
     * For nodes only:
         * `damage`: Related to player/mob damage or health
