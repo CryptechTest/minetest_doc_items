@@ -116,6 +116,17 @@ local description_for_formspec = function(itemstring)
 	end
 end
 
+local get_entry_name = function(itemstring)
+	local def = minetest.registered_items[itemstring]
+	if def._doc_items_entry_name ~= nil then
+		return def._doc_items_entry_name
+	elseif item_name_overrides[itemstring] ~= nil then
+		return item_name_overrides[itemstring]
+	else
+		return def.description
+	end
+end
+
 doc.sub.items.get_group_name = function(groupname)
 	if groupdefs[groupname] ~= nil and doc.sub.items.settings.friendly_group_names == true then
 		return groupdefs[groupname]
@@ -205,7 +216,7 @@ local range_factoid = function(itemstring, def)
 		if itemrange ~= nil then
 			return S("Range: @1", itemrange)
 		else
-			return S("Range: @1 (@2)", item_name_overrides[""], handrange)
+			return S("Range: @1 (@2)", get_entry_name(""), handrange)
 		end
 	end
 end
@@ -958,21 +969,38 @@ local function gather_descs()
 		suppressed["ignore"] = minetest.registered_items["ignore"]._doc_items_create_entry == true
 	end
 
+	-- Add entry for the default tool (“hand”)
+	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
+	local handdef = minetest.registered_items[""]
+	if handdef._doc_items_create_entry ~= false then
+		if handdef._doc_items_longdesc then
+			help.longdesc[""] = handdef._doc_items_longdesc
+		else
+			-- Default text
+			help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
+		end
+		if handdef._doc_items_entry_name then
+			item_name_overrides[""] = handdef._doc_items_entry_name
+		end
+		doc.new_entry("tools", "", {
+			name = item_name_overrides[""],
+			hidden = handdef._doc_items_hidden == true,
+			data = {
+				longdesc = help.longdesc[""],
+				usagehelp = help.usagehelp[""],
+				itemstring = "",
+				def = handdef,
+			}
+		})
+	end
+
 	local add_entries = function(deftable, category_id)
 		-- TODO: Remove legacy support: Groups in_doc, not_in_doc; forced_items, help table, etc.
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
 			if def._doc_items_create_entry == true and def ~= nil then forced = true end
-			if def._doc_items_entry_name ~= nil then
-				name = def._doc_items_entry_name
-			end
-			if item_name_overrides[id] ~= nil then
-				name = item_name_overrides[id]
-			end
-			if name == nil then
-				name = def.description
-			end
+			name = get_entry_name(id)
 			if not (((def.description == nil or def.description == "") and def._doc_items_entry_name == nil) or (def._doc_items_create_entry == false) or (suppressed[id] == true)) or forced then
 				if def._doc_items_longdesc then
 					ld = def._doc_items_longdesc
@@ -1017,30 +1045,6 @@ local function gather_descs()
 	-- Add node entries
 	add_entries(minetest.registered_nodes, "nodes")
 
-	-- Add entry for the default tool (“hand”)
-	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
-	local handdef = minetest.registered_items[""]
-	if handdef._doc_items_create_entry ~= false then
-		if handdef._doc_items_longdesc then
-			help.longdesc[""] = handdef._doc_items_longdesc
-		else
-			-- Default text
-			help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
-		end
-		if handdef._doc_items_entry_name then
-			item_name_overrides[""] = handdef._doc_items_entry_name
-		end
-		doc.new_entry("tools", "", {
-			name = item_name_overrides[""],
-			hidden = handdef._doc_items_hidden == true,
-			data = {
-				longdesc = help.longdesc[""],
-				usagehelp = help.usagehelp[""],
-				itemstring = "",
-				def = handdef,
-			}
-		})
-	end
 	-- Add tool entries
 	add_entries(minetest.registered_tools, "tools")
 
