@@ -990,7 +990,7 @@ local function gather_descs()
 					im = def._doc_items_image
 				end
 				local hidden
-				if id == "air" then hidden = false end
+				if id == "air" or id == ""  then hidden = false end
 				if type(def._doc_items_hidden) == "boolean" then
 					hidden = def._doc_items_hidden
 				end
