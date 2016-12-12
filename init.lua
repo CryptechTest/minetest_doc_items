@@ -318,6 +318,9 @@ doc.new_category("nodes", {
 				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
+			datastring = datastring .. get_custom_factoids("nodes", "use", data)
+			datastring = newline2(datastring)
+
 			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max) .. "\n"
 
 			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
@@ -819,6 +822,9 @@ doc.new_category("tools", {
 				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
+			datastring = datastring .. get_custom_factoids("tools", "use", data)
+			datastring = newline2(datastring)
+
 			if data.itemstring ~= "" then
 				datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
 			end
@@ -896,6 +902,9 @@ doc.new_category("craftitems", {
 				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
+			datastring = datastring .. get_custom_factoids("craftitems", "use", data)
+			datastring = newline2(datastring)
+
 			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
 
 			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"

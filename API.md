@@ -188,6 +188,7 @@ Add a custom factoid (see above) for the specified category.
   optimize the final text display. This currently determines where in the
   entry text the factoid appears. Possible values:
     * For all items:
+        * `"use"`: It's about using the item in some way (written right after the fixed usage help)
         * `"groups"`: Group-related factoid (very vague)
         * `"misc"`: Factoid doesn't fit anywhere else, is shown near the end
     * For nodes only:
