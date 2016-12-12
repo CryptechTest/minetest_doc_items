@@ -1032,7 +1032,7 @@ local function gather_descs()
 		end
 		doc.new_entry("tools", "", {
 			name = item_name_overrides[""],
-			hidden = false,
+			hidden = handdef._doc_items_hidden == true,
 			data = {
 				longdesc = help.longdesc[""],
 				usagehelp = help.usagehelp[""],
