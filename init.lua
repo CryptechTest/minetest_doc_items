@@ -271,7 +271,9 @@ local get_custom_factoids = function(category_id, factoid_type, data)
 	for i=1,#ftable do
 		if factoid_type == nil or ftable[i].ftype == factoid_type then
 			datastring = datastring .. ftable[i].fgen(data.itemstring, data.def)
-			datastring = newline(datastring)
+			if datastring ~= "" then
+				datastring = newline(datastring)
+			end
 		end
 	end
 	return datastring
