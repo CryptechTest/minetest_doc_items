@@ -1,4 +1,4 @@
-# Item Documentation [`doc_items`] (Version 0.7.0)
+# Item Documentation [`doc_items`] (Version 0.8.0)
 ## Description
 Automatically generated documentation of blocks, tools, weapons, crafting
 items and other items.
