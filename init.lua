@@ -758,6 +758,10 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "nodes")
 
+			-- Other custom factoids
+			datastring = newline2(datastring)
+			datastring = datastring .. get_custom_factoids("nodes", "misc", data)
+
 			datastring = newline2(datastring)
 			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
 
@@ -835,6 +839,10 @@ doc.new_category("tools", {
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "tools")
 
+			-- Other custom factoids
+			datastring = newline2(datastring)
+			datastring = datastring .. get_custom_factoids("tools", "misc", data)
+
 			datastring = newline2(datastring)
 			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
 
@@ -902,6 +910,10 @@ doc.new_category("craftitems", {
 			-- Show fuel recipe
 			datastring = newline2(datastring)
 			datastring = datastring .. fuel_factoid(data.itemstring, "craftitems")
+
+			-- Other custom factoids
+			datastring = newline2(datastring)
+			datastring = datastring .. get_custom_factoids("craftitems", "misc", data)
 
 			datastring = newline2(datastring)
 			datastring = datastring .. itemstring_factoid(data.itemstring, playername)

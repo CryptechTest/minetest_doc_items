@@ -189,6 +189,7 @@ Add a custom factoid (see above) for the specified category.
 * `factoid_type`: Rough categorization of the factoid's content. Controls
   where in the text the factoid appears. Possible values:
     * `"groups"`: Factoid appears near groups
+    * `"misc"`: Factoid of other type, appears near the end
     * **(more to come)**
 * `factoid_generator`: A function which turns item definition into a string
   (see blow)
