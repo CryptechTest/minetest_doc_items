@@ -37,6 +37,9 @@ local item_name_overrides = {
 	[""] = S("Hand"),
 	["air"] = S("Air")
 }
+local suppressed = {
+	["ignore"] = true,
+}
 
 -- Helper functions
 local yesno = function(bool)
@@ -951,13 +954,16 @@ local function gather_descs()
 	else
 		help.longdesc["air"] = S("A transparent block, basically empty space. It is usually left behind after digging something.")
 	end
+	if minetest.registered_items["ignore"]._doc_items_create_entry ~= nil then
+		suppressed["ignore"] = minetest.registered_items["ignore"]._doc_items_create_entry == true
+	end
 
 	local add_entries = function(deftable, category_id)
 		-- TODO: Remove legacy support: Groups in_doc, not_in_doc; forced_items, help table, etc.
 		for id, def in pairs(deftable) do
 			local name, ld, uh, im
 			local forced = false
-			if (def._doc_items_create_entry == true) and def ~= nil then forced = true end
+			if def._doc_items_create_entry == true and def ~= nil then forced = true end
 			if def._doc_items_entry_name ~= nil then
 				name = def._doc_items_entry_name
 			end
@@ -967,7 +973,7 @@ local function gather_descs()
 			if name == nil then
 				name = def.description
 			end
-			if not (((def.description == nil or def.description == "") and def._doc_items_entry_name == nil) or def._doc_items_create_entry == false) or forced then
+			if not (((def.description == nil or def.description == "") and def._doc_items_entry_name == nil) or (def._doc_items_create_entry == false) or (suppressed[id] == true)) or forced then
 				if def._doc_items_longdesc then
 					ld = def._doc_items_longdesc
 				end
