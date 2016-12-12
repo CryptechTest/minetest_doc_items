@@ -1020,25 +1020,27 @@ local function gather_descs()
 	-- Add entry for the default tool (“hand”)
 	-- Custom longdesc and usagehelp may be set by mods through the add_helptexts function
 	local handdef = minetest.registered_items[""]
-	if handdef._doc_items_longdesc then
-		help.longdesc[""] = handdef._doc_items_longdesc
-	else
-		-- Default text
-		help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
+	if handdef._doc_items_create_entry ~= false then
+		if handdef._doc_items_longdesc then
+			help.longdesc[""] = handdef._doc_items_longdesc
+		else
+			-- Default text
+			help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
+		end
+		if handdef._doc_items_entry_name then
+			item_name_overrides[""] = handdef._doc_items_entry_name
+		end
+		doc.new_entry("tools", "", {
+			name = item_name_overrides[""],
+			hidden = false,
+			data = {
+				longdesc = help.longdesc[""],
+				usagehelp = help.usagehelp[""],
+				itemstring = "",
+				def = handdef,
+			}
+		})
 	end
-	if handdef._doc_items_entry_name then
-		item_name_overrides[""] = handdef._doc_items_entry_name
-	end
-	doc.new_entry("tools", "", {
-		name = item_name_overrides[""],
-		hidden = false,
-		data = {
-			longdesc = help.longdesc[""],
-			usagehelp = help.usagehelp[""],
-			itemstring = "",
-			def = handdef,
-		}
-	})
 	-- Add tool entries
 	add_entries(minetest.registered_tools, "tools")
 
