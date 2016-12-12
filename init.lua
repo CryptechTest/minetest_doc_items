@@ -309,10 +309,12 @@ doc.new_category("nodes", {
 			end
 			local datastring = ""
 			if longdesc ~= nil then
-				datastring = datastring .. S("Description: @1", longdesc) .."\n\n"
+				datastring = datastring .. S("Description: @1", longdesc)
+				datastring = newline2(datastring)
 			end
 			if usagehelp ~= nil then
-				datastring = datastring .. S("Usage help: @1", usagehelp) .. "\n\n"
+				datastring = datastring .. S("Usage help: @1", usagehelp)
+				datastring = newline2(datastring)
 			end
 			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max) .. "\n"
 
@@ -872,10 +874,12 @@ doc.new_category("craftitems", {
 			end
 			local datastring = ""
 			if longdesc ~= nil then
-				datastring = datastring .. S("Description: @1", longdesc).."\n\n"
+				datastring = datastring .. S("Description: @1", longdesc)
+				datastring = newline2(datastring)
 			end
 			if usagehelp ~= nil then
-				datastring = datastring .. S("Usage help: @1", usagehelp).. "\n\n"
+				datastring = datastring .. S("Usage help: @1", usagehelp)
+				datastring = newline2(datastring)
 			end
 			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
 
