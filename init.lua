@@ -781,7 +781,6 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 
 			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
-			datastring = newline2(datastring)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -863,7 +862,6 @@ doc.new_category("tools", {
 			datastring = newline2(datastring)
 
 			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
-			datastring = newline2(datastring)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -938,7 +936,6 @@ doc.new_category("craftitems", {
 			datastring = newline2(datastring)
 
 			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
-			datastring = newline2(datastring)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
