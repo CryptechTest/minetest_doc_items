@@ -1027,7 +1027,7 @@ local function gather_descs()
 		help.longdesc[""] = S("Whenever you are not wielding any item, you use the hand which acts as a tool with its own capabilities. When you are wielding an item which is not a mining tool or a weapon it will behave as if it would be the hand.")
 	end
 	if handdef._doc_items_entry_name then
-		item_name_overrides[""] = handdef._doc_items.entry_name
+		item_name_overrides[""] = handdef._doc_items_entry_name
 	end
 	doc.new_entry("tools", "", {
 		name = item_name_overrides[""],
