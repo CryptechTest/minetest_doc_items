@@ -26,12 +26,24 @@ Entries are automatically added. The information in the entries is
 mostly automatically generated. It contains information about a wide range
 of topics:
 
-For blocks, it tells you about physics, digging properties, drops (including
-probabilities), liquid information, pointability, whether it glows in the
-dark, how light interacts with it, and much more.
-For tools and weapons, it mostly tells you about mining capabilities and
-damage.
-For all items, their range and stack size is shown.
+* Blocks
+    * Physics
+    * Digging properties
+    * Drops (including probabilities)
+    * Liquid information
+    * Pointability
+    * Luminance
+    * Much more
+* Tools and weapons
+    * Mining capabilities
+    * Damage
+    * Durability
+    * More
+* All items
+    * Range
+    * Stack size
+    * Group memberships
+    * Other information added by mods
 
 This mod also allows for mods to adding custom written description
 and usage help texts in free-form and even custom automatically generated texts
