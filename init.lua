@@ -81,7 +81,7 @@ end
 
 --[[ Append a newline to text, unless it already ends with a newline. ]]
 local newline = function(text)
-	if string.sub(text, #text, #text) == "\n" then
+	if string.sub(text, #text, #text) == "\n" or text == "" then
 		return text
 	else
 		return text .. "\n"
@@ -90,7 +90,7 @@ end
 
 --[[ Make sure the text ends with two newlines by appending any missing newlines at the end, if neccessary. ]]
 local newline2 = function(text)
-	if string.sub(text, #text-1, #text) == "\n\n" then
+	if string.sub(text, #text-1, #text) == "\n\n" or text == "" then
 		return text
 	elseif string.sub(text, #text, #text) == "\n" then
 		return text .. "\n"
