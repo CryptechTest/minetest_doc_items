@@ -44,8 +44,8 @@ request the mod author to add `doc_items` support. (But please wait
 for version 1.0.0 first).
 
 ## API
-This mod has a programming API for adding your own custom help texts,
-your custom factoids (single pieces of information extracted from the
+This mod has an API so that modders can add their own custom help texts,
+custom factoids (single pieces of information extracted from the
 item definition) and more.
 
 For example, if your mods have some complex items which need
