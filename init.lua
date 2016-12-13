@@ -822,14 +822,20 @@ doc.new_category("tools", {
 				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
+
 			datastring = datastring .. get_custom_factoids("tools", "use", data)
 			datastring = newline2(datastring)
 
 			if data.itemstring ~= "" then
-				datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
+				datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max)
+				datastring = newline(datastring)
 			end
-
-			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
+			datastring = datastring .. range_factoid(data.itemstring, data.def)
+			datastring = newline(datastring)
+			if data.def._doc_items_uses ~= nil then
+				datastring = datastring .. S("Uses: @1", data.def._doc_items_uses)
+				datastring = newline(datastring)
+			end
 
 			datastring = newline2(datastring)
 

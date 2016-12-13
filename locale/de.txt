@@ -131,3 +131,4 @@ Unknown item (@1) = Unbekannter Gegenstand (@1)
 • Renewable = • Erneuerbar
 • Viscosity: @1 = • Zähflüssigkeit: @1
 Itemstring: "@1" = Itemstring: »@1«
+Uses: @1 = Benutzungen: @1
