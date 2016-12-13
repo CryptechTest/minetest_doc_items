@@ -134,3 +134,5 @@ Unknown item (@1) =
 Itemstring: "@1" =
 Durability: @1 uses =
 Durability: @1 =
+Mining durability: =
+• @1, level @2: @3 uses =

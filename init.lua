@@ -145,6 +145,31 @@ local burntime_to_text = function(burntime)
 	end
 end
 
+local mining_durability_factoid = function(tool_capabilities)
+	local formstring = ""
+	if tool_capabilities ~= nil and tool_capabilities ~= {} then
+		local groupcaps = tool_capabilities.groupcaps
+		if groupcaps ~= nil then
+			local lines = 0
+			for k,v in pairs(groupcaps) do
+				if v.maxlevel ~= nil and v.uses ~= nil and v.uses > 0 then
+					for level=0, v.maxlevel do
+						local uses = v.uses * math.pow(3, v.maxlevel - level)
+						formstring = formstring .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, uses)
+						formstring = formstring .. "\n"
+						lines = lines + 1
+					end
+				end
+			end
+			if lines >= 1 then
+				formstring = S("Mining durability:") .. "\n" .. formstring
+				formstring = newline2(formstring)
+			end
+		end
+	end
+	return formstring
+end
+
 local toolcaps_to_text = function(tool_capabilities)
 	local formstring = ""
 	if tool_capabilities ~= nil and tool_capabilities ~= {} then
@@ -833,10 +858,16 @@ doc.new_category("tools", {
 			datastring = datastring .. range_factoid(data.itemstring, data.def)
 			datastring = newline(datastring)
 			if type(data.def._doc_items_durability) == "number" then
+				-- Fixed number of uses
 				datastring = datastring .. S("Durability: @1 uses", data.def._doc_items_durability)
 				datastring = newline(datastring)
 			elseif type(data.def._doc_items_durability) == "string" then
+				-- Manually described durability
 				datastring = datastring .. S("Durability: @1", data.def._doc_items_durability)
+				datastring = newline(datastring)
+			else
+				-- Automatically detect durability for mining tools
+				datastring = datastring .. mining_durability_factoid(data.def.tool_capabilities)
 				datastring = newline(datastring)
 			end
 
