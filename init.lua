@@ -145,33 +145,15 @@ local burntime_to_text = function(burntime)
 	end
 end
 
-local mining_durability_factoid = function(tool_capabilities)
+--[[ Convert tool capabilities to readable text. Extracted information:
+* Full punch interval
+* Mining capabilities
+* Durability (when mining
+* Damage groups
+]]
+local toolcaps_to_text = function(tool_capabilities, check_uses)
 	local formstring = ""
-	if tool_capabilities ~= nil and tool_capabilities ~= {} then
-		local groupcaps = tool_capabilities.groupcaps
-		if groupcaps ~= nil then
-			local lines = 0
-			for k,v in pairs(groupcaps) do
-				if v.maxlevel ~= nil and v.uses ~= nil and v.uses > 0 then
-					for level=0, v.maxlevel do
-						local uses = v.uses * math.pow(3, v.maxlevel - level)
-						formstring = formstring .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, uses)
-						formstring = formstring .. "\n"
-						lines = lines + 1
-					end
-				end
-			end
-			if lines >= 1 then
-				formstring = S("Mining durability:") .. "\n" .. formstring
-				formstring = newline2(formstring)
-			end
-		end
-	end
-	return formstring
-end
-
-local toolcaps_to_text = function(tool_capabilities)
-	local formstring = ""
+	if check_uses == nil then check_uses = false end
 	if tool_capabilities ~= nil and tool_capabilities ~= {} then
 		local punch = 1.0
 		if tool_capabilities.full_punch_interval ~= nil then
@@ -182,8 +164,12 @@ local toolcaps_to_text = function(tool_capabilities)
 
 		local groupcaps = tool_capabilities.groupcaps
 		if groupcaps ~= nil then
-			formstring = formstring .. S("This tool is capable of mining.\nMining capabilities:\n")
+			local miningcapstr = ""
+			local miningusesstr = ""
+			local caplines = 0
+			local useslines = 0
 			for k,v in pairs(groupcaps) do
+				-- Mining capabilities
 				local minrating, maxrating
 				for rating, time in pairs(v.times) do
 					if minrating == nil then minrating = rating else
@@ -209,11 +195,33 @@ local toolcaps_to_text = function(tool_capabilities)
 				else
 					levelstring = S("any level")
 				end
-				formstring = formstring .. S("• @1: @2, @3", doc.sub.items.get_group_name(k), ratingstring, levelstring)
-				formstring = formstring .. "\n"
+				miningcapstr = miningcapstr .. S("• @1: @2, @3", doc.sub.items.get_group_name(k), ratingstring, levelstring)
+				miningcapstr = miningcapstr .. "\n"
+				caplines = caplines + 1
+
+				-- Number of mining uses
+				if check_uses and v.maxlevel ~= nil and v.uses ~= nil and v.uses > 0 then
+					for level=0, v.maxlevel do
+						local uses = v.uses * math.pow(3, v.maxlevel - level)
+						miningusesstr = miningusesstr .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, uses)
+						miningusesstr = miningusesstr .. "\n"
+						useslines = useslines + 1
+					end
+				end
+			end
+			if caplines > 0 then
+				formstring = formstring .. S("This tool is capable of mining.\nMining capabilities:\n")
+				formstring = formstring .. miningcapstr
+				formstring = newline(formstring)
+			end
+			if useslines > 0 then
+				formstring = formstring .. S("Mining durability:") .. "\n"
+				formstring = formstring .. miningusesstr
+			end
+			if caplines > 0 or useslines > 0 then
+				formstring = newline2(formstring)
 			end
 		end
-		formstring = newline2(formstring)
 
 		local damage_groups = tool_capabilities.damage_groups
 		if damage_groups ~= nil then
@@ -868,10 +876,11 @@ doc.new_category("tools", {
 
 			datastring = newline(datastring)
 
-			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
+			-- Show tool capability stuff, including durability if not overwritten by custom field
+			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities, data.def._doc_items_durability == nil)
 			datastring = newline2(datastring)
 
-			-- Durability info
+			-- Overwritten durability info
 			if type(data.def._doc_items_durability) == "number" then
 				-- Fixed number of uses
 				datastring = datastring .. S("Durability: @1 uses", data.def._doc_items_durability)
@@ -879,10 +888,6 @@ doc.new_category("tools", {
 			elseif type(data.def._doc_items_durability) == "string" then
 				-- Manually described durability
 				datastring = datastring .. S("Durability: @1", data.def._doc_items_durability)
-				datastring = newline(datastring)
-			else
-				-- Automatically detect durability for mining tools
-				datastring = datastring .. mining_durability_factoid(data.def.tool_capabilities)
 				datastring = newline(datastring)
 			end
 
