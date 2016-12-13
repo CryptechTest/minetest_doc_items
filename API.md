@@ -46,9 +46,9 @@ easy and quick manipulation of the item help entries. All fields are optional.
 * `_doc_items_create_entry`: Whether to create an entry for this item (default: `true`)
 * `_doc_items_entry_name`: The title of the entry. By default, this is the same as the `description` field
   of the item. This field is required if the `description` is empty
-* `_doc_items_durability`: Two meanings:
-   * It it is a `number`: Number of uses for a tool before it breaks, use this is the use count is fixed.
-   * If it is a `string`: Free-form text which explains how the durability works. Try to keep it short.
+* `_doc_items_durability`: This field is for describing how long a tool can be used before it breaks. Choose one data type:
+   * It it is a `number`: Fixed number of uses before it breaks
+   * If it is a `string`: Free-form text which explains how the durability works. Try to keep it short and only use it if the other types won't work
 
 A full explanation of these fields is provided below.
 
