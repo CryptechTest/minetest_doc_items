@@ -832,8 +832,11 @@ doc.new_category("tools", {
 			end
 			datastring = datastring .. range_factoid(data.itemstring, data.def)
 			datastring = newline(datastring)
-			if data.def._doc_items_uses ~= nil then
-				datastring = datastring .. S("Uses: @1", data.def._doc_items_uses)
+			if type(data.def._doc_items_durability) == "number" then
+				datastring = datastring .. S("Durability: @1 uses", data.def._doc_items_durability)
+				datastring = newline(datastring)
+			elseif type(data.def._doc_items_durability) == "string" then
+				datastring = datastring .. S("Durability: @1", data.def._doc_items_durability)
 				datastring = newline(datastring)
 			end
 
