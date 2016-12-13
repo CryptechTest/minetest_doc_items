@@ -856,20 +856,6 @@ doc.new_category("tools", {
 				datastring = newline(datastring)
 			end
 			datastring = datastring .. range_factoid(data.itemstring, data.def)
-			datastring = newline(datastring)
-			if type(data.def._doc_items_durability) == "number" then
-				-- Fixed number of uses
-				datastring = datastring .. S("Durability: @1 uses", data.def._doc_items_durability)
-				datastring = newline(datastring)
-			elseif type(data.def._doc_items_durability) == "string" then
-				-- Manually described durability
-				datastring = datastring .. S("Durability: @1", data.def._doc_items_durability)
-				datastring = newline(datastring)
-			else
-				-- Automatically detect durability for mining tools
-				datastring = datastring .. mining_durability_factoid(data.def.tool_capabilities)
-				datastring = newline(datastring)
-			end
 
 			datastring = newline2(datastring)
 
@@ -884,6 +870,21 @@ doc.new_category("tools", {
 
 			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
 			datastring = newline2(datastring)
+
+			-- Durability info
+			if type(data.def._doc_items_durability) == "number" then
+				-- Fixed number of uses
+				datastring = datastring .. S("Durability: @1 uses", data.def._doc_items_durability)
+				datastring = newline(datastring)
+			elseif type(data.def._doc_items_durability) == "string" then
+				-- Manually described durability
+				datastring = datastring .. S("Durability: @1", data.def._doc_items_durability)
+				datastring = newline(datastring)
+			else
+				-- Automatically detect durability for mining tools
+				datastring = datastring .. mining_durability_factoid(data.def.tool_capabilities)
+				datastring = newline(datastring)
+			end
 
 			datastring = datastring .. get_custom_factoids("tools", "groups", data)
 			datastring = newline2(datastring)
