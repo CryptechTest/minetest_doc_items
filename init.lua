@@ -190,14 +190,12 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 					end
 				end
 				local levelstring
-				if v.maxlevel == 0 then
-					levelstring = S("level 0")
-				elseif v.maxlevel ~= nil then
-					levelstring = S("level 0-@1", v.maxlevel)
+				if v.maxlevel ~= nil then
+					levelstring = tostring(v.maxlevel)
 				else
 					levelstring = S("any level")
 				end
-				miningcapstr = miningcapstr .. S("• @1: @2, @3", doc.sub.items.get_group_name(k), ratingstring, levelstring)
+				miningcapstr = miningcapstr .. S("• @1: @2", doc.sub.items.get_group_name(k), levelstring)
 				miningcapstr = miningcapstr .. "\n"
 				caplines = caplines + 1
 
@@ -219,6 +217,7 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 								doc.sub.items.get_group_name(k), rating,
 								mintimestr, maxtimestr)
 						else
+							miningtimesstr = miningtimesstr ..
 								S("• @1, rating @2: @3s",
 								doc.sub.items.get_group_name(k), rating,
 								mintimestr)
@@ -239,7 +238,7 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 				end
 			end
 			if caplines > 0 then
-				formstring = formstring .. S("This tool is capable of mining.\nMining capabilities:\n")
+				formstring = formstring .. S("This tool is capable of mining.\nMaximum mining levels:\n")
 				formstring = formstring .. miningcapstr
 				formstring = newline(formstring)
 			end
