@@ -189,13 +189,12 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 						ratingstring = S("Rating @1-@2", minrating, maxrating)
 					end
 				end
-				local levelstring
-				if v.maxlevel ~= nil then
-					levelstring = tostring(v.maxlevel)
-				else
-					levelstring = S("any level")
+				local maxlevel = v.maxlevel
+				if not maxlevel then
+					-- Default from tool.h
+					maxlevel = 1
 				end
-				miningcapstr = miningcapstr .. S("• @1: @2", doc.sub.items.get_group_name(k), levelstring)
+				miningcapstr = miningcapstr .. S("• @1: @2", doc.sub.items.get_group_name(k), maxlevel)
 				miningcapstr = miningcapstr .. "\n"
 				caplines = caplines + 1
 
@@ -204,11 +203,7 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 						local maxtime = v.times[rating]
 						local mintime
 						local mintimestr, maxtimestr
-						if v.maxlevel then
-							mintime = maxtime / v.maxlevel
-						else
-							mintime = maxtime
-						end
+						mintime = maxtime / maxlevel
 						mintimestr = string.format("%.1f", mintime)
 						maxtimestr = string.format("%.1f", maxtime)
 						if mintimestr ~= maxtimestr then
@@ -228,10 +223,15 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 				end
 
 				-- Number of mining uses
-				if check_uses and v.maxlevel ~= nil and v.uses ~= nil and v.uses > 0 then
-					for level=0, v.maxlevel do
-						local uses = v.uses * math.pow(3, v.maxlevel - level)
-						miningusesstr = miningusesstr .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, uses)
+				local base_uses = v.uses
+				if not base_uses then
+					-- Default from tool.h
+					base_uses = 20
+				end
+				if check_uses and base_uses > 0 then
+					for level=0, maxlevel do
+						local real_uses = base_uses * math.pow(3, maxlevel - level)
+						miningusesstr = miningusesstr .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, real_uses)
 						miningusesstr = miningusesstr .. "\n"
 						useslines = useslines + 1
 					end
