@@ -165,8 +165,10 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 		local groupcaps = tool_capabilities.groupcaps
 		if groupcaps ~= nil then
 			local miningcapstr = ""
+			local miningtimesstr = ""
 			local miningusesstr = ""
 			local caplines = 0
+			local timelines = 0
 			local useslines = 0
 			for k,v in pairs(groupcaps) do
 				-- Mining capabilities
@@ -199,6 +201,33 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 				miningcapstr = miningcapstr .. "\n"
 				caplines = caplines + 1
 
+				for rating=3, 1, -1 do
+					if v.times ~= nil and v.times[rating] ~= nil then
+						local maxtime = v.times[rating]
+						local mintime
+						local mintimestr, maxtimestr
+						if v.maxlevel then
+							mintime = maxtime / v.maxlevel
+						else
+							mintime = maxtime
+						end
+						mintimestr = string.format("%.1f", mintime)
+						maxtimestr = string.format("%.1f", maxtime)
+						if mintimestr ~= maxtimestr then
+							miningtimesstr = miningtimesstr ..
+								S("• @1, rating @2: @3s-@4s",
+								doc.sub.items.get_group_name(k), rating,
+								mintimestr, maxtimestr)
+						else
+								S("• @1, rating @2: @3s",
+								doc.sub.items.get_group_name(k), rating,
+								mintimestr)
+						end
+						miningtimesstr = miningtimesstr.. "\n"
+						timelines = timelines + 1
+					end
+				end
+
 				-- Number of mining uses
 				if check_uses and v.maxlevel ~= nil and v.uses ~= nil and v.uses > 0 then
 					for level=0, v.maxlevel do
@@ -214,11 +243,15 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 				formstring = formstring .. miningcapstr
 				formstring = newline(formstring)
 			end
+			if timelines > 0 then
+				formstring = formstring .. S("Mining times:") .. "\n"
+				formstring = formstring .. miningtimesstr
+			end
 			if useslines > 0 then
 				formstring = formstring .. S("Mining durability:") .. "\n"
 				formstring = formstring .. miningusesstr
 			end
-			if caplines > 0 or useslines > 0 then
+			if caplines > 0 or useslines > 0 or timelines > 0 then
 				formstring = newline2(formstring)
 			end
 		end
