@@ -475,7 +475,7 @@ doc.new_category("nodes", {
 
 			---- Sounds
 			local function is_silent(def, soundtype)
-				return def.sounds == nil or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
+				return type(def.sounds) ~= "table" or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
 			end
 			local silentstep, silentdig, silentplace = false, false, false
 			if data.def.walkable and is_silent(data.def, "footstep") then
