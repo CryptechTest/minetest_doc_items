@@ -223,7 +223,8 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 				end
 			end
 			if caplines > 0 then
-				formstring = formstring .. S("This tool is capable of mining.\nMaximum mining levels:\n")
+				formstring = formstring .. S("This tool is capable of mining.") .. "\n"
+				formstring = formstring .. S("Maximum mining levels:") .. "\n"
 				formstring = formstring .. miningcapstr
 				formstring = newline(formstring)
 			end
