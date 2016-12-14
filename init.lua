@@ -146,22 +146,15 @@ local burntime_to_text = function(burntime)
 end
 
 --[[ Convert tool capabilities to readable text. Extracted information:
-* Full punch interval
 * Mining capabilities
 * Durability (when mining
+* Full punch interval
 * Damage groups
 ]]
 local toolcaps_to_text = function(tool_capabilities, check_uses)
 	local formstring = ""
 	if check_uses == nil then check_uses = false end
 	if tool_capabilities ~= nil and tool_capabilities ~= {} then
-		local punch = 1.0
-		if tool_capabilities.full_punch_interval ~= nil then
-			punch = tool_capabilities.full_punch_interval
-		end
-		formstring = formstring .. S("Full punch interval: @1 s", string.format("%.1f", punch))
-		formstring = formstring .. "\n\n"
-
 		local groupcaps = tool_capabilities.groupcaps
 		if groupcaps ~= nil then
 			local miningcapstr = ""
@@ -200,12 +193,12 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 						maxtimestr = string.format("%.1f", maxtime)
 						if mintimestr ~= maxtimestr then
 							miningtimesstr = miningtimesstr ..
-								S("• @1, rating @2: @3s-@4s",
+								S("• @1, rating @2: @3 s - @4 s",
 								doc.sub.items.get_group_name(k), rating,
 								mintimestr, maxtimestr)
 						else
 							miningtimesstr = miningtimesstr ..
-								S("• @1, rating @2: @3s",
+								S("• @1, rating @2: @3 s",
 								doc.sub.items.get_group_name(k), rating,
 								mintimestr)
 						end
@@ -247,14 +240,26 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 			end
 		end
 
+		-- Weapon data
 		local damage_groups = tool_capabilities.damage_groups
 		if damage_groups ~= nil then
-			formstring = formstring .. S("This is a melee weapon which deals damage by punching.\nMaximum damage per hit:\n")
+			formstring = formstring .. S("This is a melee weapon which deals damage by punching.") .. "\n"
+			-- Damage groups
+			formstring = formstring .. S("Maximum damage per hit:") .. "\n"
 			for k,v in pairs(damage_groups) do
 				formstring = formstring .. S("• @1: @2 HP", doc.sub.items.get_group_name(k), v)
 				formstring = formstring .. "\n"
 			end
+
+			-- Full punch interval
+			local punch = 1.0
+			if tool_capabilities.full_punch_interval ~= nil then
+				punch = tool_capabilities.full_punch_interval
+			end
+			formstring = formstring .. S("Full punch interval: @1 s", string.format("%.1f", punch))
+			formstring = formstring .. "\n"
 		end
+
 	end
 	return formstring
 end
