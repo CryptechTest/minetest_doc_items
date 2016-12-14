@@ -181,14 +181,6 @@ local toolcaps_to_text = function(tool_capabilities, check_uses)
 						if maxrating < rating then maxrating = rating end
 					end
 				end
-				local ratingstring = "Unknown rating"
-				if minrating ~= nil and maxrating ~= nil then
-					if minrating == maxrating then
-						ratingstring = S("Rating @1", minrating)
-					else
-						ratingstring = S("Rating @1-@2", minrating, maxrating)
-					end
-				end
 				local maxlevel = v.maxlevel
 				if not maxlevel then
 					-- Default from tool.h
