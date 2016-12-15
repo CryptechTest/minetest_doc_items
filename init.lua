@@ -151,7 +151,7 @@ end
 * Full punch interval
 * Damage groups
 ]]
-local toolcaps_to_text = function(tool_capabilities, check_uses)
+local factoid_toolcaps = function(tool_capabilities, check_uses)
 	local formstring = ""
 	if check_uses == nil then check_uses = false end
 	if tool_capabilities ~= nil and tool_capabilities ~= {} then
@@ -285,7 +285,7 @@ local range_factoid = function(itemstring, def)
 end
 
 -- Smelting fuel factoid
-local fuel_factoid = function(itemstring, ctype)
+local factoid_fuel = function(itemstring, ctype)
 	local formstring = ""
 	local result, decremented =  minetest.get_craft_result({method = "fuel", items = {itemstring}})
 	if result ~= nil and result.time > 0 then
@@ -308,7 +308,7 @@ local fuel_factoid = function(itemstring, ctype)
 	return formstring
 end
 
-local itemstring_factoid = function(itemstring, playername)
+local factoid_itemstring = function(itemstring, playername)
 	local privs = minetest.get_player_privs(playername)
 	if doc.sub.items.settings.itemstring or (privs.give or privs.debug) then
 		return S("Itemstring: \"@1\"", itemstring)
@@ -327,7 +327,7 @@ factoid_generators.craftitems = {}
 * category_id: Identifier of the Documentation System category in which the factoid appears
 * factoid_type: If set, oly returns factoid with a matching factoid_type.
                 If nil, all factoids for this category will be generated ]]
-local get_custom_factoids = function(category_id, factoid_type, data)
+local factoid_custom = function(category_id, factoid_type, data)
 	local ftable = factoid_generators[category_id]
 	local datastring = ""
 	-- Custom factoids are inserted here
@@ -381,7 +381,7 @@ doc.new_category("nodes", {
 				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "use", data)
+			datastring = datastring .. factoid_custom("nodes", "use", data)
 			datastring = newline2(datastring)
 
 			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max) .. "\n"
@@ -399,7 +399,7 @@ doc.new_category("nodes", {
 
 			datastring = newline2(datastring)
 
-			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities)
 
 			datastring = datastring .. S("Collidable: @1", yesno(data.def.walkable)) .. "\n"
 			local liquid
@@ -456,7 +456,7 @@ doc.new_category("nodes", {
 					datastring = datastring .. S("The fall damage on this block is reduced by @1%.", math.abs(fdap)) .. "\n"
 				end
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "damage", data)
+			datastring = datastring .. factoid_custom("nodes", "damage", data)
 			datastring = newline2(datastring)
 
 			---- Movement
@@ -470,7 +470,7 @@ doc.new_category("nodes", {
 			if bouncy ~= nil then
 				datastring = datastring .. S("This block will make you bounce off with an elasticity of @1%.", bouncy).."\n"
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "movement", data)
+			datastring = datastring .. factoid_custom("nodes", "movement", data)
 			datastring = newline2(datastring)
 
 			---- Sounds
@@ -502,7 +502,7 @@ doc.new_category("nodes", {
 					datastring = datastring .. S("Building this block is completely silent.").."\n"
 				end
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "sound", data)
+			datastring = datastring .. factoid_custom("nodes", "sound", data)
 			datastring = newline2(datastring)
 
 			-- Block activity
@@ -510,7 +510,7 @@ doc.new_category("nodes", {
 			if data.def.groups.falling_node == 1 then
 				datastring = datastring .. S("This block is affected by gravity and can fall.").."\n"
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "gravity", data)
+			datastring = datastring .. factoid_custom("nodes", "gravity", data)
 			datastring = newline2(datastring)
 
 			--- Dropping and destruction
@@ -537,7 +537,7 @@ doc.new_category("nodes", {
 			if data.def.floodable == true then
 				datastring = datastring .. S("Liquids can flow into this block and destroy it.").."\n"
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "drop_destroy", data)
+			datastring = datastring .. factoid_custom("nodes", "drop_destroy", data)
 			datastring = newline2(datastring)
 
 			-- Block appearance
@@ -562,7 +562,7 @@ doc.new_category("nodes", {
 			elseif data.def.sunlight_propagates then
 				datastring = datastring .. S("This block allows sunlight to propagate without loss in brightness.").."\n"
 			end
-			datastring = datastring .. get_custom_factoids("nodes", "light", data)
+			datastring = datastring .. factoid_custom("nodes", "light", data)
 			datastring = newline2(datastring)
 
 			--- List nodes/groups to which this node connects to
@@ -612,7 +612,7 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 
 			-- Mining groups
-			datastring = datastring .. get_custom_factoids("nodes", "mining", data)
+			datastring = datastring .. factoid_custom("nodes", "mining", data)
 			datastring = newline(datastring)
 			if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
 				-- Check if there are no mining groups at all
@@ -668,7 +668,7 @@ doc.new_category("nodes", {
 			end
 			datastring = newline2(datastring)
 
-			datastring = datastring .. get_custom_factoids("nodes", "groups", data)
+			datastring = datastring .. factoid_custom("nodes", "groups", data)
 			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups in quick list
@@ -839,14 +839,14 @@ doc.new_category("nodes", {
 			datastring = newline2(datastring)
 	
 			-- Show fuel recipe
-			datastring = datastring .. fuel_factoid(data.itemstring, "nodes")
+			datastring = datastring .. factoid_fuel(data.itemstring, "nodes")
 			datastring = newline2(datastring)
 
 			-- Other custom factoids
-			datastring = datastring .. get_custom_factoids("nodes", "misc", data)
+			datastring = datastring .. factoid_custom("nodes", "misc", data)
 			datastring = newline2(datastring)
 
-			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
+			datastring = datastring .. factoid_itemstring(data.itemstring, playername)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -886,7 +886,7 @@ doc.new_category("tools", {
 				datastring = newline2(datastring)
 			end
 
-			datastring = datastring .. get_custom_factoids("tools", "use", data)
+			datastring = datastring .. factoid_custom("tools", "use", data)
 			datastring = newline2(datastring)
 
 			if data.itemstring ~= "" then
@@ -907,7 +907,7 @@ doc.new_category("tools", {
 			datastring = newline(datastring)
 
 			-- Show tool capability stuff, including durability if not overwritten by custom field
-			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities, data.def._doc_items_durability == nil)
+			datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities, data.def._doc_items_durability == nil)
 			datastring = newline2(datastring)
 
 			-- Overwritten durability info
@@ -921,7 +921,7 @@ doc.new_category("tools", {
 				datastring = newline(datastring)
 			end
 
-			datastring = datastring .. get_custom_factoids("tools", "groups", data)
+			datastring = datastring .. factoid_custom("tools", "groups", data)
 			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups
@@ -936,14 +936,14 @@ doc.new_category("tools", {
 			datastring = newline2(datastring)
 
 			-- Show fuel recipe
-			datastring = datastring .. fuel_factoid(data.itemstring, "tools")
+			datastring = datastring .. factoid_fuel(data.itemstring, "tools")
 			datastring = newline2(datastring)
 
 			-- Other custom factoids
-			datastring = datastring .. get_custom_factoids("tools", "misc", data)
+			datastring = datastring .. factoid_custom("tools", "misc", data)
 			datastring = newline2(datastring)
 
-			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
+			datastring = datastring .. factoid_itemstring(data.itemstring, playername)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -978,7 +978,7 @@ doc.new_category("craftitems", {
 				datastring = datastring .. S("Usage help: @1", usagehelp)
 				datastring = newline2(datastring)
 			end
-			datastring = datastring .. get_custom_factoids("craftitems", "use", data)
+			datastring = datastring .. factoid_custom("craftitems", "use", data)
 			datastring = newline2(datastring)
 
 			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
@@ -995,10 +995,10 @@ doc.new_category("craftitems", {
 			end
 			datastring = newline(datastring)
 
-			datastring = datastring .. toolcaps_to_text(data.def.tool_capabilities)
+			datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities)
 			datastring = newline2(datastring)
 
-			datastring = datastring .. get_custom_factoids("craftitems", "groups", data)
+			datastring = datastring .. factoid_custom("craftitems", "groups", data)
 			datastring = newline2(datastring)
 
 			-- Show other “exposable” groups
@@ -1013,14 +1013,14 @@ doc.new_category("craftitems", {
 			datastring = newline2(datastring)
 
 			-- Show fuel recipe
-			datastring = datastring .. fuel_factoid(data.itemstring, "craftitems")
+			datastring = datastring .. factoid_fuel(data.itemstring, "craftitems")
 			datastring = newline2(datastring)
 
 			-- Other custom factoids
-			datastring = datastring .. get_custom_factoids("craftitems", "misc", data)
+			datastring = datastring .. factoid_custom("craftitems", "misc", data)
 			datastring = newline2(datastring)
 
-			datastring = datastring .. itemstring_factoid(data.itemstring, playername)
+			datastring = datastring .. factoid_itemstring(data.itemstring, playername)
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
