@@ -224,7 +224,7 @@ local factoid_toolcaps = function(tool_capabilities, check_uses)
 			end
 			if caplines > 0 then
 				formstring = formstring .. S("This tool is capable of mining.") .. "\n"
-				formstring = formstring .. S("Maximum mining levels:") .. "\n"
+				formstring = formstring .. S("Maximum toughness levels:") .. "\n"
 				formstring = formstring .. miningcapstr
 				formstring = newline(formstring)
 			end
@@ -645,7 +645,7 @@ doc.new_category("nodes", {
 				-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
 				-- Skip this for immediate digging to avoid redundancy
 				if data.def.groups.dig_immediate ~= 3 then
-					local mstring = S("This block can be mined by mining tools which match any of the following mining ratings and its mining level.").."\n"
+					local mstring = S("This block can be mined by mining tools which match any of the following mining ratings and its toughness level.").."\n"
 					mstring = mstring .. S("Mining ratings:").."\n"
 					local minegroupcount = 0
 					for group,_ in pairs(mininggroups) do
@@ -655,11 +655,11 @@ doc.new_category("nodes", {
 							minegroupcount = minegroupcount + 1
 						end
 					end
-					if data.def.groups.level ~= nil then
-						mstring = mstring .. S("Mining level: @1", data.def.groups.level).."\n"
-					else
-						mstring = mstring .. S("Mining level: 0").."\n"
+					local level = data.def.groups.level
+					if not level then
+						level = 0
 					end
+					mstring = mstring .. S("Toughness level: @1", level).."\n"
 
 					if minegroupcount > 0 then
 						datastring = datastring .. mstring
