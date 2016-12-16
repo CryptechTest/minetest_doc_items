@@ -1049,9 +1049,9 @@ end
 local function gather_descs()
 	local help = doc.sub.items.help
 
-	-- 1st pass
-	-- Gather all groups used for mining
+	-- 1st pass: Gather groups of interest
 	for id, def in pairs(minetest.registered_items) do
+		-- Gather all groups used for mining
 		if def.tool_capabilities ~= nil then
 			local groupcaps = def.tool_capabilities.groupcaps
 			if groupcaps ~= nil then
@@ -1062,10 +1062,8 @@ local function gather_descs()
 				end
 			end
 		end
-	end
 
-	-- ... and gather all groups which appear in crafting recipes
-	for id, def in pairs(minetest.registered_items) do
+		-- ... and gather all groups which appear in crafting recipes
 		local crafts = minetest.get_all_craft_recipes(id)
 		if crafts ~= nil then
 			for c=1,#crafts do
