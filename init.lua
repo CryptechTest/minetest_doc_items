@@ -265,6 +265,7 @@ local factoid_toolcaps = function(tool_capabilities, check_uses)
 	return formstring
 end
 
+-- Pointing range of itmes
 local range_factoid = function(itemstring, def)
 	local handrange = minetest.registered_items[""].range
 	local itemrange = def.range
@@ -308,6 +309,7 @@ local factoid_fuel = function(itemstring, ctype)
 	return formstring
 end
 
+-- Shows the itemstring of an item
 local factoid_itemstring = function(itemstring, playername)
 	local privs = minetest.get_player_privs(playername)
 	if doc.sub.items.settings.itemstring or (privs.give or privs.debug) then
@@ -317,7 +319,7 @@ local factoid_itemstring = function(itemstring, playername)
 	end
 end
 
--- For factoids
+-- Stuff for factoids
 local factoid_generators = {}
 factoid_generators.nodes = {}
 factoid_generators.tools = {}
@@ -326,7 +328,8 @@ factoid_generators.craftitems = {}
 --[[ Returns a list of all registered factoids for the specified category and type
 * category_id: Identifier of the Documentation System category in which the factoid appears
 * factoid_type: If set, oly returns factoid with a matching factoid_type.
-                If nil, all factoids for this category will be generated ]]
+                If nil, all factoids for this category will be generated
+* data: Entry data to parse ]]
 local factoid_custom = function(category_id, factoid_type, data)
 	local ftable = factoid_generators[category_id]
 	local datastring = ""
@@ -1023,10 +1026,6 @@ doc.new_category("craftitems", {
 	end
 })
 
-doc.sub.items.help = {}
-doc.sub.items.help.longdesc = {}
-doc.sub.items.help.usagehelp = {}
-
 -- Register group definition stuff
 -- More (user-)friendly group names to replace the rather technical names
 -- for better understanding
@@ -1046,8 +1045,13 @@ function doc.sub.items.add_notable_groups(groupnames)
 	end
 end
 
+-- Collect information about all items
 local function gather_descs()
-	local help = doc.sub.items.help
+	-- Internal help texts for default items
+	local help = {
+		longdesc = {},
+		usagehelp = {},
+	}
 
 	-- 1st pass: Gather groups of interest
 	for id, def in pairs(minetest.registered_items) do
@@ -1172,8 +1176,6 @@ local function gather_descs()
 			end
 		end
 	end
-
-
 
 	-- Add node entries
 	add_entries(minetest.registered_nodes, "nodes")
