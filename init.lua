@@ -52,7 +52,7 @@ local groups_to_string = function(grouptable, filter)
 	local gstring = ""
 	local groups_count = 0
 	for id, value in pairs(grouptable) do
-		if groupdefs[id] ~= nil and (filter == nil or filter[id] == true) then
+		if (filter == nil or filter[id] == true) then
 			-- Readable group name
 			if groups_count > 0 then
 				-- List seperator
@@ -1058,6 +1058,24 @@ local function gather_descs()
 				for k,v in pairs(groupcaps) do
 					if mininggroups[k] ~= true then
 						mininggroups[k] = true
+					end
+				end
+			end
+		end
+	end
+
+	-- ... and gather all groups which appear in crafting recipes
+	for id, def in pairs(minetest.registered_items) do
+		local crafts = minetest.get_all_craft_recipes(id)
+		if crafts ~= nil then
+			for c=1,#crafts do
+				for k,v in pairs(crafts[c].items) do
+					if string.sub(v,1,6) == "group:" then
+						local groupstring = string.sub(v,7,-1)
+						local groups = string.split(groupstring, ",")
+						for g=1, #groups do
+							miscgroups[groups[g]] = true
+						end
 					end
 				end
 			end

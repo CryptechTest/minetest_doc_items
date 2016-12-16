@@ -258,19 +258,18 @@ Add a list of groups you think are notable enough to be mentioned in the
 
 `groupnames` is a table of group names.
 
-By default, no groups are shown for this factoid which means this factoid
-is never displayed.
+Groups which are used for crafting are already automatically added.
 
 What is “notable” is subjective, but here's a rule of thumb you may follow:
 
 You should add groups with this function if:
 
-* This group is used for crafting purposes
 * This group is somehow important for interaction
 * This group appears in `connect_to` definitions of nodes
 
 Do not add groups if:
 
+* This group is only used for crafting purposes (this is already covered)
 * The group is only used internally
 * The group is uninteresting for the player
 * A factoid covering this group already exists
