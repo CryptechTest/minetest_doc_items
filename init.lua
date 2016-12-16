@@ -542,18 +542,10 @@ doc.new_category("nodes", {
 
 			-- Block appearance
 			--- Light
-			if data.def.light_source == 15 then
-				datastring = datastring .. S("This block is an extremely bright light source. It glows as bright the sun.").."\n"
-			elseif data.def.light_source == 14 then
-				datastring = datastring .. S("This block is a very bright light source.").."\n"
-			elseif data.def.light_source > 12 then
-				datastring = datastring .. S("This block is a bright light source.").."\n"
-			elseif data.def.light_source > 5 then
-				datastring = datastring .. S("This block is a light source of medium luminance.").."\n"
-			elseif data.def.light_source > 1 then
-				datastring = datastring .. S("This block is a weak light source and glows faintly.").."\n"
-			elseif data.def.light_source == 1 then
-				datastring = datastring .. S("This block glows faintly. It is barely noticable.").."\n"
+			if data.def.light_source > 3 then
+				datastring = datastring .. S("This block is a light source with a light level of @1.", data.def.light_source).."\n"
+			elseif data.def.light_source > 0 then
+				datastring = datastring .. S("This block glows faintly with a light level of @1.", data.def.light_source).."\n"
 			end
 			if data.def.paramtype == "light" and data.def.sunlight_propagates then
 				datastring = datastring .. S("This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.").."\n"
