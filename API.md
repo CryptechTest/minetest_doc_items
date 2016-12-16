@@ -266,24 +266,17 @@ What is “notable” is subjective, but there are some guidelines:
 Do add a group if:
 
 * It is used in an ABM
-* It is somehow used for a custom interaction with another item
+* It is used for a custom interaction with another item
 * It is simple enough for the player to know an item is member of this group
 * You want to refer to this group in help texts
 * The “don'ts” below don't apply
 
-Note that most groups are probably already covered elsewhere, so you
-probably only need to add a few groups here.
-
 Do not add a group if:
 
-* It is *only* used for crafting purposes
-* It *only* appears in `connect_to` definitions of nodes
-* The group is *only* a mining or damage group
-* The group membership itself requires an explanation (consider writing a
-  factoid instead)
-* The group has no gameplay relevance
+* It is *only* used for crafting, `connects_to`, mining times or damage groups
 * A factoid covering this group already exists
-* Writing a factoid would be more useful
+* The group membership itself requires an explanation (consider writing a factoid instead)
+* The group has no gameplay relevance
 * Group rating is important to gameplay (consider writing a factoid instead)
 
 Groups which are used for crafting or in the `connects_to` field of item
@@ -291,15 +284,15 @@ definitions are already automatically added to this factoid.
 
 ##### Examples for good additions
 
-* `book` in Minetest Game: Members of this group can be placed in bookshelves,
+* A group where its members can be placed in bookshelves.
   so this group meets the “custom interaction” criterion
-* `water` in Minetest Game: Used for water nodes with some ABM.
+* `water` in Minetest Game: Used for water nodes in the obsidian ABM
 * `sand` in Minetest Game: Used for the cactus growth ABM, but also crafting.
   Since it is not *only* used for crafting, it is OK to be added
 
 ##### Examples for bad additions
 
-* `stick`: in Minetest Game: This group appears in many crafting recipes and
+* `stick` in Minetest Game: This group appears in many crafting recipes and
   has no other use. It is already added automatically
 * A group in which members turn into obsidian when they touch water (ABM):
   This group is not trivial and should be introduced in a factoid instead
