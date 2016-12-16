@@ -254,34 +254,35 @@ returned.
 
 ### `doc.sub.items.add_notable_groups(groupnames)`
 Add a list of groups you think are notable enough to be mentioned in the
-“This item belongs to the following groups: (…)” factoid.
+“This item belongs to the following groups: (…)” factoid. This factoid
+is intended to give a quick rundown of misc. groups which don't fit
+to other factoids, yet they are still somewhat relevant to gameplay.
 
 `groupnames` is a table of group names.
 
-Groups which are used for crafting are already automatically added.
+Groups which are used for crafting or in the `connects_to` field of item
+definitions are already automatically added to this factoid, so you can
+omit those (but no harm is done if you do it anyway).
 
-What is “notable” is subjective, but here's a rule of thumb you may follow:
+What is “notable” is subjective, but there are some guidelines:
 
-You should add groups with this function if:
+You should add groups with this function if this group is somehow important
+for interaction, interesting for the player and not already covered by the
+other factoids.
 
-* This group is somehow important for interaction
-* This group appears in `connect_to` definitions of nodes
+Note that most groups are probably already covered elsewhere, so you
+probably only need to add a few groups here.
 
-Do not add groups if:
+Do not add a group if:
 
-* This group is only used for crafting purposes (this is already covered)
+* It is *only* used for crafting purposes (this is already covered)
+* It *only* appears in `connect_to` definitions of nodes (this is covered, too)
+* The group is a mining or damage group (this is covered, too)
 * The group is only used internally
 * The group is uninteresting for the player
 * A factoid covering this group already exists
 * Writing a factoid would be more useful
-* The group is a mining or damage group
-* Rating is important to gameplay (consider writing a factoid instead)
-
-The intention of this function is to give a short rundown of the groups
-which are notable as they are important to gameplay in some way yet don't
-deserve a full-blown factoid.
-
-
+* Group rating is important to gameplay (consider writing a factoid instead)
 
 ## Dependencies
 If you only add the custom fields to your items, you do *not* need to depend

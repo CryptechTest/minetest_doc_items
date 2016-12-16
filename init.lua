@@ -1078,6 +1078,16 @@ local function gather_descs()
 				end
 			end
 		end
+
+		-- ... and gather all groups used in connects_to
+		if def.connects_to ~= nil then
+			for c=1, #def.connects_to do
+				if string.sub(def.connects_to[c],1,6) == "group:" then
+					local group = string.sub(def.connects_to[c],7,-1)
+					miscgroups[group] = true
+				end
+			end
+		end
 	end
 
 	-- 2nd pass: Add entries
