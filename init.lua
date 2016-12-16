@@ -387,10 +387,22 @@ local factoids_header = function(data, ctype)
 	datastring = newline2(datastring)
 
 	if data.def.liquids_pointable == true then
-		datastring = datastring .. S("This item points to liquids.").."\n"
+		if ctype == "nodes" then
+			datastring = datastring .. S("This block points to liquids.").."\n"
+		elseif ctype == "tools" then
+			datastring = datastring .. S("This tool points to liquids.").."\n"
+		elseif ctype == "craftitems" then
+			datastring = datastring .. S("This item points to liquids.").."\n"
+		end
 	end
 	if data.def.on_use ~= nil then
-		datastring = datastring .. S("Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+		if ctype == "nodes" then
+			datastring = datastring .. S("Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+		elseif ctype == "tools" then
+			datastring = datastring .. S("Punches with this tool don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+		elseif ctype == "craftitems" then
+			datastring = datastring .. S("Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+		end
 	end
 
 	datastring = newline(datastring)
@@ -416,9 +428,21 @@ local factoids_footer = function(data, playername, ctype)
 	local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
 	if gstring ~= nil then
 		if gcount == 1 then
-			datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
+			if ctype == "nodes" then
+				datastring = datastring .. S("This block belongs to the @1 group.", gstring) .. "\n"
+			elseif ctype == "tools" then
+				datastring = datastring .. S("This tool belongs to the @1 group.", gstring) .. "\n"
+			elseif ctype == "craftitems" then
+				datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
+			end
 		else
-			datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
+			if ctype == "nodes" then
+				datastring = datastring .. S("This block belongs to these groups: @1.", gstring) .. "\n"
+			elseif ctype == "tools" then
+				datastring = datastring .. S("This tool belongs to these groups: @1.", gstring) .. "\n"
+			elseif ctype == "craftitems" then
+				datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
+			end
 		end
 	end
 	datastring = newline2(datastring)
