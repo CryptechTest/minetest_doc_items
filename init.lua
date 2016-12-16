@@ -100,7 +100,6 @@ local newline2 = function(text)
 end
 
 
-
 -- Extract suitable item description for formspec
 local description_for_formspec = function(itemstring)
 	if minetest.registered_items[itemstring] == nil then
@@ -319,6 +318,24 @@ local factoid_itemstring = function(itemstring, playername)
 	end
 end
 
+local entry_image = function(data)
+	local formstring = ""
+	-- No image for air
+	if data.itemstring ~= "air" then
+		-- Hand
+		if data.itemstring == "" then
+			formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..
+				minetest.registered_items[""].wield_image.."]"
+		-- Other items
+		elseif data.image ~= nil then
+			formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
+		else
+			formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
+		end
+	end
+	return formstring
+end
+
 -- Stuff for factoids
 local factoid_generators = {}
 factoid_generators.nodes = {}
@@ -345,6 +362,81 @@ local factoid_custom = function(category_id, factoid_type, data)
 	return datastring
 end
 
+-- Shows core information shared by all items, to be inserted at the top
+local factoids_header = function(data, ctype)
+	local longdesc = data.longdesc
+	local usagehelp = data.usagehelp
+	local datastring = ""
+	if longdesc ~= nil then
+		datastring = datastring .. S("Description: @1", longdesc)
+		datastring = newline2(datastring)
+	end
+	if usagehelp ~= nil then
+		datastring = datastring .. S("Usage help: @1", usagehelp)
+		datastring = newline2(datastring)
+	end
+	datastring = datastring .. factoid_custom(ctype, "use", data)
+	datastring = newline2(datastring)
+
+	if data.itemstring ~= "" then
+		datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max)
+		datastring = newline(datastring)
+	end
+	datastring = datastring .. range_factoid(data.itemstring, data.def)
+
+	datastring = newline2(datastring)
+
+	if data.def.liquids_pointable == true then
+		datastring = datastring .. S("This item points to liquids.").."\n"
+	end
+	if data.def.on_use ~= nil then
+		datastring = datastring .. S("Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+	end
+
+	datastring = newline(datastring)
+
+	-- Show tool capability stuff, including durability if not overwritten by custom field
+	local check_uses = false
+	if ctype == "tools" then
+		check_uses = data.def._doc_items_durability == nil
+	end
+	datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities, check_uses)
+	datastring = newline2(datastring)
+
+	return datastring
+end
+
+-- Shows less important information shared by all items, to be inserted at the bottom
+local factoids_footer = function(data, playername, ctype)
+	local datastring = ""
+	datastring = datastring .. factoid_custom(ctype, "groups", data)
+	datastring = newline2(datastring)
+
+	-- Show other “exposable” groups
+	local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
+	if gstring ~= nil then
+		if gcount == 1 then
+			datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
+		else
+			datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
+		end
+	end
+	datastring = newline2(datastring)
+
+	-- Show fuel recipe
+	datastring = datastring .. factoid_fuel(data.itemstring, ctype)
+	datastring = newline2(datastring)
+
+	-- Other custom factoids
+	datastring = datastring .. factoid_custom(ctype, "misc", data)
+	datastring = newline2(datastring)
+
+	-- Itemstring
+	datastring = datastring .. factoid_itemstring(data.itemstring, playername)
+
+	return datastring
+end
+
 function doc.sub.items.register_factoid(category_id, factoid_type, factoid_generator)
 	local ftable = { fgen = factoid_generator, ftype = factoid_type }
 	if category_id == "nodes" or category_id == "tools" or category_id == "craftitems" then
@@ -364,45 +456,11 @@ doc.new_category("nodes", {
 	description = S("Item reference of blocks and other things which are capable of occupying space"),
 	build_formspec = function(data, playername)
 		if data then
-			local longdesc = data.longdesc
-			local usagehelp = data.usagehelp
-
 			local formstring = ""
-			if data.itemstring ~= "air" then
-				if data.image ~= nil then
-					formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
-				else
-					formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
-				end
-			end
 			local datastring = ""
-			if longdesc ~= nil then
-				datastring = datastring .. S("Description: @1", longdesc)
-				datastring = newline2(datastring)
-			end
-			if usagehelp ~= nil then
-				datastring = datastring .. S("Usage help: @1", usagehelp)
-				datastring = newline2(datastring)
-			end
-			datastring = datastring .. factoid_custom("nodes", "use", data)
-			datastring = newline2(datastring)
 
-			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max) .. "\n"
-
-			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
-
-			datastring = newline2(datastring)
-
-			if data.def.liquids_pointable == true then
-				datastring = datastring .. S("This block points to liquids.").. "\n"
-			end
-			if data.def.on_use ~= nil then
-				datastring = datastring .. S("Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.") .. "\n"
-			end
-
-			datastring = newline2(datastring)
-
-			datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities)
+			formstring = entry_image(data)
+			datastring = factoids_header(data, "nodes")
 
 			datastring = datastring .. S("Collidable: @1", yesno(data.def.walkable)) .. "\n"
 			local liquid
@@ -663,20 +721,6 @@ doc.new_category("nodes", {
 			end
 			datastring = newline2(datastring)
 
-			datastring = datastring .. factoid_custom("nodes", "groups", data)
-			datastring = newline2(datastring)
-
-			-- Show other “exposable” groups in quick list
-			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
-			if gstring ~= nil then
-				if gcount == 1 then
-					datastring = datastring .. S("This block belongs to the @1 group.", gstring) .. "\n"
-				else
-					datastring = datastring .. S("This block belongs to these groups: @1.", gstring) .. "\n"
-				end
-			end
-			datastring = newline2(datastring)
-
 			-- Non-default drops
 			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
 				-- TODO: Calculate drop probabilities of max > 1 like for max == 1
@@ -833,15 +877,7 @@ doc.new_category("nodes", {
 			end
 			datastring = newline2(datastring)
 	
-			-- Show fuel recipe
-			datastring = datastring .. factoid_fuel(data.itemstring, "nodes")
-			datastring = newline2(datastring)
-
-			-- Other custom factoids
-			datastring = datastring .. factoid_custom("nodes", "misc", data)
-			datastring = newline2(datastring)
-
-			datastring = datastring .. factoid_itemstring(data.itemstring, playername)
+			datastring = datastring .. factoids_footer(data, playername, "nodes")
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -858,87 +894,24 @@ doc.new_category("tools", {
 	description = S("Item reference of all wieldable tools and weapons"),
 	build_formspec = function(data, playername)
 		if data then
-			local longdesc = data.longdesc
-			local usagehelp = data.usagehelp
 			local formstring = ""
-			-- Hand
-			if data.itemstring == "" then
-				formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..
-					minetest.registered_items[""].wield_image.."]"
-			-- Other tools
-			elseif data.image ~= nil then
-				formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
-			else
-				formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
-			end
 			local datastring = ""
-			if longdesc ~= nil then
-				datastring = datastring .. S("Description: @1", longdesc)
-				datastring = newline2(datastring)
-			end
-			if usagehelp ~= nil then
-				datastring = datastring .. S("Usage help: @1", usagehelp)
-				datastring = newline2(datastring)
-			end
 
-			datastring = datastring .. factoid_custom("tools", "use", data)
-			datastring = newline2(datastring)
-
-			if data.itemstring ~= "" then
-				datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max)
-				datastring = newline(datastring)
-			end
-			datastring = datastring .. range_factoid(data.itemstring, data.def)
-
-			datastring = newline2(datastring)
-
-			if data.def.liquids_pointable == true then
-				datastring = datastring .. S("This tool points to liquids.").."\n"
-			end
-			if data.def.on_use ~= nil then
-				datastring = datastring .. S("Punches with this tool don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
-			end
-
-			datastring = newline(datastring)
-
-			-- Show tool capability stuff, including durability if not overwritten by custom field
-			datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities, data.def._doc_items_durability == nil)
-			datastring = newline2(datastring)
+			formstring = entry_image(data)
+			datastring = factoids_header(data, "tools")
 
 			-- Overwritten durability info
 			if type(data.def._doc_items_durability) == "number" then
 				-- Fixed number of uses
 				datastring = datastring .. S("Durability: @1 uses", data.def._doc_items_durability)
-				datastring = newline(datastring)
+				datastring = newline2(datastring)
 			elseif type(data.def._doc_items_durability) == "string" then
 				-- Manually described durability
 				datastring = datastring .. S("Durability: @1", data.def._doc_items_durability)
-				datastring = newline(datastring)
+				datastring = newline2(datastring)
 			end
 
-			datastring = datastring .. factoid_custom("tools", "groups", data)
-			datastring = newline2(datastring)
-
-			-- Show other “exposable” groups
-			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
-			if gstring ~= nil then
-				if gcount == 1 then
-					datastring = datastring .. S("This tool belongs to the @1 group.", gstring).."\n"
-				else
-					datastring = datastring .. S("This tool belongs to these groups: @1.", gstring).."\n"
-				end
-			end
-			datastring = newline2(datastring)
-
-			-- Show fuel recipe
-			datastring = datastring .. factoid_fuel(data.itemstring, "tools")
-			datastring = newline2(datastring)
-
-			-- Other custom factoids
-			datastring = datastring .. factoid_custom("tools", "misc", data)
-			datastring = newline2(datastring)
-
-			datastring = datastring .. factoid_itemstring(data.itemstring, playername)
+			datastring = datastring .. factoids_footer(data, playername, "tools")
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
@@ -949,73 +922,18 @@ doc.new_category("tools", {
 	end
 })
 
-
 doc.new_category("craftitems", {
 	hide_entries_by_default = true,
 	name = S("Miscellaneous items"),
 	description = S("Item reference of items which are neither blocks, tools or weapons (esp. crafting items)"),
 	build_formspec = function(data, playername)
 		if data then
-			local longdesc = data.longdesc
-			local usagehelp = data.usagehelp
 			local formstring = ""
-			if data.image ~= nil then
-				formstring = formstring .. "image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.image.."]"
-			else
-				formstring = formstring .. "item_image["..(doc.FORMSPEC.ENTRY_END_X-1)..","..doc.FORMSPEC.ENTRY_START_Y..";1,1;"..data.itemstring.."]"
-			end
 			local datastring = ""
-			if longdesc ~= nil then
-				datastring = datastring .. S("Description: @1", longdesc)
-				datastring = newline2(datastring)
-			end
-			if usagehelp ~= nil then
-				datastring = datastring .. S("Usage help: @1", usagehelp)
-				datastring = newline2(datastring)
-			end
-			datastring = datastring .. factoid_custom("craftitems", "use", data)
-			datastring = newline2(datastring)
 
-			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max).. "\n"
-
-			datastring = datastring .. range_factoid(data.itemstring, data.def) .. "\n"
-
-			datastring = newline2(datastring)
-
-			if data.def.liquids_pointable == true then
-				datastring = datastring .. S("This item points to liquids.").."\n"
-			end
-			if data.def.on_use ~= nil then
-				datastring = datastring .. S("Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
-			end
-			datastring = newline(datastring)
-
-			datastring = datastring .. factoid_toolcaps(data.def.tool_capabilities)
-			datastring = newline2(datastring)
-
-			datastring = datastring .. factoid_custom("craftitems", "groups", data)
-			datastring = newline2(datastring)
-
-			-- Show other “exposable” groups
-			local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
-			if gstring ~= nil then
-				if gcount == 1 then
-					datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
-				else
-					datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
-				end
-			end
-			datastring = newline2(datastring)
-
-			-- Show fuel recipe
-			datastring = datastring .. factoid_fuel(data.itemstring, "craftitems")
-			datastring = newline2(datastring)
-
-			-- Other custom factoids
-			datastring = datastring .. factoid_custom("craftitems", "misc", data)
-			datastring = newline2(datastring)
-
-			datastring = datastring .. factoid_itemstring(data.itemstring, playername)
+			formstring = entry_image(data)
+			datastring = factoids_header(data, "craftitems")
+			datastring = datastring .. factoids_footer(data, playername, "craftitems")
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
 
