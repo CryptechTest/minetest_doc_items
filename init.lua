@@ -484,7 +484,7 @@ doc.new_category("nodes", {
 			if data.def.diggable and is_silent(data.def, "dig") and is_silent(data.def, "dug")  then
 				silentdig = true
 			end
-			if is_silent(data.def, "place") and data.itemstring ~= "air" then
+			if is_silent(data.def, "place") and is_silent(data.def, "place_failed") and data.itemstring ~= "air" then
 				silentplace = true
 			end
 			if silentstep and silentdig and silentplace then
