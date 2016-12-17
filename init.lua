@@ -942,6 +942,7 @@ doc.new_category("tools", {
 			for k,v in pairs(gc) do
 				if groupcount == 0 then
 					group = k
+					uses = v.uses
 				end
 				for rating, time in pairs(v.times) do
 					if mintime == nil or time < mintime then
@@ -956,14 +957,20 @@ doc.new_category("tools", {
 			comp[e].count = groupcount
 			comp[e].group = group
 			comp[e].mintime = mintime
+			comp[e].uses = uses
 		end
 
 		-- We want to sort out digging tools with multiple capabilities
 		if comp[1].count > 1 and comp[1].count > comp[2].count then
 			return false
-		-- Tiebreaker 1: Minimum digging time
 		elseif comp[1].group == comp[2].group then
-			return comp[1].mintime < comp[2].mintime
+			-- Tiebreaker 1: Minimum digging time
+			if comp[1].mintime == comp[2].mintime then
+			-- Tiebreaker 2: Use count
+				return comp[1].uses > comp[2].uses
+			else
+				return comp[1].mintime < comp[2].mintime
+			end
 		-- Final tiebreaker: Sort by group name
 		else
 			return comp[1].group < comp[2].group
