@@ -919,34 +919,40 @@ doc.new_category("tools", {
 	sorting = "function",
 	-- Roughly sort tools based on their capabilities. Tools which dig the same stuff end up in the same group
 	sorting_data = function(entry1, entry2)
+		local entries = { entry1, entry2 }
 		-- Hand beats all
-		if entry1.eid == "" then return true end
-		if entry2.eid == "" then return false end
+		if entries[1].eid == "" then return true end
+		if entries[2].eid == "" then return false end
 		-- No tool capabilities = instant loser
-		if entry1.data.def.tool_capabilities == nil then return false end
-		if entry2.data.def.tool_capabilities == nil then return true end
+		if entries[1].data.def.tool_capabilities == nil then return false end
+		if entries[2].data.def.tool_capabilities == nil then return true end
 		local comp = {}
-		comp[1] = {}
-		comp[2] = {}
-		comp[1].gc = entry1.data.def.tool_capabilities.groupcaps
-		comp[2].gc = entry2.data.def.tool_capabilities.groupcaps
+		for e=1, 2 do
+			comp[e] = {}
+			comp[e].gc = entries[e].data.def.tool_capabilities.groupcaps
+		end
 		-- No group capabilities = instant loser
 		if comp[1].gc == nil then return false end
 		if comp[2].gc == nil then return true end
 		for e=1, 2 do
 			local groups = {}
 			local gc = comp[e].gc
-			local group, mintime
+			local group, mintime = nil, nil
 			local groupcount = 0
-			local uses
+			local uses = nil
 			for k,v in pairs(gc) do
+				local maxlevel = v.maxlevel
+				if maxlevel == nil then
+					maxlevel = 1
+				end
 				if groupcount == 0 then
 					group = k
-					uses = v.uses
+					uses = v.uses * math.pow(3, v.maxlevel)
 				end
 				for rating, time in pairs(v.times) do
-					if mintime == nil or time < mintime then
-						mintime = time
+					local realtime = time / v.maxlevel
+					if mintime == nil or realtime < mintime then
+						mintime = realtime
 					end
 				end
 				if groups[k] ~= true then
@@ -957,7 +963,13 @@ doc.new_category("tools", {
 			comp[e].count = groupcount
 			comp[e].group = group
 			comp[e].mintime = mintime
-			comp[e].uses = uses
+			if uses then
+				comp[e].uses = uses
+			elseif type(entries[e].data.def._doc_items_durability) == "number" then
+				comp[e].uses = entries[e].data.def._doc_items_durability
+			else
+				comp[e].uses = 0
+			end
 		end
 
 		-- We want to sort out digging tools with multiple capabilities
