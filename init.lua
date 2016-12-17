@@ -916,6 +916,59 @@ doc.new_category("tools", {
 	hide_entries_by_default = true,
 	name = S("Tools and weapons"),
 	description = S("Item reference of all wieldable tools and weapons"),
+	sorting = "function",
+	-- Roughly sort tools based on their capabilities. Tools which dig the same stuff end up in the same group
+	sorting_data = function(entry1, entry2)
+		-- Hand beats all
+		if entry1.eid == "" then return true end
+		if entry2.eid == "" then return false end
+		-- No tool capabilities = instant loser
+		if entry1.data.def.tool_capabilities == nil then return false end
+		if entry2.data.def.tool_capabilities == nil then return true end
+		local comp = {}
+		comp[1] = {}
+		comp[2] = {}
+		comp[1].gc = entry1.data.def.tool_capabilities.groupcaps
+		comp[2].gc = entry2.data.def.tool_capabilities.groupcaps
+		-- No group capabilities = instant loser
+		if comp[1].gc == nil then return false end
+		if comp[2].gc == nil then return true end
+		for e=1, 2 do
+			local groups = {}
+			local gc = comp[e].gc
+			local group, mintime
+			local groupcount = 0
+			local uses
+			for k,v in pairs(gc) do
+				if groupcount == 0 then
+					group = k
+				end
+				for rating, time in pairs(v.times) do
+					if mintime == nil or time < mintime then
+						mintime = time
+					end
+				end
+				if groups[k] ~= true then
+					groupcount = groupcount + 1
+					groups[k] = true
+				end
+			end
+			comp[e].count = groupcount
+			comp[e].group = group
+			comp[e].mintime = mintime
+		end
+
+		-- We want to sort out digging tools with multiple capabilities
+		if comp[1].count > 1 and comp[1].count > comp[2].count then
+			return false
+		-- Tiebreaker 1: Minimum digging time
+		elseif comp[1].group == comp[2].group then
+			return comp[1].mintime < comp[2].mintime
+		-- Final tiebreaker: Sort by group name
+		else
+			return comp[1].group < comp[2].group
+		end
+	end,
 	build_formspec = function(data, playername)
 		if data then
 			local formstring = ""
