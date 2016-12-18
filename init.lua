@@ -923,12 +923,26 @@ doc.new_category("tools", {
 		-- Hand beats all
 		if entries[1].eid == "" then return true end
 		if entries[2].eid == "" then return false end
-		-- No tool capabilities = instant loser
-		if entries[1].data.def.tool_capabilities == nil then return false end
-		if entries[2].data.def.tool_capabilities == nil then return true end
+
 		local comp = {}
 		for e=1, 2 do
 			comp[e] = {}
+		end
+		-- No tool capabilities: Instant loser
+		if entries[1].data.def.tool_capabilities == nil and entries[2].data.def.tool_capabilities ~= nil then return false end
+		if entries[2].data.def.tool_capabilities == nil and entries[1].data.def.tool_capabilities ~= nil then return true end
+		-- No tool capabilities for both: Compare by uses
+		if entries[1].data.def.tool_capabilities == nil and entries[2].data.def.tool_capabilities == nil then
+			for e=1, 2 do
+				if type(entries[e].data.def._doc_items_durability) == "number" then
+					comp[e].uses = entries[e].data.def._doc_items_durability
+				else
+					comp[e].uses = 0
+				end
+			end
+			return comp[1].uses > comp[2].uses
+		end
+		for e=1, 2 do
 			comp[e].gc = entries[e].data.def.tool_capabilities.groupcaps
 		end
 		-- No group capabilities = instant loser
@@ -937,7 +951,8 @@ doc.new_category("tools", {
 		for e=1, 2 do
 			local groups = {}
 			local gc = comp[e].gc
-			local group, mintime = nil, nil
+			local group = nil
+			local mintime =  nil
 			local groupcount = 0
 			local uses = nil
 			for k,v in pairs(gc) do
@@ -963,7 +978,7 @@ doc.new_category("tools", {
 			comp[e].count = groupcount
 			comp[e].group = group
 			comp[e].mintime = mintime
-			if uses then
+			if uses ~= nil then
 				comp[e].uses = uses
 			elseif type(entries[e].data.def._doc_items_durability) == "number" then
 				comp[e].uses = entries[e].data.def._doc_items_durability
