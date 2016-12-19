@@ -1,4 +1,4 @@
-# Item Help [`doc_items`] (Version 0.8.0)
+# Item Help [`doc_items`] (Version 0.9.0)
 ## Description
 Automatically generated help texts of blocks, tools, weapons, crafting
 items and other items.
