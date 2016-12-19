@@ -199,7 +199,7 @@ Add a custom factoid (see above) for the specified category.
         * `movement`: Related to player movement on, in or at node
         * `sound`: Related to node sounds
         * `gravity`: Related to gravity (e.g. falling node)
-        * `drop_detroy`: Related to node being destroyed or node dropping as an item
+        * `drop_destroy`: Related to node being destroyed or node dropping as an item
         * `light`: Related to node light (luminance)
         * `mining`: Related to mining
 * `factoid_generator`: A function which turns item definition into a string
