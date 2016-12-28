@@ -474,7 +474,7 @@ function doc.sub.items.register_factoid(category_id, factoid_type, factoid_gener
 	end
 end
 
-doc.new_category("nodes", {
+doc.add_category("nodes", {
 	hide_entries_by_default = true,
 	name = S("Blocks"),
 	description = S("Item reference of blocks and other things which are capable of occupying space"),
@@ -912,7 +912,7 @@ doc.new_category("nodes", {
 	end
 })
 
-doc.new_category("tools", {
+doc.add_category("tools", {
 	hide_entries_by_default = true,
 	name = S("Tools and weapons"),
 	description = S("Item reference of all wieldable tools and weapons"),
@@ -1033,7 +1033,7 @@ doc.new_category("tools", {
 	end
 })
 
-doc.new_category("craftitems", {
+doc.add_category("craftitems", {
 	hide_entries_by_default = true,
 	name = S("Miscellaneous items"),
 	description = S("Item reference of items which are neither blocks, tools or weapons (esp. crafting items)"),
@@ -1149,7 +1149,7 @@ local function gather_descs()
 		if handdef._doc_items_entry_name then
 			item_name_overrides[""] = handdef._doc_items_entry_name
 		end
-		doc.new_entry("tools", "", {
+		doc.add_entry("tools", "", {
 			name = item_name_overrides[""],
 			hidden = handdef._doc_items_hidden == true,
 			data = {
@@ -1201,7 +1201,7 @@ local function gather_descs()
 						def = def,
 					}
 				}
-				doc.new_entry(category_id, id, infotable)
+				doc.add_entry(category_id, id, infotable)
 			end
 		end
 	end
