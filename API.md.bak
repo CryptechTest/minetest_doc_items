@@ -160,7 +160,7 @@ Suppressing an entry is useful for items which aren't supposed to be directly
 seen or obtained by the player or if they are only used for technical
 and/or internal purposes. Another possible reason to suppress an entry is
 to scrub the entry list of lots of very similar related items where the
-difference is too small to justify two separate entries (e.g.
+difference is too small to justify two seperate entries (e.g.
 burning furnace vs inactive furnace, because the gameplay mechanics are
 identical for both).
 
