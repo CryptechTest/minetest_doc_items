@@ -526,10 +526,12 @@ doc.add_category("nodes", {
 			elseif data.def.damage_per_second == 1 then
 				datastring = datastring .. S("This block causes a damage of @1 hit point per second.", data.def.damage_per_second) .. "\n"
 			end
-			if data.def.drowning > 1 then
-				datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit points every 2 seconds.", data.def.drowning) .. "\n"
-			elseif data.def.drowning == 1 then
-				datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit point every 2 seconds.", data.def.drowning) .. "\n"
+			if data.def.drowning then
+				if data.def.drowning > 1 then
+					datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit points every 2 seconds.", data.def.drowning) .. "\n"
+				elseif data.def.drowning == 1 then
+					datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit point every 2 seconds.", data.def.drowning) .. "\n"
+				end
 			end
 			local fdap = data.def.groups.fall_damage_add_percent
 			if fdap ~= nil then
@@ -627,17 +629,19 @@ doc.add_category("nodes", {
 
 			-- Block appearance
 			--- Light
-			if data.def.light_source > 3 then
-				datastring = datastring .. S("This block is a light source with a light level of @1.", data.def.light_source).."\n"
-			elseif data.def.light_source > 0 then
-				datastring = datastring .. S("This block glows faintly with a light level of @1.", data.def.light_source).."\n"
-			end
-			if data.def.paramtype == "light" and data.def.sunlight_propagates then
-				datastring = datastring .. S("This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.").."\n"
-			elseif data.def.paramtype == "light" then
-				datastring = datastring .. S("This block allows light to propagate with a small loss of brightness.").."\n"
-			elseif data.def.sunlight_propagates then
-				datastring = datastring .. S("This block allows sunlight to propagate without loss in brightness.").."\n"
+			if data.def.light_source then
+				if data.def.light_source > 3 then
+					datastring = datastring .. S("This block is a light source with a light level of @1.", data.def.light_source).."\n"
+				elseif data.def.light_source > 0 then
+					datastring = datastring .. S("This block glows faintly with a light level of @1.", data.def.light_source).."\n"
+				end
+				if data.def.paramtype == "light" and data.def.sunlight_propagates then
+					datastring = datastring .. S("This block allows light to propagate with a small loss of brightness, and sunlight can even go through losslessly.").."\n"
+				elseif data.def.paramtype == "light" then
+					datastring = datastring .. S("This block allows light to propagate with a small loss of brightness.").."\n"
+				elseif data.def.sunlight_propagates then
+					datastring = datastring .. S("This block allows sunlight to propagate without loss in brightness.").."\n"
+				end
 			end
 			datastring = datastring .. factoid_custom("nodes", "light", data)
 			datastring = newline2(datastring)
