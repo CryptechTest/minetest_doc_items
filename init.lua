@@ -187,7 +187,11 @@ local factoid_toolcaps = function(tool_capabilities, check_uses)
 						local maxtime = v.times[rating]
 						local mintime
 						local mintimestr, maxtimestr
-						mintime = maxtime / maxlevel
+						local maxlevel_calc = maxlevel
+						if maxlevel_calc < 1 then
+							maxlevel_calc = 1
+						end
+						mintime = maxtime / maxlevel_calc
 						mintimestr = string.format("%.1f", mintime)
 						maxtimestr = string.format("%.1f", maxtime)
 						if mintimestr ~= maxtimestr then
