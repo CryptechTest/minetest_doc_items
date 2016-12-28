@@ -3,9 +3,6 @@
 This document explains the API of `doc_items`. It contains a reference of
 all functions.
 
-***Warning***: This mod is still in alpha stage, expect bugs and missing
-features!
-
 ## Quick start
 The most common use case for using this API requires only to set some
 hand-written help texts for your items.

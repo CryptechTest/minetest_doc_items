@@ -1,4 +1,4 @@
-# Item Help [`doc_items`] (Version 0.9.0)
+# Item Help [`doc_items`] (Version 1.0.0)
 ## Description
 Automatically generated help texts of blocks, tools, weapons, crafting
 items and other items.
@@ -52,8 +52,7 @@ one of the core features of this mod; the mod relies on other mods to
 provide their custom help texts for a complete help.
 
 If you find a particular item which is lacking an explanation on usage,
-request the mod author to add `doc_items` support. (But please wait
-for version 1.0.0 first).
+request the mod author to add `doc_items` support.
 
 ## API
 This mod has an API so that modders can add their own custom help texts,
