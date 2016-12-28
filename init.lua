@@ -891,7 +891,6 @@ doc.add_category("nodes", {
 								dropstring_this = S("@1 (<0.5%)", dropstring_this)
 							else
 								-- Add circa indicator for percentages with decimal point
-								-- FIXME: Is this check actually reliable?
 								local fchance = string.format("%.0f", chance)
 								if math.fmod(chance, 1) > 0 then
 									dropstring_this = S("@1 (ca. @2%)", dropstring_this, fchance)
