@@ -136,3 +136,4 @@ Durability: @1 uses = Haltbarkeit: @1 Benutzungen
 Durability: @1 = Haltbarkeit: @1
 Mining durability: = Grabehaltbarkeit:
 • @1, level @2: @3 uses = • @1, Stufe @2: @3 Benutzungen
+• @1, level @2: Unlimited = • @1, Stufe @2: Unbegrenzt

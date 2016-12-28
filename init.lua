@@ -215,7 +215,11 @@ local factoid_toolcaps = function(tool_capabilities, check_uses)
 				if check_uses and base_uses > 0 then
 					for level=0, maxlevel do
 						local real_uses = base_uses * math.pow(3, maxlevel - level)
-						miningusesstr = miningusesstr .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, real_uses)
+						if real_uses < 65535 then
+							miningusesstr = miningusesstr .. S("• @1, level @2: @3 uses", doc.sub.items.get_group_name(k), level, real_uses)
+						else
+							miningusesstr = miningusesstr .. S("• @1, level @2: Unlimited", doc.sub.items.get_group_name(k), level)
+						end
 						miningusesstr = miningusesstr .. "\n"
 						useslines = useslines + 1
 					end

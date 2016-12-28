@@ -136,3 +136,4 @@ Durability: @1 uses =
 Durability: @1 =
 Mining durability: =
 • @1, level @2: @3 uses =
+• @1, level @2: Unlimited =
