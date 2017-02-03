@@ -965,18 +965,24 @@ doc.add_category("tools", {
 			local group = nil
 			local mintime =  nil
 			local groupcount = 0
-			local uses = nil
+			local realuses = nil
 			for k,v in pairs(gc) do
 				local maxlevel = v.maxlevel
 				if maxlevel == nil then
+					-- Default from tool.h
 					maxlevel = 1
 				end
 				if groupcount == 0 then
 					group = k
-					uses = v.uses * math.pow(3, v.maxlevel)
+					local uses = v.uses
+					if v.uses == nil then
+						-- Default from tool.h
+						uses = 20
+					end
+					realuses = uses * math.pow(3, maxlevel)
 				end
 				for rating, time in pairs(v.times) do
-					local realtime = time / v.maxlevel
+					local realtime = time / maxlevel
 					if mintime == nil or realtime < mintime then
 						mintime = realtime
 					end
@@ -989,8 +995,8 @@ doc.add_category("tools", {
 			comp[e].count = groupcount
 			comp[e].group = group
 			comp[e].mintime = mintime
-			if uses ~= nil then
-				comp[e].uses = uses
+			if realuses ~= nil then
+				comp[e].uses = realuses
 			elseif type(entries[e].data.def._doc_items_durability) == "number" then
 				comp[e].uses = entries[e].data.def._doc_items_durability
 			else
