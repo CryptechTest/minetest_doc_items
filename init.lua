@@ -165,13 +165,18 @@ local factoid_toolcaps = function(tool_capabilities, check_uses)
 			for k,v in pairs(groupcaps) do
 				-- Mining capabilities
 				local minrating, maxrating
-				for rating, time in pairs(v.times) do
-					if minrating == nil then minrating = rating else
-						if minrating > rating then minrating = rating end
+				if v.times then
+					for rating, time in pairs(v.times) do
+						if minrating == nil then minrating = rating else
+							if minrating > rating then minrating = rating end
+						end
+						if maxrating == nil then maxrating = rating else
+							if maxrating < rating then maxrating = rating end
+						end
 					end
-					if maxrating == nil then maxrating = rating else
-						if maxrating < rating then maxrating = rating end
-					end
+				else
+					minrating = 1
+					maxrating = 1
 				end
 				local maxlevel = v.maxlevel
 				if not maxlevel then
@@ -981,11 +986,15 @@ doc.add_category("tools", {
 					end
 					realuses = uses * math.pow(3, maxlevel)
 				end
-				for rating, time in pairs(v.times) do
-					local realtime = time / maxlevel
-					if mintime == nil or realtime < mintime then
-						mintime = realtime
+				if v.times then
+					for rating, time in pairs(v.times) do
+						local realtime = time / maxlevel
+						if mintime == nil or realtime < mintime then
+							mintime = realtime
+						end
 					end
+				else
+					mintime = 0
 				end
 				if groups[k] ~= true then
 					groupcount = groupcount + 1
