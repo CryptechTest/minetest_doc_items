@@ -1027,7 +1027,11 @@ doc.add_category("tools", {
 			end
 		-- Final tiebreaker: Sort by group name
 		else
-			return comp[1].group < comp[2].group
+			if comp[1].group and comp[2].group then
+				return comp[1].group < comp[2].group
+			else
+				return false
+			end
 		end
 	end,
 	build_formspec = function(data, playername)
