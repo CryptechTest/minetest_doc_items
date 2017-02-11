@@ -987,7 +987,7 @@ doc.add_category("tools", {
 					end
 					realuses = uses * math.pow(3, maxlevel)
 				end
-				if v.times then
+				if v.times and #v.times > 1 then
 					for rating, time in pairs(v.times) do
 						local realtime = time / maxlevel
 						if mintime == nil or realtime < mintime then
