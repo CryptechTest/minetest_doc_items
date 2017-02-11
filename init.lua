@@ -16,6 +16,7 @@ doc.sub.items.temp.craftitem = S("This item is primarily used for crafting other
 
 doc.sub.items.temp.eat = S("Hold it in your hand, then leftclick to eat it.")
 doc.sub.items.temp.eat_bad = S("Hold it in your hand, then leftclick to eat it. But why would you want to do this?")
+doc.sub.items.temp.rotate_node = S("This block's rotation is affected by the way you place it: Place it on the floor or ceiling for a vertical orientation; place it at the side for a horizontal orientation. Sneaking while placing it leads to a perpendicular orientation instead.")
 
 doc.sub.items.settings = {}
 doc.sub.items.settings.friendly_group_names = false

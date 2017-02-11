@@ -143,6 +143,8 @@ to avoid redundancy and to increase consistency for simple things. Read
 ##### Usage help
 * `doc.sub.items.temp.eat`: For eatable items using the `on_use=minetest.item_eat(1)` idiom
 * `doc.sub.items.temp.eat_bad`: Same as above, but eating them is considered a bad idea
+* `doc.sub.items.temp.rotate_node`: For nodes with `on_place=minetest.rotate_node`,
+  explains placement and rotation
 
 ### Entry creation
 By default, an entry for each item is added automatically, except for items
