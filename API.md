@@ -216,6 +216,7 @@ Add a custom factoid (see above) for the specified category.
         * `drop_destroy`: Related to node being destroyed or node dropping as an item
         * `light`: Related to node light (luminance)
         * `mining`: Related to mining
+        * `drops`: Related to node drops
 * `factoid_generator`: A function which turns item definition into a string
   (see blow)
 
@@ -243,6 +244,42 @@ to all blocks which are member of the group `puts_out_fire`.
             return ""
         end
     end)
+
+
+### `doc.sub.items.disable_core_factoid(factoid_name)`
+This function removes a core (built-in) factoid entirely, its text will never be displayed in any
+entry then.
+
+#### Parameter
+`factoid_name` chooses the factoid you want to disable. The following core factoids can be disabled:
+
+* `"node_mining"`: Mining properties of nodes
+* `"tool_capabilities"`: Tool capabilities such as digging times
+* `"groups"`: Group memberships
+* `"fuel"`: How long the item burns as a fuel and if there's a leftover
+* `"itemstring"`: The itemstring
+* `"drops"`: Node drops
+* `"connects_to"`: Tells to which nodes the node connects to
+* `"light"`: Light and transparency information for nodes
+* `"drop_destroy"`: Information about when the node causes to create its “drop” and if it gets destroyed by flooding
+* `"gravity"`: Factoid for `falling_node` group
+* `"sounds"`: Infos about sound effects related to the item
+* `"node_damage"`: Direct damage and drowning damage caused by nodes
+* `"node_movement"`: Nodes affecting player movement
+* `"liquid"`: Liquid-related infos of a node
+* `"basics"`: Collection of many basic factoids: The custom help texts, pointability, collidability, range, stack size, `liquids_pointable`, “punches don't work as usual”. Be careful with this one!
+
+#### Background
+Normally, the core factoids are written in a very general-purpose style, so this function might
+not be needed at all. But it might be useful for subgames and mods which radically break with
+some of the underlying core assumptions in Minetest. For example, if your mod completely changes
+the digging system, the help texts provided by `doc_items` are probably incorrect, so you can
+disable `node_mining` and register a custom factoid as a replacement.
+
+Please do not use this function lightly because it touches the very core of `doc_items`. Try to
+understand a core factoid before you consider to disable it. If you think a core factoid is just
+broken or buggy in general, please file a bug instead.
+
 
 ### `doc.sub.items.add_friendly_group_names(groupnames)`
 Use this function so set some more readable group names to show them

@@ -42,6 +42,10 @@ local suppressed = {
 	["ignore"] = true,
 }
 
+-- This table contains which of the builtin factoids must NOT be displayed because
+-- they have been disabled by a mod
+local forbidden_core_factoids = {}
+
 -- Helper functions
 local yesno = function(bool)
 	if bool==true then return S("Yes")
@@ -152,6 +156,10 @@ end
 * Damage groups
 ]]
 local factoid_toolcaps = function(tool_capabilities, check_uses)
+	if forbidden_core_factoids.tool_capabilities then
+		return ""
+	end
+
 	local formstring = ""
 	if check_uses == nil then check_uses = false end
 	if tool_capabilities ~= nil and tool_capabilities ~= {} then
@@ -284,6 +292,10 @@ end
 - level group
 ]]
 local factoid_mining_node = function(data)
+	if forbidden_core_factoids.node_mining then
+		return ""
+	end
+
 	local datastring = ""
 	if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
 		-- Check if there are no mining groups at all
@@ -362,6 +374,10 @@ end
 
 -- Smelting fuel factoid
 local factoid_fuel = function(itemstring, ctype)
+	if forbidden_core_factoids.fuel then
+		return ""
+	end
+
 	local formstring = ""
 	local result, decremented =  minetest.get_craft_result({method = "fuel", items = {itemstring}})
 	if result ~= nil and result.time > 0 then
@@ -386,6 +402,10 @@ end
 
 -- Shows the itemstring of an item
 local factoid_itemstring = function(itemstring, playername)
+	if forbidden_core_factoids.itemstring then
+		return ""
+	end
+
 	local privs = minetest.get_player_privs(playername)
 	if doc.sub.items.settings.itemstring or (privs.give or privs.debug) then
 		return S("Itemstring: \"@1\"", itemstring)
@@ -440,45 +460,49 @@ end
 
 -- Shows core information shared by all items, to be inserted at the top
 local factoids_header = function(data, ctype)
-	local longdesc = data.longdesc
-	local usagehelp = data.usagehelp
 	local datastring = ""
-	if longdesc ~= nil then
-		datastring = datastring .. S("Description: @1", longdesc)
-		datastring = newline2(datastring)
-	end
-	if usagehelp ~= nil then
-		datastring = datastring .. S("Usage help: @1", usagehelp)
-		datastring = newline2(datastring)
-	end
-	datastring = datastring .. factoid_custom(ctype, "use", data)
-	datastring = newline2(datastring)
+	if not forbidden_core_factoids.basics then
 
-	if data.itemstring ~= "" then
-		datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max)
-		datastring = newline(datastring)
-	end
-	datastring = datastring .. range_factoid(data.itemstring, data.def)
-
-	datastring = newline2(datastring)
-
-	if data.def.liquids_pointable == true then
-		if ctype == "nodes" then
-			datastring = datastring .. S("This block points to liquids.").."\n"
-		elseif ctype == "tools" then
-			datastring = datastring .. S("This tool points to liquids.").."\n"
-		elseif ctype == "craftitems" then
-			datastring = datastring .. S("This item points to liquids.").."\n"
+		local longdesc = data.longdesc
+		local usagehelp = data.usagehelp
+		if longdesc ~= nil then
+			datastring = datastring .. S("Description: @1", longdesc)
+			datastring = newline2(datastring)
 		end
-	end
-	if data.def.on_use ~= nil then
-		if ctype == "nodes" then
-			datastring = datastring .. S("Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
-		elseif ctype == "tools" then
-			datastring = datastring .. S("Punches with this tool don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
-		elseif ctype == "craftitems" then
-			datastring = datastring .. S("Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+		if usagehelp ~= nil then
+			datastring = datastring .. S("Usage help: @1", usagehelp)
+			datastring = newline2(datastring)
 		end
+		datastring = datastring .. factoid_custom(ctype, "use", data)
+		datastring = newline2(datastring)
+
+		if data.itemstring ~= "" then
+			datastring = datastring .. S("Maximum stack size: @1", data.def.stack_max)
+			datastring = newline(datastring)
+		end
+		datastring = datastring .. range_factoid(data.itemstring, data.def)
+
+		datastring = newline2(datastring)
+
+		if data.def.liquids_pointable == true then
+			if ctype == "nodes" then
+				datastring = datastring .. S("This block points to liquids.").."\n"
+			elseif ctype == "tools" then
+				datastring = datastring .. S("This tool points to liquids.").."\n"
+			elseif ctype == "craftitems" then
+				datastring = datastring .. S("This item points to liquids.").."\n"
+			end
+		end
+			if data.def.on_use ~= nil then
+			if ctype == "nodes" then
+				datastring = datastring .. S("Punches with this block don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+			elseif ctype == "tools" then
+				datastring = datastring .. S("Punches with this tool don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+			elseif ctype == "craftitems" then
+				datastring = datastring .. S("Punches with this item don't work as usual; melee combat and mining are either not possible or work differently.").."\n"
+			end
+		end
+
 	end
 
 	datastring = newline(datastring)
@@ -501,23 +525,25 @@ local factoids_footer = function(data, playername, ctype)
 	datastring = newline2(datastring)
 
 	-- Show other “exposable” groups
-	local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
-	if gstring ~= nil then
-		if gcount == 1 then
-			if ctype == "nodes" then
-				datastring = datastring .. S("This block belongs to the @1 group.", gstring) .. "\n"
-			elseif ctype == "tools" then
-				datastring = datastring .. S("This tool belongs to the @1 group.", gstring) .. "\n"
-			elseif ctype == "craftitems" then
-				datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
-			end
-		else
-			if ctype == "nodes" then
-				datastring = datastring .. S("This block belongs to these groups: @1.", gstring) .. "\n"
-			elseif ctype == "tools" then
-				datastring = datastring .. S("This tool belongs to these groups: @1.", gstring) .. "\n"
-			elseif ctype == "craftitems" then
-				datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
+	if not forbidden_core_factoids.groups then
+		local gstring, gcount = groups_to_string(data.def.groups, miscgroups)
+		if gstring ~= nil then
+			if gcount == 1 then
+				if ctype == "nodes" then
+					datastring = datastring .. S("This block belongs to the @1 group.", gstring) .. "\n"
+				elseif ctype == "tools" then
+					datastring = datastring .. S("This tool belongs to the @1 group.", gstring) .. "\n"
+				elseif ctype == "craftitems" then
+					datastring = datastring .. S("This item belongs to the @1 group.", gstring) .. "\n"
+				end
+			else
+				if ctype == "nodes" then
+					datastring = datastring .. S("This block belongs to these groups: @1.", gstring) .. "\n"
+				elseif ctype == "tools" then
+					datastring = datastring .. S("This tool belongs to these groups: @1.", gstring) .. "\n"
+				elseif ctype == "craftitems" then
+					datastring = datastring .. S("This item belongs to these groups: @1.", gstring) .. "\n"
+				end
 			end
 		end
 	end
@@ -550,6 +576,10 @@ function doc.sub.items.register_factoid(category_id, factoid_type, factoid_gener
 	end
 end
 
+function doc.sub.items.disable_core_factoid(factoid_name)
+	forbidden_core_factoids[factoid_name] = true
+end
+
 doc.add_category("nodes", {
 	hide_entries_by_default = true,
 	name = S("Blocks"),
@@ -562,18 +592,20 @@ doc.add_category("nodes", {
 			formstring = entry_image(data)
 			datastring = factoids_header(data, "nodes")
 
-			datastring = datastring .. S("Collidable: @1", yesno(data.def.walkable)) .. "\n"
-			local liquid
-			if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
-			if data.def.pointable == true then
-				datastring = datastring .. S("Pointable: Yes") .. "\n"
-			elseif liquid then
-				datastring = datastring .. S("Pointable: Only by special items") .. "\n"
-			else
-				datastring = datastring .. S("Pointable: No") .. "\n"
+			if not forbidden_core_factoids.basics then
+				datastring = datastring .. S("Collidable: @1", yesno(data.def.walkable)) .. "\n"
+				local liquid
+				if data.def.liquidtype ~= "none" then liquid = true else liquid = false end
+				if data.def.pointable == true then
+					datastring = datastring .. S("Pointable: Yes") .. "\n"
+				elseif liquid then
+					datastring = datastring .. S("Pointable: Only by special items") .. "\n"
+				else
+					datastring = datastring .. S("Pointable: No") .. "\n"
+				end
 			end
 			datastring = newline2(datastring)
-			if liquid then
+			if not forbidden_core_factoids.liquid and liquid then
 				datastring = newline(datastring, false)
 				datastring = datastring .. S("This block is a liquid with these properties:") .. "\n"
 				local range, renew, viscos
@@ -597,72 +629,78 @@ doc.add_category("nodes", {
 			-- Global factoids
 			--- Direct interaction with the player
 			---- Damage (very important)
-			if data.def.damage_per_second ~= nil and data.def.damage_per_second > 1 then
-				datastring = datastring .. S("This block causes a damage of @1 hit points per second.", data.def.damage_per_second) .. "\n"
-			elseif data.def.damage_per_second == 1 then
-				datastring = datastring .. S("This block causes a damage of @1 hit point per second.", data.def.damage_per_second) .. "\n"
-			end
-			if data.def.drowning then
-				if data.def.drowning > 1 then
-					datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit points every 2 seconds.", data.def.drowning) .. "\n"
-				elseif data.def.drowning == 1 then
-					datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit point every 2 seconds.", data.def.drowning) .. "\n"
+			if not forbidden_core_factoids.node_damage then
+				if data.def.damage_per_second ~= nil and data.def.damage_per_second > 1 then
+					datastring = datastring .. S("This block causes a damage of @1 hit points per second.", data.def.damage_per_second) .. "\n"
+				elseif data.def.damage_per_second == 1 then
+					datastring = datastring .. S("This block causes a damage of @1 hit point per second.", data.def.damage_per_second) .. "\n"
 				end
-			end
-			local fdap = data.def.groups.fall_damage_add_percent
-			if fdap ~= nil then
-				if fdap > 0 then
-					datastring = datastring .. S("The fall damage on this block is increased by @1%.", fdap) .. "\n"
-				elseif fdap <= -100 then
-					datastring = datastring .. S("This block negates all fall damage.") .. "\n"
-				else
-					datastring = datastring .. S("The fall damage on this block is reduced by @1%.", math.abs(fdap)) .. "\n"
+				if data.def.drowning then
+					if data.def.drowning > 1 then
+						datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit points every 2 seconds.", data.def.drowning) .. "\n"
+					elseif data.def.drowning == 1 then
+						datastring = datastring .. S("This block decreases your breath and causes a drowning damage of @1 hit point every 2 seconds.", data.def.drowning) .. "\n"
+					end
+				end
+				local fdap = data.def.groups.fall_damage_add_percent
+				if fdap ~= nil then
+					if fdap > 0 then
+						datastring = datastring .. S("The fall damage on this block is increased by @1%.", fdap) .. "\n"
+					elseif fdap <= -100 then
+						datastring = datastring .. S("This block negates all fall damage.") .. "\n"
+					else
+						datastring = datastring .. S("The fall damage on this block is reduced by @1%.", math.abs(fdap)) .. "\n"
+					end
 				end
 			end
 			datastring = datastring .. factoid_custom("nodes", "damage", data)
 			datastring = newline2(datastring)
 
 			---- Movement
-			if data.def.groups.disable_jump == 1 then
-				datastring = datastring .. S("You can not jump while standing on this block.").."\n"
+			if forbidden_core_factoids.node_movement then
+				if data.def.groups.disable_jump == 1 then
+					datastring = datastring .. S("You can not jump while standing on this block.").."\n"
+				end
+				if data.def.climbable == true then
+					datastring = datastring .. S("This block can be climbed.").."\n"
+				end
+				local bouncy = data.def.groups.bouncy
+				if bouncy ~= nil then
+					datastring = datastring .. S("This block will make you bounce off with an elasticity of @1%.", bouncy).."\n"
+				end
+				datastring = datastring .. factoid_custom("nodes", "movement", data)
+				datastring = newline2(datastring)
 			end
-			if data.def.climbable == true then
-				datastring = datastring .. S("This block can be climbed.").."\n"
-			end
-			local bouncy = data.def.groups.bouncy
-			if bouncy ~= nil then
-				datastring = datastring .. S("This block will make you bounce off with an elasticity of @1%.", bouncy).."\n"
-			end
-			datastring = datastring .. factoid_custom("nodes", "movement", data)
-			datastring = newline2(datastring)
 
 			---- Sounds
-			local function is_silent(def, soundtype)
-				return type(def.sounds) ~= "table" or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
-			end
-			local silentstep, silentdig, silentplace = false, false, false
-			if data.def.walkable and is_silent(data.def, "footstep") then
-				silentstep = true
-			end
-			if data.def.diggable and is_silent(data.def, "dig") and is_silent(data.def, "dug")  then
-				silentdig = true
-			end
-			if is_silent(data.def, "place") and is_silent(data.def, "place_failed") and data.itemstring ~= "air" then
-				silentplace = true
-			end
-			if silentstep and silentdig and silentplace then
-				datastring = datastring .. S("This block is completely silent when walked on, mined or built.").."\n"
-			elseif silentdig and silentplace then
-				datastring = datastring .. S("This block is completely silent when mined or built.").."\n"
-			else
-				if silentstep then
-					datastring = datastring .. S("Walking on this block is completely silent.").."\n"
+			if not forbidden_core_factoids.sounds then
+				local function is_silent(def, soundtype)
+					return type(def.sounds) ~= "table" or def.sounds[soundtype] == nil or def.sounds[soundtype] == "" or (type(data.def.sounds[soundtype]) == "table" and (data.def.sounds[soundtype].name == nil or data.def.sounds[soundtype].name == ""))
 				end
-				if silentdig then
-					datastring = datastring .. S("Mining this block is completely silent.").."\n"
+				local silentstep, silentdig, silentplace = false, false, false
+				if data.def.walkable and is_silent(data.def, "footstep") then
+					silentstep = true
 				end
-				if silentplace then
-					datastring = datastring .. S("Building this block is completely silent.").."\n"
+				if data.def.diggable and is_silent(data.def, "dig") and is_silent(data.def, "dug")  then
+					silentdig = true
+				end
+				if is_silent(data.def, "place") and is_silent(data.def, "place_failed") and data.itemstring ~= "air" then
+					silentplace = true
+				end
+				if silentstep and silentdig and silentplace then
+					datastring = datastring .. S("This block is completely silent when walked on, mined or built.").."\n"
+				elseif silentdig and silentplace then
+					datastring = datastring .. S("This block is completely silent when mined or built.").."\n"
+				else
+					if silentstep then
+						datastring = datastring .. S("Walking on this block is completely silent.").."\n"
+					end
+					if silentdig then
+						datastring = datastring .. S("Mining this block is completely silent.").."\n"
+					end
+					if silentplace then
+						datastring = datastring .. S("Building this block is completely silent.").."\n"
+					end
 				end
 			end
 			datastring = datastring .. factoid_custom("nodes", "sound", data)
@@ -670,42 +708,46 @@ doc.add_category("nodes", {
 
 			-- Block activity
 			--- Gravity
-			if data.def.groups.falling_node == 1 then
-				datastring = datastring .. S("This block is affected by gravity and can fall.").."\n"
+			if not forbidden_core_factoids.gravity then
+				if data.def.groups.falling_node == 1 then
+					datastring = datastring .. S("This block is affected by gravity and can fall.").."\n"
+				end
 			end
 			datastring = datastring .. factoid_custom("nodes", "gravity", data)
 			datastring = newline2(datastring)
 
 			--- Dropping and destruction
-			if data.def.buildable_to == true then
-				datastring = datastring .. S("Building another block at this block will place it inside and replace it.").."\n"
-				if data.def.walkable then
-					datastring = datastring .. S("Falling blocks can go through this block; they destroy it when doing so.").."\n"
+			if not forbidden_core_factoids.drop_destroy then
+				if data.def.buildable_to == true then
+					datastring = datastring .. S("Building another block at this block will place it inside and replace it.").."\n"
+					if data.def.walkable then
+						datastring = datastring .. S("Falling blocks can go through this block; they destroy it when doing so.").."\n"
+					end
 				end
-			end
-			if data.def.walkable == false then
-				if data.def.buildable_to == false and data.def.drop ~= "" then
-					datastring = datastring .. S("This block will drop as an item when a falling block ends up inside it.").."\n"
-				else
-					datastring = datastring .. S("This block is destroyed when a falling block ends up inside it.").."\n"
+				if data.def.walkable == false then
+					if data.def.buildable_to == false and data.def.drop ~= "" then
+						datastring = datastring .. S("This block will drop as an item when a falling block ends up inside it.").."\n"
+					else
+						datastring = datastring .. S("This block is destroyed when a falling block ends up inside it.").."\n"
+					end
 				end
-			end
-			if data.def.groups.attached_node == 1 then
-				if data.def.paramtype2 == "wallmounted" then
-					datastring = datastring .. S("This block will drop as an item when it is not attached to a surrounding block.").."\n"
-				else
-					datastring = datastring .. S("This block will drop as an item when no collidable block is below it.").."\n"
+				if data.def.groups.attached_node == 1 then
+					if data.def.paramtype2 == "wallmounted" then
+						datastring = datastring .. S("This block will drop as an item when it is not attached to a surrounding block.").."\n"
+					else
+						datastring = datastring .. S("This block will drop as an item when no collidable block is below it.").."\n"
+					end
 				end
-			end
-			if data.def.floodable == true then
-				datastring = datastring .. S("Liquids can flow into this block and destroy it.").."\n"
+				if data.def.floodable == true then
+					datastring = datastring .. S("Liquids can flow into this block and destroy it.").."\n"
+				end
 			end
 			datastring = datastring .. factoid_custom("nodes", "drop_destroy", data)
 			datastring = newline2(datastring)
 
 			-- Block appearance
 			--- Light
-			if data.def.light_source then
+			if not forbidden_core_factoids.light and data.def.light_source then
 				if data.def.light_source > 3 then
 					datastring = datastring .. S("This block is a light source with a light level of @1.", data.def.light_source).."\n"
 				elseif data.def.light_source > 0 then
@@ -723,7 +765,7 @@ doc.add_category("nodes", {
 			datastring = newline2(datastring)
 
 			--- List nodes/groups to which this node connects to
-			if data.def.connects_to ~= nil then
+			if not forbidden_core_factoids.connects_to and data.def.connects_to ~= nil then
 				local nodes = {}
 				local groups = {}
 				for c=1,#data.def.connects_to do
@@ -777,7 +819,7 @@ doc.add_category("nodes", {
 			datastring = newline2(datastring)
 
 			-- Non-default drops
-			if data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
+			if not forbidden_core_factoids.drops and data.def.drop ~= nil and data.def.drop ~= data.itemstring and data.itemstring ~= "air" then
 				-- TODO: Calculate drop probabilities of max > 1 like for max == 1
 				local get_desc = function(stack)
 					return description_for_formspec(stack:get_name())
@@ -929,8 +971,9 @@ doc.add_category("nodes", {
 					datastring = newline(datastring)
 				end
 			end
+			datastring = datastring .. factoid_custom("nodes", "drops", data)
 			datastring = newline2(datastring)
-	
+
 			datastring = datastring .. factoids_footer(data, playername, "nodes")
 
 			formstring = formstring .. doc.widgets.text(datastring, nil, nil, doc.FORMSPEC.ENTRY_WIDTH - 1.2)
