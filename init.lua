@@ -278,6 +278,68 @@ local factoid_toolcaps = function(tool_capabilities, check_uses)
 	return formstring
 end
 
+--[[ Factoid for the mining times properties of a node. Extracted infos:
+- dig_immediate group
+- Digging times/groups
+- level group
+]]
+local factoid_mining_node = function(data)
+	local datastring = ""
+	if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
+		-- Check if there are no mining groups at all
+		local nogroups = true
+		for groupname,_ in pairs(mininggroups) do
+			if data.def.groups[groupname] ~= nil or groupname == "dig_immediate" then
+				nogroups = false
+				break
+			end
+		end
+		-- dig_immediate
+		if data.def.drop ~= "" then
+			if data.def.groups.dig_immediate == 2 then
+				datastring = datastring .. S("This block can be mined by any mining tool in half a second.").."\n"
+			elseif data.def.groups.dig_immediate == 3 then
+				datastring = datastring .. S("This block can be mined by any mining tool immediately.").."\n"
+			-- Note: “unbreakable” is an unofficial group for undiggable blocks
+			elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+				datastring = datastring .. S("This block can not be mined by ordinary mining tools.").."\n"
+			end
+		else
+			if data.def.groups.dig_immediate == 2 then
+				datastring = datastring .. S("This block can be destroyed by any mining tool in half a second.").."\n"
+			elseif data.def.groups.dig_immediate == 3 then
+				datastring = datastring .. S("This block can be destroyed by any mining tool immediately.").."\n"
+			elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
+				datastring = datastring .. S("This block can not be destroyed by ordinary mining tools.").."\n"
+			end
+		end
+		-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
+		-- Skip this for immediate digging to avoid redundancy
+		if data.def.groups.dig_immediate ~= 3 then
+			local mstring = S("This block can be mined by mining tools which match any of the following mining ratings and its toughness level.").."\n"
+			mstring = mstring .. S("Mining ratings:").."\n"
+			local minegroupcount = 0
+			for group,_ in pairs(mininggroups) do
+				local rating = data.def.groups[group]
+				if rating ~= nil then
+					mstring = mstring .. S("• @1: @2", doc.sub.items.get_group_name(group), rating).."\n"
+					minegroupcount = minegroupcount + 1
+				end
+			end
+			local level = data.def.groups.level
+			if not level then
+				level = 0
+			end
+			mstring = mstring .. S("Toughness level: @1", level).."\n"
+
+			if minegroupcount > 0 then
+				datastring = datastring .. mstring
+			end
+		end
+	end
+	return datastring
+end
+
 -- Pointing range of itmes
 local range_factoid = function(itemstring, def)
 	local handrange = minetest.registered_items[""].range
@@ -708,59 +770,10 @@ doc.add_category("nodes", {
 
 			-- Mining groups
 			datastring = datastring .. factoid_custom("nodes", "mining", data)
-			datastring = newline(datastring)
-			if data.def.pointable ~= false and (data.def.liquid_type == "none" or data.def.liquid_type == nil) then
-				-- Check if there are no mining groups at all
-				local nogroups = true
-				for groupname,_ in pairs(mininggroups) do
-					if data.def.groups[groupname] ~= nil or groupname == "dig_immediate" then
-						nogroups = false
-						break
-					end
-				end
-				-- dig_immediate
-				if data.def.drop ~= "" then
-					if data.def.groups.dig_immediate == 2 then
-						datastring = datastring .. S("This block can be mined by any mining tool in half a second.").."\n"
-					elseif data.def.groups.dig_immediate == 3 then
-						datastring = datastring .. S("This block can be mined by any mining tool immediately.").."\n"
-					-- Note: “unbreakable” is an unofficial group for undiggable blocks
-					elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-						datastring = datastring .. S("This block can not be mined by ordinary mining tools.").."\n"
-					end
-				else
-					if data.def.groups.dig_immediate == 2 then
-						datastring = datastring .. S("This block can be destroyed by any mining tool in half a second.").."\n"
-					elseif data.def.groups.dig_immediate == 3 then
-						datastring = datastring .. S("This block can be destroyed by any mining tool immediately.").."\n"
-					elseif data.def.diggable == false or nogroups or data.def.groups.immortal == 1 or data.def.groups.unbreakable == 1 then
-						datastring = datastring .. S("This block can not be destroyed by ordinary mining tools.").."\n"
-					end
-				end
-				-- Expose “ordinary” mining groups (crumbly, cracky, etc.) and level group
-				-- Skip this for immediate digging to avoid redundancy
-				if data.def.groups.dig_immediate ~= 3 then
-					local mstring = S("This block can be mined by mining tools which match any of the following mining ratings and its toughness level.").."\n"
-					mstring = mstring .. S("Mining ratings:").."\n"
-					local minegroupcount = 0
-					for group,_ in pairs(mininggroups) do
-						local rating = data.def.groups[group]
-						if rating ~= nil then
-							mstring = mstring .. S("• @1: @2", doc.sub.items.get_group_name(group), rating).."\n"
-							minegroupcount = minegroupcount + 1
-						end
-					end
-					local level = data.def.groups.level
-					if not level then
-						level = 0
-					end
-					mstring = mstring .. S("Toughness level: @1", level).."\n"
 
-					if minegroupcount > 0 then
-						datastring = datastring .. mstring
-					end
-				end
-			end
+			datastring = newline(datastring)
+
+			datastring = datastring .. factoid_mining_node(data)
 			datastring = newline2(datastring)
 
 			-- Non-default drops
