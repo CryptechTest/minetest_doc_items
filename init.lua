@@ -679,7 +679,7 @@ doc.add_category("nodes", {
 					if item_name_overrides[nodes[n]] ~= nil then
 						name = item_name_overrides[nodes[n]]
 					else
-						name = description_for_formspec(minetest.registered_nodes[nodes[n]])
+						name = description_for_formspec(nodes[n])
 					end
 					if n > 1 then
 						nstring = nstring .. S(", ")
