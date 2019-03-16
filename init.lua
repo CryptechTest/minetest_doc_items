@@ -637,7 +637,7 @@ doc.add_category("nodes", {
 					end
 				end
 				local fdap = data.def.groups.fall_damage_add_percent
-				if fdap ~= nil then
+				if fdap ~= nil and fdap ~= 0 then
 					if fdap > 0 then
 						datastring = datastring .. S("The fall damage on this block is increased by @1%.", fdap) .. "\n"
 					elseif fdap <= -100 then
@@ -659,8 +659,12 @@ doc.add_category("nodes", {
 					datastring = datastring .. S("This block can be climbed.").."\n"
 				end
 				local bouncy = data.def.groups.bouncy
-				if bouncy ~= nil then
+				if bouncy ~= nil and bouncy ~= 0 then
 					datastring = datastring .. S("This block will make you bounce off with an elasticity of @1%.", bouncy).."\n"
+				end
+				local slippery = data.def.groups.slippery
+				if slippery ~= nil and slippery ~= 0 then
+					datastring = datastring .. S("This block is slippery.") .. "\n"
 				end
 				datastring = datastring .. factoid_custom("nodes", "movement", data)
 				datastring = newline2(datastring)
