@@ -1401,4 +1401,4 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
-minetest.after(0, gather_descs)
+minetest.register_on_mods_loaded(gather_descs)
