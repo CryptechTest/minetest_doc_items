@@ -1368,6 +1368,18 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv
 	end
 end)
 
+minetest.register_on_player_inventory_action(function(player, action, inventory, inventory_info)
+	if player == nil then return end
+	local playername = player:get_player_name()
+	local itemstack
+	if action == "take" or action == "put" then
+		itemstack = inventory_info.stack
+	end
+	if itemstack ~= nil and playername ~= nil and playername ~= "" and (not itemstack:is_empty()) then
+		reveal_item(playername, itemstack:get_name())
+	end
+end)
+
 minetest.register_on_item_eat(function(hp_change, replace_with_item, itemstack, user, pointed_thing)
 	if user == nil then return end
 	local playername = user:get_player_name()
