@@ -931,7 +931,7 @@ doc.add_category("nodes", {
 								-- Final list seperator
 								dropstring_this = dropstring_this .. S(" and ")
 							end
-							local desc = S(itemtable.desc)
+							local desc = itemtable.desc
 							local count = itemtable.count
 							if count ~= 1 then
 								desc = S("@1×@2", count, desc)
