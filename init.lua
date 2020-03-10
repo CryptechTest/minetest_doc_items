@@ -65,10 +65,14 @@ local groups_to_string = function(grouptable, filter)
 	end
 end
 
--- Replaces all newlines with spaces
+-- Removes all text after the first newline (including the newline)
 local scrub_newlines = function(text)
-	local new, x = string.gsub(text, "\n", " ")
-	return new
+	local spl = string.split(text, "\n")
+	if spl and #spl > 0 then
+		return spl[1]
+	else
+		return text
+	end
 end
 
 --[[ Append a newline to text, unless it already ends with a newline. ]]
