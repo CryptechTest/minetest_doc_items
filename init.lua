@@ -103,7 +103,13 @@ local description_for_formspec = function(itemstring)
 		minetest.log("warning", "[doc] Unknown item detected: "..tostring(itemstring))
 		return S("Unknown item (@1)", tostring(itemstring))
 	end
-	local description = minetest.registered_items[itemstring].description
+	local description
+	-- The tt mod modifies the description, we'll use the original one
+	if minetest.registered_items[itemstring]._tt_original_description then
+		description = minetest.registered_items[itemstring]._tt_original_description
+	else
+		description = minetest.registered_items[itemstring].description
+	end
 	if description == nil or description == "" then
 		return minetest.formspec_escape(itemstring)
 	else
